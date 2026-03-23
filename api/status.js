@@ -1,39 +1,32 @@
 // api/status.js
-// La web consulta este endpoint para saber si el bot está online
-// Lee el timestamp guardado en Vercel KV
+// La web consulta esto para saber si el bot está online
+
+const BIN_ID  = process.env.JSONBIN_BIN_ID;
+const API_KEY = process.env.JSONBIN_API_KEY;
+const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}/latest`;
+const TIMEOUT = 60000; // 60s sin ping = offline
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Cache-Control', 'no-store');
 
   try {
-    const { kv } = await import('@vercel/kv');
+    const response = await fetch(BIN_URL, {
+      headers: { 'X-Master-Key': API_KEY },
+    });
 
-    // Si la key existe, el bot hizo ping hace menos de 120s (ver ex en ping.js)
-    const lastSeen = await kv.get('bot_last_seen');
+    const data = await response.json();
+    const lastSeen = data?.record?.lastSeen;
 
     if (!lastSeen) {
-      // Key expiró o nunca existió = bot offline
-      return res.status(200).json({
-        online: false,
-        lastSeen: null,
-        ago: null
-      });
+      return res.status(200).json({ online: false, lastSeen: null, ago: null });
     }
 
-    const ago = Math.floor((Date.now() - lastSeen) / 1000);
-    return res.status(200).json({
-      online: true,
-      lastSeen,
-      ago
-    });
+    const ago    = Math.floor((Date.now() - lastSeen) / 1000);
+    const online = ago < (TIMEOUT / 1000);
 
+    return res.status(200).json({ online, lastSeen, ago });
   } catch (err) {
-    return res.status(200).json({
-      online: false,
-      lastSeen: null,
-      ago: null,
-      error: err.message
-    });
+    return res.status(200).json({ online: false, lastSeen: null, ago: null });
   }
 }
