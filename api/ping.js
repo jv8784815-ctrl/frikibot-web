@@ -1,6 +1,10 @@
 // api/ping.js
-// Tu bot hace POST a este endpoint cada 30s
-// Guarda el timestamp en Vercel KV (Redis) — persiste entre reinicios
+// El bot hace POST aquí cada 30s
+// Usa jsonbin.io para guardar el estado — sin dependencias extra
+
+const BIN_ID    = process.env.JSONBIN_BIN_ID;
+const API_KEY   = process.env.JSONBIN_API_KEY;
+const BIN_URL   = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -10,12 +14,17 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   try {
-    // Guarda en Vercel KV
-    const { kv } = await import('@vercel/kv');
-    await kv.set('bot_last_seen', Date.now(), { ex: 120 }); // expira en 120s automáticamente
+    await fetch(BIN_URL, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Master-Key': API_KEY,
+      },
+      body: JSON.stringify({ lastSeen: Date.now() }),
+    });
+
     return res.status(200).json({ ok: true, ts: Date.now() });
   } catch (err) {
-    // Fallback: si KV no está configurado aún
     return res.status(500).json({ ok: false, error: err.message });
   }
 }
