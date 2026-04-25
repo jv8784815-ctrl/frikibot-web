@@ -1,857 +1,382 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>FrikiBot · Administración + Entretenimiento</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; font-size: 16px; }
-        body {
-            background: #000; color: #fff;
-            font-family: 'Inter', sans-serif;
-            line-height: 1.5; overflow-x: hidden;
-            position: relative; width: 100%;
-        }
-
-        /* ── FONDO CINÉTICO ── */
-        .kinetic-grid {
-            position: fixed; top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            z-index: 0; pointer-events: none; opacity: 0.6;
-        }
-        .grid-lines {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background-image:
-                linear-gradient(to right, rgba(255,255,255,0.12) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255,255,255,0.12) 1px, transparent 1px);
-            background-size: 35px 35px;
-            animation: grid-move 20s linear infinite;
-            transition: transform 0.1s ease-out;
-        }
-        @keyframes grid-move {
-            0%   { transform: translateX(0) translateY(0); }
-            100% { transform: translateX(35px) translateY(35px); }
-        }
-        .floating-squares { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-        .square {
-            position: absolute; width: 30px; height: 30px;
-            border: 1.8px solid rgba(255,255,255,0.2);
-            background: transparent;
-            animation: float-square 20s infinite ease-in-out;
-            box-shadow: 0 0 12px rgba(255,255,255,0.08);
-        }
-        @keyframes float-square {
-            0%   { transform: translate(0,0) rotate(0deg); opacity: 0.15; }
-            50%  { transform: translate(25px,-35px) rotate(180deg); opacity: 0.4; }
-            100% { transform: translate(0,0) rotate(360deg); opacity: 0.15; }
-        }
-        .particle-pixel {
-            position: absolute; width: 3px; height: 3px;
-            background: white; opacity: 0.4;
-            animation: pixel-float 25s linear infinite; border-radius: 50%;
-        }
-        @keyframes pixel-float {
-            0%   { transform: translateY(-10vh) translateX(0) scale(1); opacity: 0; }
-            20%  { opacity: 0.9; }
-            80%  { opacity: 0.7; }
-            100% { transform: translateY(110vh) translateX(50px) scale(0.5); opacity: 0; }
-        }
-
-        /* ── LOADER ── */
-        .loader {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: black; display: flex; flex-direction: column;
-            justify-content: center; align-items: center;
-            z-index: 10000; transition: opacity 0.8s, visibility 0.8s;
-        }
-        .loader.hidden { opacity: 0; visibility: hidden; }
-        .loader-logo {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: clamp(2.5rem, 10vw, 4rem); font-weight: 800; color: white;
-            text-shadow: 0 0 30px white; margin-bottom: 2rem;
-            letter-spacing: -0.02em;
-            animation: loader-breath 1.6s infinite alternate;
-            display: flex; align-items: center; gap: 0.6rem;
-        }
-        @keyframes loader-breath {
-            from { text-shadow: 0 0 15px white, 0 0 30px white; opacity: 0.9; }
-            to   { text-shadow: 0 0 45px white, 0 0 90px white; opacity: 1; }
-        }
-        .loader-bar {
-            width: min(280px, 70%); height: 3px;
-            background: #222; position: relative; overflow: hidden; border-radius: 3px;
-        }
-        .loader-bar::after {
-            content: ''; position: absolute; top: 0; left: -60%;
-            width: 60%; height: 100%; background: white;
-            animation: loader-slide 1.4s infinite ease-in-out;
-            box-shadow: 0 0 25px white; border-radius: 3px;
-        }
-        @keyframes loader-slide { 0% { left: -60%; } 100% { left: 100%; } }
-
-        /* ── GIF ESQUINA ── */
-        .corner-gif {
-            position: fixed; top: 20px; right: 20px;
-            width: 110px; height: auto; z-index: 2000;
-            border-radius: 12px; overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.7), 0 0 0 2px rgba(255,255,255,0.15);
-            border: 1px solid rgba(255,255,255,0.3);
-            transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s;
-            pointer-events: none; opacity: 0.95;
-            filter: grayscale(0.4) contrast(1.2);
-        }
-        .corner-gif:hover {
-            transform: scale(1.08) rotate(1deg);
-            box-shadow: 0 15px 35px rgba(255,255,255,0.15), 0 0 0 3px rgba(255,255,255,0.5);
-            filter: grayscale(0) contrast(1.2);
-        }
-        /* Soporta tanto GIF como MP4 en la esquina */
-        .corner-gif img,
-        .corner-gif video {
-            width: 100%; height: auto; display: block;
-            object-fit: cover; border-radius: 10px;
-        }
-
-        /* ── NAV ── */
-        nav {
-            position: fixed; top: 0; width: 100%; padding: 1.5rem 5%;
-            background: rgba(0,0,0,0.9);
-            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-            z-index: 1000; display: flex; justify-content: space-between; align-items: center;
-            transition: all 0.4s cubic-bezier(0.165,0.84,0.44,1);
-        }
-        nav.scrolled {
-            padding: 1rem 5%; background: #000;
-            border-bottom-color: rgba(255,255,255,0.2);
-            box-shadow: 0 5px 25px rgba(0,0,0,0.5);
-        }
-        .logo {
-            font-family: 'Space Grotesk', sans-serif; font-size: 1.8rem; font-weight: 700;
-            display: flex; align-items: center; gap: 0.6rem; color: white; letter-spacing: -0.02em;
-        }
-        .logo i { color: white; transition: 0.3s; }
-        .logo:hover i { transform: scale(1.2) rotate(10deg); }
-        .nav-links { display: flex; gap: 2.8rem; }
-        .nav-link {
-            color: #ccc; text-decoration: none; font-weight: 500; font-size: 0.95rem;
-            text-transform: uppercase; letter-spacing: 0.1em; padding: 0.5rem 0;
-            position: relative; transition: 0.25s;
-        }
-        .nav-link::after {
-            content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px;
-            background: white; transition: 0.3s cubic-bezier(0.175,0.885,0.32,1.275);
-        }
-        .nav-link:hover, .nav-link.active { color: white; }
-        .nav-link:hover::after, .nav-link.active::after { width: 100%; }
-
-        /* ── STATUS BADGE ── */
-        .status-badge {
-            display: inline-flex; align-items: center; gap: 0.6rem;
-            padding: 0.5rem 1.2rem;
-            border: 1px solid rgba(255,255,255,0.2);
-            font-size: 0.82rem; font-weight: 600;
-            text-transform: uppercase; letter-spacing: 0.12em;
-            background: rgba(0,0,0,0.6); backdrop-filter: blur(5px);
-            color: #aaa; transition: all 0.4s ease;
-            font-family: 'JetBrains Mono', monospace;
-        }
-        .status-dot {
-            width: 9px; height: 9px; border-radius: 50%;
-            background: #444; transition: all 0.4s ease; flex-shrink: 0;
-        }
-        .status-badge.online { border-color: rgba(255,255,255,0.5); color: white; }
-        .status-badge.online .status-dot {
-            background: white;
-            box-shadow: 0 0 8px white, 0 0 18px white;
-            animation: pulse-dot 1.5s infinite;
-        }
-        @keyframes pulse-dot {
-            0%, 100% { box-shadow: 0 0 6px white; }
-            50%       { box-shadow: 0 0 16px white, 0 0 30px rgba(255,255,255,0.4); }
-        }
-        .status-badge.offline { border-color: rgba(255,255,255,0.1); color: #555; }
-        .status-badge.offline .status-dot { background: #333; box-shadow: none; }
-        .status-badge.checking { border-color: rgba(255,255,255,0.15); color: #777; }
-        .status-badge.checking .status-dot {
-            background: #555;
-            animation: blink-dot 1s infinite;
-        }
-        @keyframes blink-dot {
-            0%, 100% { opacity: 0.3; } 50% { opacity: 1; }
-        }
-
-        /* ── HERO ── */
-        .hero {
-            min-height: 100vh; display: flex; align-items: center;
-            padding: 8rem 5% 5rem; position: relative; z-index: 5;
-        }
-        .hero-content { max-width: 1200px; margin: 0 auto; width: 100%; }
-        .hero-badge {
-            display: inline-flex; align-items: center; gap: 0.8rem;
-            padding: 0.7rem 1.5rem;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.15);
-            font-size: 0.85rem; font-weight: 500; color: #ddd;
-            margin-bottom: 1.2rem;
-            text-transform: uppercase; letter-spacing: 0.15em;
-            backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
-        }
-        .hero-badge i { color: white; }
-        .hero-title {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: clamp(3rem, 12vw, 7rem); font-weight: 800;
-            line-height: 0.95; margin-bottom: 1.5rem; color: white;
-            text-transform: uppercase; letter-spacing: -0.02em;
-            animation: glitch 4s infinite;
-        }
-        @keyframes glitch {
-            0%, 100% { text-shadow: 0 0 0 white, 0 0 0 transparent; }
-            96%       { text-shadow: 0 0 0 white; }
-            97%       { text-shadow: -3px 0 white, 3px 3px 0 rgba(255,255,255,0.5); }
-            98%       { text-shadow: 3px -2px white, -3px 2px 0 rgba(255,255,255,0.5); }
-            99%       { text-shadow: -2px 2px white, 2px -2px 0 rgba(255,255,255,0.5); }
-        }
-        .hero-subtitle {
-            font-size: clamp(1.1rem, 3vw, 1.7rem); color: #ccc;
-            margin-bottom: 1.5rem; max-width: 700px; font-weight: 300;
-            border-left: 4px solid white; padding-left: 1.8rem;
-        }
-        .hero-status-row { margin-bottom: 2rem; }
-        .hero-video-wrapper {
-            max-width: 800px; margin: 2.5rem 0 3rem;
-            border: 1px solid rgba(255,255,255,0.2); background: #0a0a0a;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.1) inset;
-            transition: 0.4s ease; position: relative; overflow: hidden;
-        }
-        .hero-video-wrapper:hover {
-            border-color: white;
-            box-shadow: 0 30px 60px rgba(255,255,255,0.1), 0 0 0 2px rgba(255,255,255,0.3) inset;
-            transform: scale(1.02);
-        }
-        .hero-video {
-            width: 100%; height: auto; display: block;
-            filter: grayscale(1) contrast(1.2); transition: filter 0.4s;
-        }
-        .hero-video-wrapper:hover .hero-video { filter: grayscale(0) contrast(1); }
-        .hero-buttons { display: flex; gap: 1.5rem; flex-wrap: wrap; }
-
-        /* ── BOTONES ── */
-        .btn {
-            display: inline-flex; align-items: center; justify-content: center;
-            gap: 0.9rem; padding: 1rem 2.5rem; font-size: 1rem; font-weight: 600;
-            text-decoration: none; border: 2px solid white; background: transparent;
-            color: white; text-transform: uppercase; letter-spacing: 0.15em;
-            position: relative; overflow: hidden; transition: 0.25s; z-index: 1;
-            cursor: pointer; min-width: 200px;
-        }
-        .btn::before {
-            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
-            background: white; transition: left 0.3s ease-out; z-index: -1;
-        }
-        .btn:hover { color: black; transform: translateY(-3px); box-shadow: 0 10px 25px rgba(255,255,255,0.2); }
-        .btn:hover::before { left: 0; }
-        .btn-primary { background: white; color: black; border-color: white; }
-        .btn-primary::before { background: black; }
-        .btn-primary:hover { color: white; border-color: white; box-shadow: 0 10px 30px rgba(255,255,255,0.3); }
-        .btn i { transition: 0.25s; }
-        .btn:hover i { transform: scale(1.2); }
-
-        /* ── STATS ── */
-        .stats {
-            padding: 6rem 5%;
-            background: rgba(255,255,255,0.02);
-            border-top: 1px solid rgba(255,255,255,0.08);
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-            position: relative; z-index: 5;
-        }
-        .stats-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem; max-width: 1200px; margin: 0 auto;
-        }
-        .stat-card {
-            text-align: center; padding: 3rem 2rem;
-            background: #0a0a0a; border: 1px solid #2a2a2a;
-            transition: all 0.4s cubic-bezier(0.175,0.885,0.32,1.275); position: relative;
-        }
-        .stat-card:hover {
-            border-color: white; background: #111;
-            transform: translateY(-10px); box-shadow: 0 25px 40px rgba(255,255,255,0.1);
-        }
-        .stat-number {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: clamp(3rem, 6vw, 4.5rem); font-weight: 700; color: white;
-            line-height: 1; margin-bottom: 0.5rem;
-        }
-        .stat-label {
-            font-size: 1rem; color: #ccc; text-transform: uppercase;
-            letter-spacing: 0.2em; margin-bottom: 0.6rem;
-        }
-        .stat-card p { color: #999; font-size: 0.9rem; }
-
-        /* ── FEATURES ── */
-        .features { padding: 8rem 5%; position: relative; z-index: 5; }
-        .section-header { text-align: center; max-width: 750px; margin: 0 auto 5rem; }
-        .section-title {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: clamp(2.2rem, 5vw, 4rem); font-weight: 700; color: white;
-            margin-bottom: 1.2rem; letter-spacing: -0.02em;
-        }
-        .section-description { font-size: clamp(1rem, 2vw, 1.2rem); color: #bbb; font-weight: 300; }
-        .features-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem; max-width: 1200px; margin: 0 auto;
-        }
-        .feature-card {
-            background: #0a0a0a; border: 1px solid #2a2a2a;
-            padding: 2.8rem 2rem; transition: all 0.3s ease; position: relative;
-        }
-        .feature-card::after {
-            content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px;
-            background: white; transition: width 0.3s ease;
-        }
-        .feature-card:hover {
-            border-color: white; background: #0c0c0c;
-            transform: scale(1.02); box-shadow: 0 20px 35px rgba(0,0,0,0.8);
-        }
-        .feature-card:hover::after { width: 100%; }
-        .feature-icon {
-            width: 70px; height: 70px; display: flex; align-items: center; justify-content: center;
-            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.2);
-            margin-bottom: 2rem; color: white; font-size: 2.2rem; transition: 0.3s;
-        }
-        .feature-card:hover .feature-icon {
-            background: white; color: black; border-color: white;
-            transform: rotate(5deg) scale(1.1);
-        }
-        .feature-title {
-            font-family: 'Space Grotesk', sans-serif; font-size: 1.7rem;
-            font-weight: 600; margin-bottom: 1rem; color: white;
-        }
-        .feature-description { color: #aaa; line-height: 1.7; font-size: 1rem; }
-
-        /* ── COMMANDS ── */
-        .commands {
-            padding: 8rem 5%;
-            background: rgba(255,255,255,0.02);
-            border-top: 1px solid rgba(255,255,255,0.08);
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-            position: relative; z-index: 5;
-        }
-        .commands-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 1.8rem; max-width: 1200px; margin: 0 auto;
-        }
-        .command-card {
-            background: #0a0a0a; border: 1px solid #2a2a2a;
-            padding: 2rem; transition: all 0.3s cubic-bezier(0.175,0.885,0.32,1.275);
-        }
-        .command-card:hover {
-            border-color: white; background: #0c0c0c;
-            transform: translateY(-8px); box-shadow: 0 20px 35px rgba(255,255,255,0.08);
-        }
-        .command-syntax {
-            font-family: 'JetBrains Mono', monospace; font-size: 1.2rem;
-            color: white; margin-bottom: 0.8rem; font-weight: 600;
-            display: flex; align-items: center; gap: 0.5rem;
-        }
-        .command-syntax::before { content: '>_'; color: #aaa; font-weight: 500; }
-        .command-description { font-size: 0.95rem; color: #aaa; line-height: 1.6; }
-
-        /* ── CTA ── */
-        .cta { padding: 8rem 5%; text-align: center; position: relative; z-index: 5; }
-        .cta::before {
-            content: ''; position: absolute; top: 50%; left: 50%;
-            width: 100%; height: 100%;
-            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
-            transform: translate(-50%,-50%); pointer-events: none;
-            animation: cta-pulse 5s infinite alternate;
-        }
-        @keyframes cta-pulse { 0% { opacity: 0.3; } 100% { opacity: 0.7; } }
-        .cta-title {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: clamp(2.2rem, 5vw, 4rem); font-weight: 700; color: white;
-            margin-bottom: 1.5rem; letter-spacing: -0.02em;
-        }
-        .cta-description {
-            font-size: clamp(1.1rem, 2.5vw, 1.3rem); color: #ccc; margin-bottom: 3rem;
-            max-width: 600px; margin-left: auto; margin-right: auto;
-        }
-
-        /* ── FOOTER ── */
-        footer {
-            padding: 5rem 5% 3rem; background: rgba(0,0,0,0.98);
-            border-top: 1px solid rgba(255,255,255,0.1); position: relative; z-index: 5;
-        }
-        .footer-content {
-            max-width: 1200px; margin: 0 auto;
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 3rem; margin-bottom: 3rem;
-        }
-        .footer-logo {
-            font-family: 'Space Grotesk', sans-serif; font-size: 1.8rem; font-weight: 700;
-            display: flex; align-items: center; gap: 0.5rem; color: white; margin-bottom: 1rem;
-        }
-        .footer-copyright { color: #999; font-size: 0.9rem; }
-        .footer-links h3 {
-            font-family: 'Space Grotesk', sans-serif; font-size: 1.1rem; font-weight: 600;
-            color: white; margin-bottom: 1.5rem; text-transform: uppercase; letter-spacing: 0.15em;
-        }
-        .footer-links ul { list-style: none; }
-        .footer-links li { margin-bottom: 0.8rem; }
-        .footer-links a {
-            color: #aaa; text-decoration: none;
-            display: flex; align-items: center; gap: 0.6rem; transition: 0.25s;
-        }
-        .footer-links a:hover { color: white; transform: translateX(8px); }
-        .footer-links a i { color: white; font-size: 0.8rem; }
-        .footer-bottom {
-            text-align: center; padding-top: 2rem;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            color: #999; font-size: 0.9rem;
-        }
-
-        /* ── ANIMACIONES ── */
-        .fade-in { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
-        .fade-in.visible { opacity: 1; transform: translateY(0); }
-
-        /* ── CURSOR ── */
-        .cursor-outline {
-            position: fixed; width: 45px; height: 45px;
-            border: 1.8px solid rgba(255,255,255,0.4); border-radius: 50%;
-            pointer-events: none; z-index: 10000;
-            transform: translate(-50%,-50%);
-            transition: width 0.3s, height 0.3s, opacity 0.3s, border-color 0.3s;
-            opacity: 0; backdrop-filter: blur(2px);
-        }
-        .cursor-dot {
-            position: fixed; width: 8px; height: 8px; background: white;
-            border-radius: 50%; pointer-events: none; z-index: 10001;
-            transform: translate(-50%,-50%);
-            transition: opacity 0.2s, transform 0.1s;
-            opacity: 0; box-shadow: 0 0 15px white;
-        }
-
-        /* ── RESPONSIVE ── */
-        @media (max-width: 992px) { html { font-size: 15px; } .nav-links { gap: 2rem; } }
-        @media (max-width: 768px) {
-            html { font-size: 14px; }
-            .nav-links { display: none; }
-            .hero { text-align: center; }
-            .hero-subtitle {
-                border-left: none; border-top: 3px solid white;
-                padding-left: 0; padding-top: 1.5rem;
-                margin-left: auto; margin-right: auto;
-            }
-            .hero-status-row { display: flex; justify-content: center; }
-            .hero-video-wrapper { margin-left: auto; margin-right: auto; }
-            .hero-buttons { justify-content: center; flex-direction: column; align-items: center; }
-            .btn { width: 100%; max-width: 350px; }
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
-            .corner-gif { width: 75px; top: 15px; right: 15px; }
-            .cursor-outline, .cursor-dot { display: none; }
-        }
-        @media (max-width: 480px) {
-            html { font-size: 13px; }
-            .stats-grid { grid-template-columns: 1fr; }
-            .hero-title { font-size: 3.8rem; }
-            .corner-gif { width: 65px; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>FrikiBot · Kasane Teto Style</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800;900&family=Zen+Dots&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{
+  --red:#e8193c;--pink:#ff6b8a;--light:#ffb3c1;--cream:#fff5f7;
+  --dark:#1a0511;--darker:#0d0208;--border:#5a1530;
+  --glow:rgba(232,25,60,0.55);
+  --jp:'M PLUS Rounded 1c',sans-serif;
+  --tech:'Zen Dots',cursive;
+  --mono:'Share Tech Mono',monospace;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--darker);color:var(--cream);font-family:var(--jp);overflow-x:hidden;cursor:none;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");opacity:0.035;pointer-events:none;z-index:0;}
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.06) 2px,rgba(0,0,0,0.06) 4px);pointer-events:none;z-index:1;opacity:0.5;}
+.cur-ring{position:fixed;width:36px;height:36px;border:2px solid var(--pink);border-radius:50%;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:width 0.2s,height 0.2s,border-color 0.2s;mix-blend-mode:difference;}
+.cur-dot{position:fixed;width:6px;height:6px;background:var(--pink);border-radius:50%;pointer-events:none;z-index:100000;transform:translate(-50%,-50%);box-shadow:0 0 12px var(--pink);}
+.cur-ring.big{width:52px;height:52px;border-color:var(--red);}
+.bg-grid{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(45deg,rgba(232,25,60,0.04) 1px,transparent 1px),linear-gradient(-45deg,rgba(255,107,138,0.03) 1px,transparent 1px);background-size:40px 40px;animation:grid-shift 28s linear infinite;}
+@keyframes grid-shift{to{background-position:40px 40px,-40px 40px;}}
+.particles{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+.p{position:absolute;clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);opacity:0;animation:pfloat linear infinite;}
+@keyframes pfloat{0%{opacity:0;transform:translateY(110vh) rotate(0deg);}8%{opacity:0.5;}92%{opacity:0.25;}100%{opacity:0;transform:translateY(-10vh) rotate(720deg);}}
+#loader{position:fixed;inset:0;z-index:99998;background:var(--darker);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.8rem;transition:opacity 0.7s,visibility 0.7s;}
+#loader.out{opacity:0;visibility:hidden;}
+.ld-title{font-family:var(--tech);font-size:clamp(2.8rem,10vw,5.5rem);color:var(--red);text-shadow:0 0 30px var(--glow),0 0 70px rgba(232,25,60,0.25);letter-spacing:0.04em;animation:flicker 2.2s infinite;}
+@keyframes flicker{0%,100%{opacity:1;}92%{opacity:1;}93%{opacity:0.15;}94%{opacity:1;}96%{opacity:0.4;}97%{opacity:1;}}
+.ld-sub{font-family:var(--mono);font-size:0.82rem;letter-spacing:0.35em;color:var(--pink);opacity:0.6;text-transform:uppercase;}
+.ld-bar{width:min(300px,75vw);height:2px;background:var(--border);overflow:hidden;}
+.ld-fill{height:100%;background:linear-gradient(90deg,var(--red),var(--pink));box-shadow:0 0 18px var(--pink);animation:ldfill 1.9s cubic-bezier(0.4,0,0.2,1) forwards;}
+@keyframes ldfill{from{width:0;}to{width:100%;}}
+.corner{position:fixed;bottom:22px;right:22px;z-index:9000;width:clamp(85px,11vw,130px);border:2px solid var(--border);border-radius:10px;overflow:hidden;box-shadow:0 0 0 3px rgba(232,25,60,0.12),0 12px 35px rgba(0,0,0,0.55);pointer-events:none;}
+.corner img{width:100%;display:block;}
+nav{position:fixed;top:0;width:100%;z-index:8000;padding:1.3rem 5%;display:flex;align-items:center;justify-content:space-between;transition:all 0.35s;border-bottom:1px solid transparent;}
+nav.scrolled{background:rgba(13,2,8,0.96);border-bottom-color:var(--border);backdrop-filter:blur(20px);padding:0.85rem 5%;box-shadow:0 4px 28px rgba(0,0,0,0.5);}
+.nav-logo{font-family:var(--tech);font-size:1.45rem;color:var(--red);text-shadow:0 0 20px var(--glow);display:flex;align-items:center;gap:0.5rem;letter-spacing:0.04em;}
+.logo-spin{display:inline-block;animation:spin 5s linear infinite;color:var(--pink);}
+@keyframes spin{to{transform:rotate(360deg);}}
+.nav-links{display:flex;gap:2.5rem;}
+.nav-link{font-family:var(--mono);font-size:0.82rem;text-decoration:none;color:#aa7788;letter-spacing:0.15em;text-transform:uppercase;transition:color 0.2s;position:relative;padding-bottom:2px;}
+.nav-link::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1.5px;background:var(--pink);transition:width 0.3s;box-shadow:0 0 8px var(--pink);}
+.nav-link:hover{color:var(--light);}.nav-link:hover::after{width:100%;}
+.status-pill{display:inline-flex;align-items:center;gap:0.55rem;padding:0.38rem 1rem;border:1.5px solid var(--border);background:rgba(26,5,17,0.8);font-family:var(--mono);font-size:0.78rem;letter-spacing:0.12em;backdrop-filter:blur(8px);transition:all 0.4s;}
+.status-pill.online{border-color:var(--red);color:var(--light);}
+.status-pill.offline{border-color:#333;color:#554;}
+.status-pill.checking{border-color:var(--border);color:#886;animation:sblink 1.2s infinite;}
+@keyframes sblink{0%,100%{opacity:0.5;}50%{opacity:1;}}
+.s-dot{width:7px;height:7px;border-radius:50%;background:#332;flex-shrink:0;transition:all 0.4s;}
+.status-pill.online .s-dot{background:var(--red);box-shadow:0 0 10px var(--red),0 0 22px rgba(232,25,60,0.5);animation:spulse 1.5s infinite;}
+@keyframes spulse{0%,100%{box-shadow:0 0 8px var(--red);}50%{box-shadow:0 0 18px var(--red),0 0 38px rgba(232,25,60,0.5);}}
+.status-pill.offline .s-dot{background:#333;box-shadow:none;}
+.hero{min-height:100vh;padding:9rem 5% 6rem;display:flex;align-items:center;position:relative;z-index:5;}
+.hero-inner{max-width:1200px;margin:0 auto;width:100%;}
+.hero-eyebrow{font-family:var(--mono);font-size:0.78rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--pink);display:flex;align-items:center;gap:0.8rem;margin-bottom:1.2rem;}
+.hero-eyebrow::before{content:'';width:28px;height:1px;background:var(--pink);}
+.hero-status{margin-bottom:1.3rem;}
+.hero-name{font-family:var(--tech);font-size:clamp(4.5rem,15vw,10rem);line-height:0.85;letter-spacing:-0.02em;color:transparent;-webkit-text-stroke:2px var(--red);position:relative;display:inline-block;margin-bottom:1.8rem;animation:nameblink 4.5s infinite;}
+.hero-name .fill{position:absolute;top:0;left:0;color:var(--red);-webkit-text-stroke:0;clip-path:inset(0 100% 0 0);animation:reveal-fill 1.3s cubic-bezier(0.77,0,0.175,1) 0.4s forwards;text-shadow:0 0 60px rgba(232,25,60,0.35);}
+@keyframes reveal-fill{to{clip-path:inset(0 0% 0 0);}}
+@keyframes nameblink{0%,88%,100%{text-shadow:none;}89%{text-shadow:-3px 0 var(--pink),3px 0 rgba(0,210,210,0.5);}90%{text-shadow:3px -2px rgba(0,210,210,0.5),-3px 2px var(--pink);}91%{text-shadow:none;}93%{text-shadow:-2px 2px var(--pink);}94%{text-shadow:none;}}
+.hero-sub{font-size:clamp(1.05rem,2.5vw,1.4rem);color:#ccaabb;max-width:620px;line-height:1.7;border-left:3px solid var(--red);padding-left:1.6rem;margin-bottom:2.5rem;}
+.hero-video-wrap{max-width:800px;margin-bottom:3rem;border:1.5px solid var(--border);background:#000;position:relative;overflow:hidden;transition:border-color 0.35s,box-shadow 0.35s;}
+.hero-video-wrap:hover{border-color:var(--red);box-shadow:0 20px 50px rgba(232,25,60,0.3);}
+.hero-video-wrap video{width:100%;display:block;filter:contrast(1.12) saturate(0.9);transition:filter 0.4s;}
+.hero-video-wrap:hover video{filter:contrast(1) saturate(1);}
+.vc{position:absolute;width:14px;height:14px;border-color:var(--red);border-style:solid;}
+.vc-tl{top:8px;left:8px;border-width:2px 0 0 2px;}.vc-tr{top:8px;right:8px;border-width:2px 2px 0 0;}
+.vc-bl{bottom:8px;left:8px;border-width:0 0 2px 2px;}.vc-br{bottom:8px;right:8px;border-width:0 2px 2px 0;}
+.hero-btns{display:flex;gap:1.2rem;flex-wrap:wrap;}
+.btn{display:inline-flex;align-items:center;gap:0.7rem;padding:0.85rem 2.2rem;font-family:var(--mono);font-size:0.82rem;letter-spacing:0.18em;text-transform:uppercase;text-decoration:none;border:2px solid;cursor:none;position:relative;overflow:hidden;transition:color 0.25s,transform 0.2s;white-space:nowrap;}
+.btn::before{content:'';position:absolute;inset:0;transform:translateX(-101%);transition:transform 0.3s cubic-bezier(0.7,0,0.3,1);z-index:-1;}
+.btn:hover::before{transform:translateX(0);}.btn:hover{transform:translateY(-2px);}
+.btn-red{border-color:var(--red);color:var(--red);}.btn-red::before{background:var(--red);}
+.btn-red:hover{color:var(--darker);box-shadow:0 8px 28px rgba(232,25,60,0.4);}
+.btn-ghost{border-color:var(--border);color:#bb8899;}.btn-ghost::before{background:var(--border);}
+.btn-ghost:hover{color:var(--light);}
+.marquee-wrap{position:relative;z-index:5;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:rgba(232,25,60,0.03);overflow:hidden;padding:0.85rem 0;white-space:nowrap;}
+.mq-track{display:inline-flex;animation:mq 24s linear infinite;}
+@keyframes mq{to{transform:translateX(-50%);}}
+.mq-item{display:inline-flex;align-items:center;gap:1.5rem;padding:0 2rem;font-family:var(--mono);font-size:0.78rem;letter-spacing:0.22em;color:var(--pink);text-transform:uppercase;}
+.mq-sep{color:var(--red);opacity:0.45;}
+.stats{padding:6rem 5%;position:relative;z-index:5;}
+.stats-grid{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:1.5px;background:var(--border);border:1.5px solid var(--border);}
+.stat-item{background:var(--dark);padding:3rem 2rem;text-align:center;position:relative;overflow:hidden;transition:background 0.3s;}
+.stat-item::before{content:'';position:absolute;bottom:0;left:0;width:100%;height:0;background:rgba(232,25,60,0.05);transition:height 0.4s;}
+.stat-item:hover::before{height:100%;}.stat-item:hover{background:#200a14;}
+.stat-num{font-family:var(--tech);font-size:clamp(3rem,5.5vw,5rem);color:var(--red);line-height:1;margin-bottom:0.4rem;text-shadow:0 0 22px rgba(232,25,60,0.4);}
+.stat-lbl{font-family:var(--mono);font-size:0.72rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--pink);margin-bottom:0.4rem;}
+.stat-desc{font-size:0.82rem;color:#886677;}
+.sec-label{display:flex;align-items:center;gap:1rem;font-family:var(--mono);font-size:0.72rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--red);margin-bottom:1.3rem;}
+.sec-label::after{content:'';flex:1;height:1px;background:var(--border);}
+.sec-title{font-family:var(--tech);font-size:clamp(2rem,5vw,3.5rem);color:var(--cream);margin-bottom:1rem;letter-spacing:0.02em;line-height:1.1;}
+.sec-title span{color:var(--red);}
+.sec-desc{font-size:1rem;color:#998899;max-width:520px;line-height:1.7;}
+.features{padding:7rem 5%;position:relative;z-index:5;border-top:1px solid var(--border);}
+.features-inner{max-width:1200px;margin:0 auto;}
+.feat-hdr{margin-bottom:3.5rem;}
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5px;background:var(--border);border:1.5px solid var(--border);}
+.feat-card{background:var(--dark);padding:2.8rem 2rem;position:relative;overflow:hidden;transition:background 0.3s;}
+.feat-card:hover{background:#200a14;}
+.feat-card::after{content:'';position:absolute;bottom:0;left:0;width:0;height:2px;background:var(--red);transition:width 0.4s cubic-bezier(0.7,0,0.3,1);box-shadow:0 0 12px var(--red);}
+.feat-card:hover::after{width:100%;}
+.feat-icon{font-size:2.4rem;color:var(--red);margin-bottom:1.5rem;display:block;transition:transform 0.3s;}
+.feat-card:hover .feat-icon{transform:scale(1.12) rotate(-6deg);}
+.feat-name{font-family:var(--jp);font-weight:900;font-size:1.3rem;color:var(--light);margin-bottom:0.7rem;}
+.feat-text{font-size:0.9rem;color:#998899;line-height:1.65;}
+.commands{padding:7rem 5%;position:relative;z-index:5;background:rgba(232,25,60,0.018);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.commands-inner{max-width:1200px;margin:0 auto;}
+.cmd-hdr{margin-bottom:3.5rem;}
+.cmd-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.5px;background:var(--border);border:1.5px solid var(--border);}
+.cmd-card{background:var(--dark);padding:1.8rem;position:relative;transition:background 0.25s;overflow:hidden;}
+.cmd-card:hover{background:#200a14;}
+.cmd-card::after{content:'';position:absolute;bottom:0;left:0;width:0;height:2px;background:var(--red);transition:width 0.35s ease;box-shadow:0 0 10px var(--red);}
+.cmd-card:hover::after{width:100%;}
+.cmd-syntax{font-family:var(--mono);font-size:1.1rem;color:var(--pink);margin-bottom:0.65rem;display:flex;align-items:center;gap:0.4rem;}
+.cmd-prompt{color:var(--red);opacity:0.65;}
+.cmd-desc{font-size:0.88rem;color:#997788;line-height:1.55;}
+.cta{padding:8rem 5%;position:relative;z-index:5;text-align:center;overflow:hidden;}
+.cta-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:650px;height:650px;background:radial-gradient(circle,rgba(232,25,60,0.11) 0%,transparent 70%);pointer-events:none;animation:glow-breathe 5s ease-in-out infinite alternate;}
+@keyframes glow-breathe{from{opacity:0.35;transform:translate(-50%,-50%) scale(0.88);}to{opacity:1;transform:translate(-50%,-50%) scale(1.12);}}
+.cta-inner{position:relative;z-index:1;max-width:680px;margin:0 auto;}
+.cta-jp{font-family:var(--jp);font-size:0.9rem;font-weight:900;letter-spacing:0.45em;color:var(--red);margin-bottom:1.5rem;opacity:0.65;}
+.cta-title{font-family:var(--tech);font-size:clamp(2.5rem,7vw,5rem);color:var(--cream);margin-bottom:1.5rem;line-height:0.92;text-shadow:0 0 40px rgba(232,25,60,0.28);}
+.cta-title span{color:var(--red);}
+.cta-desc{font-size:1.05rem;color:#bbaacc;margin-bottom:2.5rem;line-height:1.65;}
+.cta-btns{display:flex;gap:1.2rem;justify-content:center;flex-wrap:wrap;}
+footer{border-top:1px solid var(--border);padding:4rem 5% 2.5rem;position:relative;z-index:5;background:rgba(13,2,8,0.92);}
+.footer-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr;gap:4rem;margin-bottom:3rem;}
+.footer-logo{font-family:var(--tech);font-size:1.7rem;color:var(--red);text-shadow:0 0 18px var(--glow);display:flex;align-items:center;gap:0.5rem;margin-bottom:0.8rem;}
+.footer-brand{font-size:0.88rem;color:#776677;line-height:1.65;}
+.footer-brand strong{color:var(--pink);}
+.footer-col h4{font-family:var(--mono);font-size:0.72rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--red);margin-bottom:1.3rem;}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:0.7rem;}
+.footer-col a{font-size:0.88rem;color:#776677;text-decoration:none;display:flex;align-items:center;gap:0.5rem;transition:color 0.2s,transform 0.2s;}
+.footer-col a:hover{color:var(--light);transform:translateX(5px);}
+.footer-col a i{font-size:0.72rem;color:var(--border);}
+.footer-bottom{border-top:1px solid rgba(90,21,48,0.4);padding-top:2rem;display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:0.72rem;color:#554455;letter-spacing:0.1em;}
+.heart{color:var(--red);}
+.reveal{opacity:0;transform:translateY(22px);transition:opacity 0.7s ease,transform 0.7s ease;}
+.d1{transition-delay:0.07s;}.d2{transition-delay:0.14s;}.d3{transition-delay:0.21s;}.d4{transition-delay:0.28s;}
+.reveal.in{opacity:1;transform:translateY(0);}
+@media(max-width:1024px){.stats-grid{grid-template-columns:repeat(2,1fr);}.footer-inner{grid-template-columns:1fr 1fr;}}
+@media(max-width:768px){
+  .nav-links{display:none;}
+  .hero-sub{border-left:none;border-top:3px solid var(--red);padding-left:0;padding-top:1rem;}
+  .hero-eyebrow::before{display:none;}
+  .hero-btns,.cta-btns{flex-direction:column;align-items:flex-start;}
+  .btn{width:100%;max-width:320px;}
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .footer-inner{grid-template-columns:1fr;gap:2.5rem;}
+  .footer-bottom{flex-direction:column;gap:0.5rem;text-align:center;}
+  .cur-ring,.cur-dot{display:none;}body{cursor:auto;}
+  .corner{width:78px;bottom:14px;right:14px;}
+}
+@media(max-width:480px){.hero-name{font-size:3.8rem;}.stats-grid{grid-template-columns:1fr;}}
+</style>
 </head>
 <body>
 
-    <!-- LOADER -->
-    <div class="loader" id="loader">
-        <div class="loader-logo"><i class="fas fa-robot"></i> FRIKIBOT</div>
-        <div class="loader-bar"></div>
+<div class="cur-ring" id="curRing"></div>
+<div class="cur-dot" id="curDot"></div>
+
+<div id="loader">
+  <div class="ld-title">FRIKIBOT</div>
+  <div class="ld-sub">カサネテト &middot; BY JOSEXO &middot; WhatsApp Bot</div>
+  <div class="ld-bar"><div class="ld-fill"></div></div>
+</div>
+
+<div class="bg-grid"></div>
+<div class="particles" id="particles"></div>
+
+<div class="corner"><img src="teto.gif" alt="Kasane Teto"></div>
+
+<nav id="nav">
+  <div class="nav-logo"><span class="logo-spin">&#10022;</span> FRIKIBOT</div>
+  <div class="nav-links">
+    <a href="#home"     class="nav-link">Inicio</a>
+    <a href="#features" class="nav-link">Funciones</a>
+    <a href="#commands" class="nav-link">Comandos</a>
+    <a href="#join"     class="nav-link">Unirse</a>
+  </div>
+</nav>
+
+<section class="hero" id="home">
+  <div class="hero-inner">
+    <div class="hero-eyebrow reveal">BY JOSEXO</div>
+    <div class="hero-status reveal d1">
+      <div class="status-pill checking" id="statusBadge">
+        <span class="s-dot"></span>
+        <span id="sText">checking...</span>
+      </div>
     </div>
-
-    <!-- FONDO -->
-    <div class="kinetic-grid">
-        <div class="grid-lines"></div>
-        <div class="floating-squares" id="floatingSquares"></div>
+    <div class="reveal d1">
+      <div class="hero-name">FrikiBot<span class="fill" aria-hidden="true">FrikiBot</span></div>
     </div>
-
-    <!--
-        GIF ESQUINA
-        Sube tu gif al repo con el nombre: teto.gif
-        Si es un mp4, cambia <img> por <video autoplay loop muted playsinline><source src="teto.mp4"></video>
-    -->
-    <div class="corner-gif">
-        <img src="teto.gif" alt="Teto">
+    <p class="hero-sub reveal d2">Un menu de comandos extenso, tanto para la diversion y administracion de tu grupo.</p>
+    <div class="hero-video-wrap reveal d3">
+      <video controls playsinline loop><source src="video.mp4" type="video/mp4"></video>
+      <div class="vc vc-tl"></div><div class="vc vc-tr"></div>
+      <div class="vc vc-bl"></div><div class="vc vc-br"></div>
     </div>
+    <div class="hero-btns reveal d4">
+      <a class="btn btn-red" href="https://chat.whatsapp.com/FvmAr3qHTGMKE2C51J3ZEC" target="_blank"><i class="fab fa-whatsapp"></i> Grupo</a>
+      <a class="btn btn-ghost" href="https://whatsapp.com/channel/0029VbBKwI71XquRMXqfBD1R" target="_blank"><i class="fas fa-broadcast-tower"></i> Canal</a>
+    </div>
+  </div>
+</section>
 
-    <!-- NAV -->
-    <nav id="navbar">
-        <div class="logo"><i class="fas fa-robot"></i><span>FRIKIBOT</span></div>
-        <div class="nav-links">
-            <a href="#home"     class="nav-link active">Inicio</a>
-            <a href="#features" class="nav-link">Funciones</a>
-            <a href="#commands" class="nav-link">Comandos</a>
-            <a href="#join"     class="nav-link">Unirse</a>
-        </div>
-    </nav>
+<div class="marquee-wrap"><div class="mq-track" id="mqTrack"></div></div>
 
-    <!-- HERO -->
-    <section class="hero" id="home">
-        <div class="hero-content">
+<section class="stats" id="stats">
+  <div class="stats-grid">
+    <div class="stat-item reveal">
+      <div class="stat-num" data-target="24">0</div>
+      <div class="stat-lbl">24/7</div>
+      <div class="stat-desc">siempre online</div>
+    </div>
+    <div class="stat-item reveal d1">
+      <div class="stat-num" data-target="1000">0</div>
+      <div class="stat-lbl">Usuarios</div>
+      <div class="stat-desc">y contando...</div>
+    </div>
+    <div class="stat-item reveal d2">
+      <div class="stat-num">&#8734;</div>
+      <div class="stat-lbl">caos</div>
+      <div class="stat-desc">diversion sin fin</div>
+    </div>
+    <div class="stat-item reveal d3">
+      <div class="stat-num" data-target="99.9">0</div>
+      <div class="stat-lbl">uptime</div>
+      <div class="stat-desc">casi perfecto</div>
+    </div>
+  </div>
+</section>
 
-            <div class="hero-badge fade-in"><i class="fas fa-bolt"></i> BY JOSEXO</div>
+<section class="features" id="features">
+  <div class="features-inner">
+    <div class="feat-hdr">
+      <div class="sec-label">FUNCIONES // &#27231;&#33021;</div>
+      <h2 class="sec-title reveal">&#191;que <span>ofrece?</span></h2>
+      <p class="sec-desc reveal d1">todo para que tu grupo no se muera del aburrimiento.</p>
+    </div>
+    <div class="feat-grid">
+      <div class="feat-card reveal">
+        <i class="feat-icon fas fa-terminal"></i>
+        <div class="feat-name">comandos</div>
+        <p class="feat-text">Un menu de comandos extenso, tanto para la diversion y administracion de tu grupo.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-            <!-- ★ INDICADOR ONLINE / OFFLINE ★ -->
-            <div class="hero-status-row fade-in">
-                <div class="status-badge checking" id="statusBadge">
-                    <span class="status-dot" id="statusDot"></span>
-                    <span id="statusText">Verificando...</span>
-                </div>
-            </div>
+<section class="commands" id="commands">
+  <div class="commands-inner">
+    <div class="cmd-hdr">
+      <div class="sec-label">COMANDOS // &#12467;&#12510;&#12531;&#12489;</div>
+      <h2 class="sec-title reveal">comandos</h2>
+      <p class="sec-desc reveal d1">escribi esto en el chat y mira lo que pasa.</p>
+    </div>
+    <div class="cmd-grid">
+      <div class="cmd-card reveal">
+        <div class="cmd-syntax"><span class="cmd-prompt">&gt;_</span> .menu</div>
+        <div class="cmd-desc">Todos los comandos disponibles.</div>
+      </div>
+      <div class="cmd-card reveal d1">
+        <div class="cmd-syntax"><span class="cmd-prompt">&gt;_</span> .yt [nombre]</div>
+        <div class="cmd-desc">Descarga audio/video de YouTube.</div>
+      </div>
+      <div class="cmd-card reveal d2">
+        <div class="cmd-syntax"><span class="cmd-prompt">&gt;_</span> .tiktok [url]</div>
+        <div class="cmd-desc">Descarga video sin marca de agua.</div>
+      </div>
+      <div class="cmd-card reveal">
+        <div class="cmd-syntax"><span class="cmd-prompt">&gt;_</span> .sticker</div>
+        <div class="cmd-desc">Convierte imagen en sticker.</div>
+      </div>
+      <div class="cmd-card reveal d1">
+        <div class="cmd-syntax"><span class="cmd-prompt">&gt;_</span> .kick @user</div>
+        <div class="cmd-desc">Expulsa a un miembro.</div>
+      </div>
+      <div class="cmd-card reveal d2">
+        <div class="cmd-syntax"><span class="cmd-prompt">&gt;_</span> .ia [texto]</div>
+        <div class="cmd-desc">La IA te responde al toque.</div>
+      </div>
+    </div>
+  </div>
+</section>
 
-            <h1 class="hero-title fade-in">FrikiBot</h1>
+<section class="cta" id="join">
+  <div class="cta-glow"></div>
+  <div class="cta-inner">
+    <div class="cta-jp reveal">&#12459;&#12469;&#12493;&#12486;&#12488; &middot; &#12501;&#12522;&#12461;&#12508;&#12483;&#12488; &middot; Unete!</div>
+    <h2 class="cta-title reveal d1">Pruebalo<br><span>ahora &#10084;</span></h2>
+    <p class="cta-desc reveal d2">+1000 usuarios ya estan en el grupo. &#191;que esperas?</p>
+    <div class="cta-btns reveal d3">
+      <a class="btn btn-red" href="https://chat.whatsapp.com/FvmAr3qHTGMKE2C51J3ZEC" target="_blank"><i class="fab fa-whatsapp"></i> Grupo</a>
+      <a class="btn btn-ghost" href="https://whatsapp.com/channel/0029VbBKwI71XquRMXqfBD1R" target="_blank"><i class="fas fa-broadcast-tower"></i> Canal</a>
+    </div>
+  </div>
+</section>
 
-            <p class="hero-subtitle fade-in">
-                Bot para la administración, entretenimiento y ayuda a que tu grupo no muera.
-            </p>
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo">&#10022; FRIKIBOT</div>
+      <p class="footer-brand">creado por <strong>Josexo</strong><br>bot para WhatsApp</p>
+    </div>
+    <div class="footer-col">
+      <h4>links</h4>
+      <ul>
+        <li><a href="#home"><i class="fas fa-chevron-right"></i> inicio</a></li>
+        <li><a href="#features"><i class="fas fa-chevron-right"></i> funciones</a></li>
+        <li><a href="#commands"><i class="fas fa-chevron-right"></i> comandos</a></li>
+        <li><a href="#join"><i class="fas fa-chevron-right"></i> unirse</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>comunidad</h4>
+      <ul>
+        <li><a href="https://chat.whatsapp.com/FvmAr3qHTGMKE2C51J3ZEC" target="_blank"><i class="fab fa-whatsapp"></i> grupo</a></li>
+        <li><a href="https://whatsapp.com/channel/0029VbBKwI71XquRMXqfBD1R" target="_blank"><i class="fas fa-broadcast-tower"></i> canal</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>&#169; 2026 FrikiBot &middot; by Josexo</span>
+    <span>Hecho para tu entretenimiento <span class="heart">&#x1F495;</span></span>
+  </div>
+</footer>
 
-            <!--
-                VIDEO HERO
-                Sube tu video al repo con el nombre: video.mp4
-            -->
-            <div class="hero-video-wrapper fade-in">
-                <video class="hero-video" controls playsinline loop>
-                    <source src="video.mp4" type="video/mp4">
-                </video>
-            </div>
-
-            <div class="hero-buttons fade-in">
-                <a href="https://chat.whatsapp.com/FvmAr3qHTGMKE2C51J3ZEC" class="btn btn-primary" target="_blank">
-                    <i class="fab fa-whatsapp"></i> Unirse al Grupo
-                </a>
-                <a href="https://whatsapp.com/channel/0029VbBKwI71XquRMXqfBD1R" class="btn btn-secondary" target="_blank">
-                    <i class="fas fa-broadcast-tower"></i> Seguir Canal
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- STATS -->
-    <section class="stats" id="stats">
-        <div class="stats-grid">
-            <div class="stat-card fade-in">
-                <div class="stat-number" data-target="24">0</div>
-                <div class="stat-label">Online 24/7</div>
-                <p>Siempre activo para servirte</p>
-            </div>
-            <div class="stat-card fade-in">
-                <div class="stat-number" data-target="100">0</div>
-                <div class="stat-label">Comandos+</div>
-                <p>Funciones para todo</p>
-            </div>
-            <div class="stat-card fade-in">
-                <div class="stat-number">∞</div>
-                <div class="stat-label">Diversión</div>
-                <p>Entretenimiento garantizado</p>
-            </div>
-            <div class="stat-card fade-in">
-                <div class="stat-number" data-target="99.9">0</div>
-                <div class="stat-label">Uptime %</div>
-                <p>Estabilidad máxima</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- FEATURES -->
-    <section class="features" id="features">
-        <div class="section-header fade-in">
-            <h2 class="section-title">Funciones principales</h2>
-            <p class="section-description">Todo lo que necesitas para administrar, entretener y automatizar tu grupo.</p>
-        </div>
-        <div class="features-grid">
-            <div class="feature-card fade-in">
-                <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
-                <h3 class="feature-title">Administración</h3>
-                <p class="feature-description">Moderación, kick, ban, mute, anti-spam y más.</p>
-            </div>
-            <div class="feature-card fade-in">
-                <div class="feature-icon"><i class="fas fa-gamepad"></i></div>
-                <h3 class="feature-title">Juegos</h3>
-                <p class="feature-description">Trivias, acertijos, ruleta y minijuegos multijugador.</p>
-            </div>
-            <div class="feature-card fade-in">
-                <div class="feature-icon"><i class="fas fa-download"></i></div>
-                <h3 class="feature-title">Descargas</h3>
-                <p class="feature-description">Música, videos, stickers, TikTok, Instagram.</p>
-            </div>
-            <div class="feature-card fade-in">
-                <div class="feature-icon"><i class="fas fa-robot"></i></div>
-                <h3 class="feature-title">IA Integrada</h3>
-                <p class="feature-description">Respuestas inteligentes, asistencia y chat contextual.</p>
-            </div>
-            <div class="feature-card fade-in">
-                <div class="feature-icon"><i class="fas fa-images"></i></div>
-                <h3 class="feature-title">Edición</h3>
-                <p class="feature-description">Memes, stickers personalizados, efectos y filtros.</p>
-            </div>
-            <div class="feature-card fade-in">
-                <div class="feature-icon"><i class="fas fa-chart-bar"></i></div>
-                <h3 class="feature-title">Estadísticas</h3>
-                <p class="feature-description">Rankings, niveles, actividad y seguimiento.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- COMMANDS -->
-    <section class="commands" id="commands">
-        <div class="section-header fade-in">
-            <h2 class="section-title">Comandos destacados</h2>
-            <p class="section-description">Solo escribe el comando en el chat y obtén resultados al instante.</p>
-        </div>
-        <div class="commands-grid">
-            <div class="command-card fade-in">
-                <div class="command-syntax">.menu</div>
-                <div class="command-description">Lista completa de comandos disponibles.</div>
-            </div>
-            <div class="command-card fade-in">
-                <div class="command-syntax">.yt [nombre]</div>
-                <div class="command-description">Descarga audio/video de YouTube.</div>
-            </div>
-            <div class="command-card fade-in">
-                <div class="command-syntax">.tiktok [url]</div>
-                <div class="command-description">Descarga video sin marca de agua.</div>
-            </div>
-            <div class="command-card fade-in">
-                <div class="command-syntax">.sticker</div>
-                <div class="command-description">Convierte imagen/foto en sticker.</div>
-            </div>
-            <div class="command-card fade-in">
-                <div class="command-syntax">.kick @usuario</div>
-                <div class="command-description">Expulsa a un miembro del grupo.</div>
-            </div>
-            <div class="command-card fade-in">
-                <div class="command-syntax">.chatgpt [texto]</div>
-                <div class="command-description">Chatgpt responde tus preguntas.</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CTA -->
-    <section class="cta" id="join">
-        <div class="cta-content">
-            <h2 class="cta-title fade-in">Haz que tu grupo viva</h2>
-            <p class="cta-description fade-in">+600 usuarios satisfechos con FrikiBot. Únete ahora.</p>
-            <div class="hero-buttons fade-in">
-                <a href="https://chat.whatsapp.com/FvmAr3qHTGMKE2C51J3ZEC" class="btn btn-primary" target="_blank">
-                    <i class="fab fa-whatsapp"></i> Grupo Oficial
-                </a>
-                <a href="https://whatsapp.com/channel/0029VbBKwI71XquRMXqfBD1R" class="btn btn-secondary" target="_blank">
-                    <i class="fas fa-broadcast-tower"></i> Canal
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- FOOTER -->
-    <footer>
-        <div class="footer-content">
-            <div>
-                <div class="footer-logo"><i class="fas fa-robot"></i> FRIKIBOT</div>
-                <p class="footer-copyright">Creado por <strong>Josexo</strong><br>Bot multifuncional para WhatsApp</p>
-            </div>
-            <div class="footer-links">
-                <h3>Enlaces</h3>
-                <ul>
-                    <li><a href="#home"><i class="fas fa-chevron-right"></i> Inicio</a></li>
-                    <li><a href="#features"><i class="fas fa-chevron-right"></i> Funciones</a></li>
-                    <li><a href="#commands"><i class="fas fa-chevron-right"></i> Comandos</a></li>
-                    <li><a href="#join"><i class="fas fa-chevron-right"></i> Unirse</a></li>
-                </ul>
-            </div>
-            <div class="footer-links">
-                <h3>Comunidad</h3>
-                <ul>
-                    <li><a href="https://chat.whatsapp.com/FvmAr3qHTGMKE2C51J3ZEC" target="_blank"><i class="fab fa-whatsapp"></i> Grupo</a></li>
-                    <li><a href="https://whatsapp.com/channel/0029VbBKwI71XquRMXqfBD1R" target="_blank"><i class="fas fa-broadcast-tower"></i> Canal</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer-bottom">© 2026 FrikiBot · Todos los derechos reservados</div>
-    </footer>
-
-    <script>
-        // ── Loader ──
-        window.addEventListener('load', () => {
-            setTimeout(() => document.getElementById('loader').classList.add('hidden'), 900);
-        });
-
-        // ── Nav scroll ──
-        window.addEventListener('scroll', () => {
-            document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 80);
-        });
-
-        // ── Floating squares ──
-        function initFloatingSquares(count) {
-            const container = document.querySelector('.floating-squares');
-            if (!container) return;
-            container.innerHTML = '';
-            for (let i = 0; i < count; i++) {
-                const s = document.createElement('div');
-                s.className = 'square';
-                s.style.width = `${15 + Math.random() * 35}px`;
-                s.style.height = s.style.width;
-                s.style.left = `${Math.random() * 100}%`;
-                s.style.top  = `${Math.random() * 100}%`;
-                s.style.animationDelay    = `${Math.random() * 15}s`;
-                s.style.animationDuration = `${15 + Math.random() * 20}s`;
-                s.style.borderColor = `rgba(255,255,255,${0.15 + Math.random() * 0.3})`;
-                container.appendChild(s);
-            }
-        }
-
-        // ── Particles ──
-        function initParticles(count) {
-            const container = document.querySelector('.kinetic-grid');
-            if (!container) return;
-            for (let i = 0; i < count; i++) {
-                const p = document.createElement('div');
-                p.className = 'particle-pixel';
-                p.style.left = `${Math.random() * 100}%`;
-                p.style.top  = `${Math.random() * 100}%`;
-                p.style.animationDelay    = `${Math.random() * 20}s`;
-                p.style.animationDuration = `${15 + Math.random() * 20}s`;
-                p.style.background = `rgba(255,255,255,${0.3 + Math.random() * 0.6})`;
-                const sz = `${2 + Math.random() * 4}px`;
-                p.style.width = sz; p.style.height = sz;
-                container.appendChild(p);
-            }
-        }
-
-        // ── Counters ──
-        function initCounters() {
-            const counters = document.querySelectorAll('.stat-number[data-target]');
-            if (!counters.length) return;
-            let animated = false;
-            const observer = new IntersectionObserver((entries) => {
-                if (entries[0].isIntersecting && !animated) {
-                    animated = true;
-                    counters.forEach(counter => {
-                        const target = parseFloat(counter.dataset.target);
-                        let current = 0;
-                        const step = target / 60;
-                        const timer = setInterval(() => {
-                            current += step;
-                            if (current >= target) {
-                                counter.textContent = target % 1 === 0 ? Math.floor(target) : target.toFixed(1);
-                                clearInterval(timer);
-                            } else {
-                                counter.textContent = target % 1 === 0 ? Math.floor(current) : current.toFixed(1);
-                            }
-                        }, 20);
-                    });
-                }
-            }, { threshold: 0.5 });
-            const statsSection = document.getElementById('stats');
-            if (statsSection) observer.observe(statsSection);
-        }
-
-        // ── Scroll animations ──
-        function initScrollAnimations() {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) entry.target.classList.add('visible');
-                });
-            }, { threshold: 0.15, rootMargin: '0px 0px -30px 0px' });
-            document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-        }
-
-        // ── Cursor ──
-        function initCursor() {
-            if (window.innerWidth <= 768 || ('ontouchstart' in window)) return;
-            const dot     = document.createElement('div'); dot.className = 'cursor-dot';
-            const outline = document.createElement('div'); outline.className = 'cursor-outline';
-            document.body.appendChild(dot);
-            document.body.appendChild(outline);
-            document.addEventListener('mousemove', (e) => {
-                dot.style.transform     = `translate(${e.clientX}px, ${e.clientY}px)`;
-                outline.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
-                dot.style.opacity = outline.style.opacity = '1';
-            });
-            document.addEventListener('mouseleave', () => {
-                dot.style.opacity = outline.style.opacity = '0';
-            });
-            document.querySelectorAll('a, button, .btn, .feature-card, .command-card, .stat-card').forEach(el => {
-                el.addEventListener('mouseenter', () => {
-                    outline.style.width = outline.style.height = '55px';
-                    outline.style.borderColor = 'rgba(255,255,255,0.8)';
-                });
-                el.addEventListener('mouseleave', () => {
-                    outline.style.width = outline.style.height = '45px';
-                    outline.style.borderColor = 'rgba(255,255,255,0.4)';
-                });
-            });
-        }
-
-        // ── Parallax ──
-        document.addEventListener('mousemove', (e) => {
-            if (window.innerWidth <= 768) return;
-            const grid = document.querySelector('.grid-lines');
-            if (grid) {
-                const x = (e.clientX / window.innerWidth  - 0.5) * 15;
-                const y = (e.clientY / window.innerHeight - 0.5) * 15;
-                grid.style.transform = `translateX(${x}px) translateY(${y}px)`;
-            }
-        });
-
-        // ── Resize ──
-        window.addEventListener('resize', () => {
-            if (window.innerWidth <= 768) {
-                document.querySelector('.cursor-dot')?.remove();
-                document.querySelector('.cursor-outline')?.remove();
-            }
-        });
-
-        // ══════════════════════════════════════════
-        // ★ STATUS ONLINE / OFFLINE ★
-        const STATUS_URL     = '/api/status';
-        const CHECK_INTERVAL = 30000; // 30s
-
-        async function checkBotStatus() {
-            const badge = document.getElementById('statusBadge');
-            const text  = document.getElementById('statusText');
-            if (!badge || !text) return;
-            try {
-                const res  = await fetch(STATUS_URL, { cache: 'no-store' });
-                if (!res.ok) throw new Error('HTTP ' + res.status);
-                const data = await res.json();
-                if (data.online) {
-                    badge.className  = 'status-badge online';
-                    text.textContent = '● Bot Online';
-                } else {
-                    badge.className  = 'status-badge offline';
-                    const mins = data.ago ? Math.floor(data.ago / 60) : null;
-                    text.textContent = mins ? `● Bot Offline · hace ${mins}m` : '● Bot Offline';
-                }
-            } catch {
-                badge.className  = 'status-badge offline';
-                text.textContent = '● Bot Offline';
-            }
-        }
-        // ══════════════════════════════════════════
-
-        // ── Init ──
-        document.addEventListener('DOMContentLoaded', () => {
-            initFloatingSquares(20);
-            initParticles(50);
-            initCounters();
-            initScrollAnimations();
-            initCursor();
-            checkBotStatus();
-            setInterval(checkBotStatus, CHECK_INTERVAL);
-        });
-    </script>
+<script>
+window.addEventListener('load',()=>{setTimeout(()=>document.getElementById('loader').classList.add('out'),1950);});
+window.addEventListener('scroll',()=>{document.getElementById('nav').classList.toggle('scrolled',window.scrollY>60);});
+const ring=document.getElementById('curRing'),dot=document.getElementById('curDot');
+if(ring&&dot&&window.innerWidth>768){
+  let mx=-100,my=-100,rx=-100,ry=-100;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+  (function loop(){rx+=(mx-rx)*0.11;ry+=(my-ry)*0.11;ring.style.transform=`translate(${rx}px,${ry}px) translate(-50%,-50%)`;dot.style.transform=`translate(${mx}px,${my}px) translate(-50%,-50%)`;requestAnimationFrame(loop);})();
+  document.querySelectorAll('a,button,.btn,.feat-card,.cmd-card,.stat-item').forEach(el=>{el.addEventListener('mouseenter',()=>ring.classList.add('big'));el.addEventListener('mouseleave',()=>ring.classList.remove('big'));});
+}
+(function(){
+  const c=document.getElementById('particles');if(!c)return;
+  const cols=['#e8193c','#ff6b8a','#ff3355','#cc1133'];
+  for(let i=0;i<16;i++){const d=document.createElement('div');d.className='p';const s=8+Math.random()*16;d.style.cssText=`width:${s}px;height:${s}px;left:${Math.random()*100}%;background:${cols[Math.floor(Math.random()*cols.length)]};animation-duration:${10+Math.random()*22}s;animation-delay:${Math.random()*18}s;`;c.appendChild(d);}
+})();
+(function(){
+  const items=['FrikiBot','WhatsApp Bot','by Josexo','カサネテト','Kasane Teto','24/7 Online','+1000 usuarios','comandos extensos','diversion sin fin','Ecuador'];
+  const track=document.getElementById('mqTrack');if(!track)return;
+  const html=items.map(t=>`<span class="mq-item">${t}<span class="mq-sep">✦</span></span>`).join('');
+  track.innerHTML=html+html;
+})();
+document.querySelectorAll('.stat-num[data-target]').forEach(el=>{
+  const obs=new IntersectionObserver(entries=>{
+    if(entries[0].isIntersecting){
+      const target=parseFloat(el.dataset.target),float=target%1!==0;let cur=0,step=target/50;
+      const iv=setInterval(()=>{cur=Math.min(cur+step,target);el.textContent=cur>=target?(float?target.toFixed(1):Math.floor(target)):(float?cur.toFixed(1):Math.floor(cur));if(cur>=target)clearInterval(iv);},26);
+      obs.disconnect();
+    }
+  },{threshold:0.5});obs.observe(el);
+});
+const revObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');revObs.unobserve(e.target);}});},{threshold:0.08,rootMargin:'0px 0px -25px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>revObs.observe(el));
+async function checkStatus(){
+  const badge=document.getElementById('statusBadge'),text=document.getElementById('sText');
+  if(!badge||!text)return;
+  try{const r=await fetch('/api/status',{cache:'no-store'});if(!r.ok)throw new Error();const d=await r.json();
+    if(d.online){badge.className='status-pill online';text.textContent='● online';}
+    else{badge.className='status-pill offline';const m=d.ago?Math.floor(d.ago/60):null;text.textContent=m?`● offline · ${m}m`:'● offline';}
+  }catch{badge.className='status-pill offline';text.textContent='● offline';}
+}
+checkStatus();setInterval(checkStatus,30000);
+</script>
 </body>
 </html>
