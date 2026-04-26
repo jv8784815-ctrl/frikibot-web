@@ -721,7 +721,7 @@ if(ring&&dot&&window.innerWidth>768){
   const video = document.getElementById('heroVideo');
   if(!videoWrap || !video) return;
 
-  const posibles = ['video.mp4', 'tetovideo.mp4', 'friki.mp4', 'bot.mp4', 'hero.mp4'];
+  const posibles = ['bot.mp4', 'video.mp4', 'tetovideo.mp4', 'friki.mp4', 'hero.mp4'];
   let found = false;
 
   for(const name of posibles){
@@ -731,6 +731,7 @@ if(ring&&dot&&window.innerWidth>768){
         video.querySelector('source').src = name;
         video.load();
         found = true;
+        console.log('✅ Video cargado:', name);
         break;
       }
     }catch(e){}
@@ -738,6 +739,7 @@ if(ring&&dot&&window.innerWidth>768){
 
   if(!found){
     videoWrap.style.display = 'none';
+    console.log('⚠️ No se encontró ningún video .mp4');
   }
 })();
 
