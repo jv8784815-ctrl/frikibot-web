@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>FrikiBot · Kasane Teto Style</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800;900&family=Zen+Dots&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800;900&family=Zen+Dots&family=Share+Tech+Mono&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
 :root {
@@ -20,6 +20,7 @@
   --jp:     'M PLUS Rounded 1c', sans-serif;
   --tech:   'Zen Dots', cursive;
   --mono:   'Share Tech Mono', monospace;
+  --pixel:  'Silkscreen', cursive;
 }
 
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -267,6 +268,54 @@ nav.scrolled{
 .btn-ghost::before{background:var(--border);}
 .btn-ghost:hover{color:var(--light);}
 
+/* ───── MODAL MENÚ ───── */
+.modal-overlay{
+  position:fixed;inset:0;z-index:9500;
+  background:rgba(0,0,0,0.88);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;visibility:hidden;transition:opacity 0.3s,visibility 0.3s;
+  padding:1rem;
+}
+.modal-overlay.open{opacity:1;visibility:visible;}
+.modal-box{
+  background:var(--dark);
+  border:2px solid var(--border);
+  max-width:700px;width:100%;max-height:85vh;
+  overflow-y:auto;padding:2rem;
+  position:relative;
+  box-shadow:0 0 60px rgba(232,25,60,0.25);
+}
+.modal-close{
+  position:sticky;top:0;float:right;
+  background:none;border:none;color:var(--red);
+  font-size:1.8rem;cursor:none;z-index:1;
+  font-family:var(--mono);transition:color 0.2s;
+}
+.modal-close:hover{color:var(--light);}
+.modal-title{
+  font-family:var(--pixel);font-size:1rem;color:var(--pink);
+  text-align:center;margin-bottom:1.5rem;
+  letter-spacing:0.1em;line-height:1.6;
+}
+.menu-content{
+  font-family:var(--mono);font-size:0.7rem;
+  color:#ccaaaa;line-height:1.7;white-space:pre-wrap;
+  word-break:break-word;
+}
+.menu-content .section-title{
+  color:var(--red);font-weight:700;font-size:0.75rem;
+  margin:1.2rem 0 0.5rem;font-family:var(--pixel);
+}
+.menu-content .cmd{color:var(--pink);}
+.menu-content .vip{color:#ffcc00;}
+.menu-content .note{color:#887777;font-style:italic;}
+.menu-sep{color:var(--border);text-align:center;margin:0.5rem 0;}
+
+/* scrollbar modal */
+.modal-box::-webkit-scrollbar{width:4px;}
+.modal-box::-webkit-scrollbar-track{background:var(--dark);}
+.modal-box::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+
 .stats{padding:6rem 5%;position:relative;z-index:5;}
 .stats-grid{
   max-width:1200px;margin:0 auto;
@@ -322,7 +371,7 @@ nav.scrolled{
 }
 .feat-card{
   background:var(--dark);padding:2.8rem 2rem;
-  position:relative;overflow:hidden;transition:background 0.3s;
+  position:relative;overflow:hidden;transition:background 0.3s;cursor:none;
 }
 .feat-card:hover{background:#200a14;}
 .feat-card::after{
@@ -356,7 +405,7 @@ nav.scrolled{
 }
 .cmd-card{
   background:var(--dark);padding:1.8rem;
-  position:relative;transition:background 0.25s;overflow:hidden;
+  position:relative;transition:background 0.25s;overflow:hidden;cursor:none;
 }
 .cmd-card:hover{background:#200a14;}
 .cmd-card::after{
@@ -402,6 +451,10 @@ nav.scrolled{
   text-shadow:0 0 40px rgba(232,25,60,0.28);
 }
 .cta-title span{color:var(--red);}
+.pixel-heart{
+  font-family:var(--pixel);font-size:clamp(2.5rem,7vw,5rem);
+  display:inline;vertical-align:middle;
+}
 .cta-desc{font-size:1.05rem;color:#bbaacc;margin-bottom:2.5rem;line-height:1.65;}
 .cta-btns{display:flex;gap:1.2rem;justify-content:center;flex-wrap:wrap;}
 
@@ -487,6 +540,15 @@ footer{
 
 <!-- TETO GIF -->
 <div class="corner"><img src="teto.gif" alt="Kasane Teto"></div>
+
+<!-- MODAL MENÚ -->
+<div class="modal-overlay" id="menuModal">
+  <div class="modal-box">
+    <button class="modal-close" id="menuClose">&times;</button>
+    <div class="modal-title">✦ MENÚ DE COMANDOS ✦</div>
+    <div class="menu-content" id="menuContent"></div>
+  </div>
+</div>
 
 <!-- NAV -->
 <nav id="nav">
@@ -597,7 +659,7 @@ footer{
       <p class="sec-desc reveal d1">escribí esto en el chat y mirá lo que pasa.</p>
     </div>
     <div class="cmd-grid">
-      <div class="cmd-card reveal">
+      <div class="cmd-card reveal menu-trigger" id="menuTrigger">
         <div class="cmd-syntax"><span class="cmd-prompt">&gt;_</span> .menu</div>
         <div class="cmd-desc">Todos los comandos disponibles.</div>
       </div>
@@ -630,8 +692,8 @@ footer{
   <div class="cta-glow"></div>
   <div class="cta-inner">
     <div class="cta-jp reveal">カサネテト · フリキボット · ¡Únete!</div>
-    <h2 class="cta-title reveal d1">Pruébalo<br><span>ahora ❤</span></h2>
-    <p class="cta-desc reveal d2">+1000 usuarios ya están en el grupo. ¿qué esperás?</p>
+    <h2 class="cta-title reveal d1">Pruébalo<br><span>ahora <span class="pixel-heart">❤</span></span></h2>
+    <p class="cta-desc reveal d2">+1000 usuarios satisfechos con FrikiBot. ¿Qué esperas para probarlo?</p>
     <div class="cta-btns reveal d3">
       <a class="btn btn-red" href="https://chat.whatsapp.com/FvmAr3qHTGMKE2C51J3ZEC" target="_blank">
         <i class="fab fa-whatsapp"></i> Grupo
@@ -674,6 +736,754 @@ footer{
 </footer>
 
 <script>
+// ─── MENÚ RPG COMPLETO ───
+const MENU_RPG = `━━━━━━━━━━━━━━━━━━━━━━━━━
+
+┣━━━━ 🎮 MENÚ RPG ━━━━┫
+
+✰ *.cooldowns* | *.rpg*
+> Muestra qué comandos puedes usar y cuánto tiempo falta para el resto
+
+✰ *.cambiar nombre* \`<nuevo nombre>\`
+> Cambia tu nombre actual
+
+✰ *.cambiar estado*
+> Mira tus usos restantes del cambiar nombre
+
+✰ *.descripcion* \`<texto>\`
+> Añade una descripción visible a tu perfil
+
+✰ *.asignarperfil* \`<respondiendo a una foto>\`
+> Asigna una imagen a tu perfil RPG
+
+✰ *.trabajar*
+> Trabaja para obtener GEOS
+
+✰ *.trabajar subir*
+> Sube de puesto de trabajo, cada puesto da más GEOS
+
+✰ *.trabajar puesto*
+> Ver qué necesitas para el siguiente puesto
+
+✰ *.robar* \`<@usuario>\`
+> Roba GEOS a otro usuario
+
+✰ *.minar*
+> Mina GEOS cada 5 minutos (necesitas un pico)
+
+✰ *.minar2*
+> Mina GEOS con mayor eficiencia
+
+✰ *.talar*
+> Tala madera, crea palos y empieza con pico de madera
+
+✰ *.talar2* 👑
+> Versión VIP del talar
+
+✰ *.mesa* \`<cantidad>\`
+> Crea una cantidad específica de palos
+
+✰ *.craftear* \`<pico_madera | pico_piedra | pico_hierro | pico_diamante>\`
+> Usa minerales para craftear picos
+
+✰ *.invmc*
+> Muestra tu inventario de minerales
+
+✰ *.vendermc* \`<mineral> <cantidad>\`
+> Vende minerales por GEOS
+
+✰ *.pescar*
+> Pesca peces comunes, raros, épicos, legendarios y figuras (4 disponibles)
+
+✰ *.pescar2* 👑
+> Versión VIP del pescar
+
+✰ *.pescar2 subirnvl*
+> Sube de nivel tu caña, mientras más alto el nivel más pesca tienes
+
+✰ *.pescar2 nivel*
+> Ver nivel actual de tu caña
+
+✰ *.cazar*
+> Caza animales y obtén recursos
+
+✰ *.cazar2* 👑
+> Versión VIP del cazar
+
+┃ Exploración & Recursos
+
+✰ *.explorar*
+> Ver info y estadísticas de cada lugar
+
+✰ *.explorar mazmorra* | *.explorar casa* | *.explorar castillo*
+> Explora lugares (cooldown compartido)
+
+> Nota: En casa hay 10% de conseguir Reliquia Maldita (vende por 1.5M GEOS o falla y pierdes 1M). Si la tienes en inventario, te quita GEOS cada 5 min. Véndela con *.venderreliquia*
+
+✰ *.crimen*
+> 50% éxito (ganas GEOS) / 50% arresto (pierdes GEOS)
+> Da EXP acumulable para el .nivel
+
+✰ *.recolectar*
+> Recolecta cosechas para venderlas y recibir GEOS a cambio
+> Da EXP acumulable para el .nivel
+
+✰ *.recolectar2*
+> Cosecha con más posibilidades de conseguir algo y en menos tiempo de espera
+> Da EXP acumulable para el .nivel
+
+✰ *.expedicion*
+> Busca recursos provenientes de Gravity Falls para conseguir GEOS
+> Da EXP acumulable para el .nivel
+
+✰ *.expedicion2*
+> Consigue recursos de Gravity Falls en menos tiempo y con mayor probabilidad
+> Da EXP acumulable para el .nivel
+
+✰ *.perfil*
+> Muestra tu perfil RPG completo
+
+✰ *.perfil quitar*
+> Quita la foto de perfil, no se mostrará ni la foto personalizada ni la de tu perfil de WhatsApp
+
+✰ *.perfil mostrar*
+> Muestra tu foto de perfil nuevamente
+
+┣━━━━ 🌊 RÍO Y MASCOTAS ━━━━┫
+
+✰ *.rio filtro*
+> Construye un filtro
+
+✰ *.rio recoger*
+> Recoge filtros construidos
+
+✰ *.rio recolectar*
+> Recolecta agua sucia del río
+
+✰ *.rio purificar*
+> Purifica el agua sucia para darle a tus mascotas
+
+✰ *.rio recolectar todo*
+> Recolecta el agua purificada de todos los filtros
+
+✰ *.rio inv*
+> Ver tu inventario de agua
+
+✰ *.mascota tienda*
+> Mira las mascotas disponibles
+
+✰ *.mascota comprar* \`<raza>\`
+> Comprar mascota
+
+✰ *.mascota mis*
+> Mira tus mascotas
+
+✰ *.mascota estadistica* \`<nombre>\`
+> Ver stats de tu mascota
+
+✰ *.mascota dormir* \`<nombre>\`
+> Haz dormir a tu mascota durante 12H
+
+✰ *.mascota dar agua* \`<botellas> <nombre>\`
+> Dar agua para disminuir sed
+
+✰ *.mascota dar comida* \`<animal> <cant> <nombre>\`
+> Dar comida y disminuir hambre
+
+✰ *.mascota nombre* \`<raza> <nuevo nombre>\`
+> Renombra a tu mascota
+
+> 🐾 Tener a cada mascota te multiplica x1 lo que consigas en cada caza
+
+┣━━━━ 📊 NIVELES ━━━━┫
+
+✰ *.nivel*
+> Consulta tu nivel actual y EXP faltante
+
+✰ *.nivel reclamar*
+> Reclama tu recompensa al subir de nivel (recursos)
+
+> Comandos que otorgan EXP:
+> .talar .talar2 👑 .pescar .pescar2 👑 .minar .minar2 .cazar .cazar2 👑 .hourly .daily .weekly .monthly .expedicion .expedicion2 .recolectar .recolectar2 .crimen
+
+┣━━━━ 👤 PERSONAJE ━━━━┫
+
+✰ *.psfav* \`<nombre>\`
+> Define tu personaje favorito
+
+✰ *.comprar* \`<nombre>\`
+> Compra un personaje disponible
+
+✰ *.inventario*
+> Muestra tus personajes comprados
+
+✰ *.personajes*
+> Lista de todos los personajes disponibles
+
+✰ *.vender* \`<nombre>\`
+> Vende un personaje por GEOS
+
+┣━━━━ ⭐ PERSONAJES VIP ━━━━┫
+
+✰ *.psvip lista*
+> Lista de personajes VIP y sus habilidades
+
+✰ *.psvip comprar* \`<nombre>\`
+> Compra un personaje VIP que te ayude en combate
+
+✰ *.psvip mispersonajes*
+> Muestra tus personajes VIP adquiridos
+
+┣━━━━ 💤 AFK VIP 👑 ━━━━┫
+
+✰ *.afkon*
+> Activa modo AFK
+> No pueden robarte mientras estés AFK
+
+✰ *.afkoff*
+> Desactiva manualmente el modo AFK
+
+> Usar cualquier comando quita el AFK
+> Penalización de 10 minutos
+
+┣━━━━ 📅 RECOMPENSAS ━━━━┫
+
+✰ *.hourly*
+> Reclama recompensa cada hora
+> GEOS mejorados + EXP
+
+✰ *.daily*
+> Reclama recompensa diaria
+> GEOS mejorados + EXP
+
+✰ *.weekly*
+> Reclama recompensa semanal
+> GEOS mejorados + EXP
+
+✰ *.monthly*
+> Reclama recompensa mensual
+> GEOS mejorados + EXP
+
+┣━━━━ 💰 PRÉSTAMOS ━━━━┫
+
+✰ *.prestamo* \`<cantidad>\`
+> Pide un préstamo de hasta 200,000 GEOS
+> Debes devolver el 20% más de lo pedido
+> Si no pagas, el bot te quita el doble de lo prestado
+
+┣━━━━ 🌾 GRANJAS MC ━━━━┫
+
+✰ *.granjamc*
+> Muestra el menú completo de tu granja
+
+✰ *.granjamc comprar* \`<tipo>\`
+> Compra un terreno y elige qué producir
+
+✰ *.granjamc construir* \`<#>\`
+> Construye el siguiente componente de la granja
+
+✰ *.granjamc encender* \`<#>\`
+> Activa la granja cuando esté lista
+
+✰ *.granjamc recolectar* \`<#>\`
+> Recoge lo que produjo la granja
+
+✰ *.granjamc mejorar* \`<#>\`
+> Aumenta la producción de una granja
+
+✰ *.granjamc misgranjas*
+> Resumen de todas tus granjas
+
+✰ *.granjamc ver* \`<#>\`
+> Detalle completo de una granja
+
+> 🏭 Tipos disponibles:
+> ⚙️ hierro — 10 hierro cada 25 min
+> 🦴 huesos — 10 huesos cada 15 min
+> 🪨 piedra — 10 piedra cada 10 min
+> ⭐ oro — 5 lingotes de oro cada 20 min
+
+> 💰 Terreno: 750.000 GEOS
+> 🔨 Construcción total: 4.400.000 GEOS + 4×20min
+> 📊 Máximo: 10 granjas
+
+┣━━━━ 🎮 BALATRO ━━━━┫
+
+✰ *.b*
+> Ver estado del juego
+
+✰ *.b draw*
+> Robar 5 cartas
+
+✰ *.b play 1*
+> Jugar carta 1
+
+✰ *.b discard 1*
+> Descartar carta
+
+✰ *.b eval*
+> Evaluar mano actual
+
+✰ *.b end*
+> Terminar ronda
+
+✰ *.b clear*
+> Limpiar cartas jugadas
+
+✰ *.b shop*
+> Ver tienda
+
+✰ *.b buy 1*
+> Comprar joker 1
+
+✰ *.b sell 1*
+> Vender joker 1
+
+✰ *.b jokers*
+> Ver jokers detallados
+
+✰ *.b stats*
+> Estadísticas del juego
+
+✰ *.b decks*
+> Ver mazos disponibles
+
+✰ *.b help*
+> Menú de ayuda Balatro
+
+✰ *.b new*
+> Iniciar nuevo juego
+
+> Balatro Balatrez está jugando balatro 🗣️
+
+┣━━━━ 🔫 BUCKSHOT ROULETTE ━━━━┫
+
+✰ *.buckshot* \`<@usuario|bot>\`
+> Juega contra el bot o un usuario
+
+✰ *.buckshot item* \`<nombre>\`
+> Usar un ítem del inventario
+
+✰ *.buckshot inv*
+> Ver inventario completo
+
+✰ *.buckshot items*
+> Ver todos los ítems disponibles
+
+✰ *.buckshot oponente*
+> Disparar al rival
+
+✰ *.buckshot yo*
+> Dispararte a ti mismo
+
+✰ *.buckshot rendirse*
+> Terminar el juego
+
+┣━━━━ 🎲 APUESTAS ━━━━┫
+
+✰ *.dado* \`<GEOS> <par|impar>\`
+> Apuesta GEOS a un dado
+
+✰ *.ruleta* \`<cantidad|todo> <apuesta>\`
+> Apuesta en ruleta
+> Opciones: rojo / negro / par / impar / 0-36
+
+✰ *.apostar* \`<cantidad|todo> <bajo|medio|alto>\`
+> Apuesta por rangos numéricos
+
+┣━━━━ 🗣️ GRUPOS ━━━━┫
+
+✰ *.info*
+> Muestra información completa del grupo
+
+✰ *.setdesc* \`<descripción>\`
+> Cambia la descripción del grupo
+
+✰ *.kick* \`<@usuario>\`
+> Expulsa a un usuario del grupo
+
+✰ *.grupo cerrar*
+> Solo admins pueden escribir
+
+✰ *.grupo abrir*
+> Todos los usuarios pueden escribir
+
+✰ *.promote* \`<@usuario>\`
+> Otorga admin a un usuario
+
+✰ *.demote* \`<@usuario>\`
+> Quita admin a un usuario
+
+┣━━━━ 🎭 BIENVENIDAS/DESPEDIDAS ━━━━┫
+
+✰ *.bienvenida test*
+> Probar banner de bienvenida
+
+✰ *.bienvenida on/off* \`<bienvenida|despedida>\`
+> Activar o desactivar sistema
+
+✰ *.bienvenida config* \`<tipo> <mensaje>\`
+> Configurar mensaje personalizado
+
+✰ *.bienvenida banner* \`<respondiendo a imagen>\`
+> Establece tu propio banner personalizado
+
+✰ *.bienvenida add* \`<respondiendo a imagen>\`
+> Añade una imagen a tus banners (máximo 6, saldrán al azar en cada bienvenida/despedida)
+
+✰ *.bienvenida color* \`<color>\`
+> Elige el color del texto en la imagen de bienvenida/despedida
+
+✰ *.bienvenida status*
+> Ver estado del sistema
+
+┣━━━━ 🛡️ SISTEMA ANTILINK ━━━━┫
+
+✰ *.antilink activar*
+> Activa el sistema antilink
+
+✰ *.antilink desactivar*
+> Desactiva el sistema antilink
+
+✰ *.antilink admin* \`<@usuario|yo>\`
+> Añade un admin para avisos de links
+
+✰ *.antilink quitaradmin* \`<@usuario|yo>\`
+> Quita admin del sistema antilink
+
+✰ *.antilink veradmins*
+> Muestra la lista de admins
+
+✰ *.antilink estado*
+> Muestra el estado del sistema
+
+┣━━━━ 🛡️ SISTEMA ANTIFLOOD ━━━━┫
+
+✰ *.antiflood config* \`<modo> | <límite>\`
+> Configura el antiflood
+> Modos: seguidos, 10, 20, 30, 60
+
+✰ *.antiflood on*
+> Activa el sistema antiflood
+
+✰ *.antiflood off*
+> Desactiva el sistema antiflood
+
+✰ *.antiflood status*
+> Ver estado detallado del sistema
+
+✰ *.antiflood ver*
+> Ver configuración actual
+
+✰ *.antiflood reset* \`[@usuario]\`
+> Resetear contadores de flood
+
+✰ *.antiflood forceall*
+> Forzar monitoreo de todos los usuarios
+
+> 🛡️ Administradores son inmunes
+> ⚠️ Avisos enviados al privado
+> ❌ Desactivado por defecto (requiere activación manual)
+
+┣━━━━ 💎 VIP ━━━━┫
+
+✰ *.vip*
+> Compra VIP por 62k GEOS
+
+✰ *.estatusvip*
+> Muestra el tiempo restante de VIP
+
+✰ *.mistertbox*
+> Reclama tu caja misteriosa
+> (Solo VIP nivel 3)
+
+┣━━━━ 📁 PLAYLIST ━━━━┫
+
+✰ *.playlist crear* \`<nombre>\`
+> Crea una playlist
+
+✰ *.playlist agregar* \`<nombre> <canción>\`
+> Agrega una canción a la playlist
+
+✰ *.playlist ver* \`<nombre>\`
+> Muestra canciones y peso
+
+✰ *.playlist mover* \`<nombre> <de> <a>\`
+> Cambia el orden de una canción
+
+✰ *.playlist descargar* \`<nombre>\`
+> Descarga toda la playlist
+
+┣━━━━ 👨🏿‍🌾🇵🇪 PERUANOS ━━━━┫
+
+✰ *.peruanos comprar peruano* \`<cantidad>\`
+> Compra peruanos para trabajar
+
+✰ *.peruanos comprar agua* \`<cantidad>\`
+> Compra agua para tus peruanos
+
+✰ *.peruanos comprar comida* \`<cantidad>\`
+> Compra comida para tus peruanos
+
+✰ *.peruanos dar agua*
+> Dale agua a tus peruanos
+
+✰ *.peruanos dar comida*
+> Dale comida a tus peruanos
+
+✰ *.peruanos asignar* \`<area> <cantidad>\`
+> Asigna a minar, cultivar o pesca
+
+✰ *.peruanos stats*
+> Muestra las estadísticas
+
+✰ *.peruanos reclamar* \`<area|todo>\`
+> Reclama los recursos producidos
+
+✰ *.peruanos invadir*
+> Intenta robar un peruano de un usuario aleatorio
+
+┣━━━━ 🎧 AUDIO / VIDEO / FOTO ━━━━┫
+
+✰ *.facebook* \`<url>\`
+> Descarga video de Facebook
+
+✰ *.ig* \`<url>\`
+> Descarga video de Instagram
+
+✰ *.imgtiktok* \`<url> <número>\`
+> Envía imagen de TikTok sin marca
+
+✰ *.ver*
+> Reenvía el video citado
+
+✰ *.foto*
+> Reenvía la imagen citada
+
+✰ *.tiktok* \`<url>\`
+> Descarga TikTok sin marca en formato audio o video
+
+✰ *.yt* \`<nombre|url>\`
+> Descarga audio o video de YouTube
+
+✰ *.waifu*
+> Envía una waifu aleatoria
+
+✰ *.mambo*
+> Muestra video de mambo
+
+✰ *.teto*
+> Muestra video de teto
+
+✰ *.miku*
+> Muestra video de miku
+
+┣━━━━ 🌸 GIFS ━━━━┫
+
+✰ *.flores*
+> Envía un gif de flores
+
+✰ *.abrazar*
+> Envía un gif de abrazo
+
+✰ *.pat*
+> Envía un gif de pat
+
+✰ *.hit*
+> Envía un gif de golpe
+
+┣━━━━ 🌐 WIKIPEDIA ━━━━┫
+
+✰ *.wikipedia* \`<tema>\`
+> Busca el tema en Wikipedia (resultado incompleto)
+
+✰ *.wikipedia txt* \`<tema>\`
+> Resultado completo en archivo .txt
+
+✰ *.wikipedia resumen* \`<tema>\`
+> Resumen del tema por FrikiBot
+
+┣━━━━ ☁️ INFORMACIÓN DE CIUDAD ━━━━┫
+
+✰ *.clima* \`<ciudad y pais>\`
+> Muestra el clima aproximado de la ciudad
+
+┣━━━━ 🔧 ÚTILES ━━━━┫
+
+✰ *.acortar* \`<link>\`
+> Acorta un enlace extenso
+
+✰ *.traductor* \`<texto en cualquier idioma>\`
+> Se traduce automáticamente a español
+
+✰ *.traductor* \`<texto en español> | <idioma>\`
+> Traduce el español a cualquier idioma
+
+✰ *.subir* (responde a una imagen o video)
+> Sube una imagen o video a nuestro servidor y copia el link
+
+✰ *.hdr* \`<2|4>\`
+> Mejora la calidad de una imagen
+
+✰ *.qc* \`<mensaje>\`
+> Crea sticker de un mensaje
+
+✰ *.bratv* \`<texto>\`
+> Crea sticker animado con texto
+
+✰ *.hidetag* \`<mensaje>\`
+> Menciona a todos sin notificar
+
+✰ *.id*
+> Muestra tu ID de usuario
+
+✰ *.ping*
+> Muestra la latencia del bot
+
+✰ *.s*
+> Convierte imagen a sticker
+
+✰ *.toimg*
+> Convierte sticker a imagen
+
+✰ *.wm* \`<texto>\`
+> Responde a un sticker y cámbiale la metadata (packname)
+
+✰ *.wm permanente* \`<texto>\`
+> Asigna un texto permanente como metadata (puedes cambiarlo cuando quieras)
+
+✰ *.wm*
+> Responde a un sticker y se aplicará automáticamente la metadata permanente asignada
+
+┣━━━━ 🌐 IDIOMA ━━━━┫
+
+✰ *.miidioma* \`<código>\`
+> Configura el idioma en que el bot te responde personalmente
+
+✰ *.idioma* \`<idioma>\`
+> Traduce visualmente todo lo que el bot envía al idioma del grupo
+
+> ⚠️ El .menu se puede traducir con .miidioma
+
+┣━━━━ 👹 BOSS (EVENTO) ━━━━┫
+
+✰ *.boss*
+> Muestra el boss actual
+
+✰ *.atacas*
+> Ataca al boss junto a otros usuarios
+
+✰ *.aguijon*
+> Muestra requisitos para mejorar aguijón
+
+✰ *.mejorar aguijon*
+> Sube de nivel tu aguijón
+
+┣━━━━ 🔞 +18 ━━━━┫
+
+✰ *.hornet*
+> Imagen +18 aleatoria
+
+✰ *.videox*
+> Video +18 aleatorio
+
+✰ *.waifux*
+> Waifu H aleatoria
+
+┣━━━━ 🍆 DILDOS ━━━━┫
+
+✰ *.dildo inv*
+> Muestra tus dildos
+
+✰ *.dildo stat* \`<número>\`
+> Ver estadísticas del dildo
+
+✰ *.dildo usar* \`<número>\`
+> Usa tu dildo
+
+✰ *.dildo vender* \`<número>\`
+> Vende tu dildo
+
+✰ *.dildo dilderia*
+> Ver dildos disponibles para comprar
+
+✰ *.dildo comprar* \`<nombre>\` (responde a imagen)
+> Compra el dildo
+
+✰ *.dildo robar* \`<@usuario>\`
+> Roba dildo
+
+✰ *.dildo fusion* \`<num1> <num2>\`
+> Fusiona tus dildos
+
+✰ *.dildo consumible*
+> Ver consumibles
+
+✰ *.dildo canjeos*
+> Ver canjeos disponibles
+
+✰ *.dildo canjear* \`<número>\`
+> Canjea por Dildo Coins
+
+✰ *.dildo limpiar* \`<número>\`
+> Limpia tu dildo
+
+┣━━━━ 🔞 ANTI +18 ━━━━┫
+
+✰ *.desactivar+18*
+> Desactiva contenido +18 en el grupo
+
+✰ *.activar+18*
+> Activa contenido +18 en el grupo
+
+┣━━━━ 👨🏿‍💻 OWNERS ━━━━┫
+
+✰ *.ban* \`<@usuario>\`
+> Haz que el bot ignore todos los comandos del usuario etiquetado
+
+✰ *.mibot*
+> Realiza backup completo del bot
+
+✰ *.FrikiBot*
+> Muestra el index/base del bot
+
+✰ *.comando* \`<comando>\`
+> Muestra el código interno del comando
+
+✰ *.ruleta*
+> Elige un usuario aleatorio
+
+✰ *.emojiponer* \`<emoji> <@usuario>\`
+> El bot reaccionará con ese emoji
+
+✰ *.ownerponer* \`<@usuario> <emoji>\`
+> Asigna reacción a otro owner
+
+✰ *.cooldownaqui*
+> Quita cooldown a todos en el grupo
+
+✰ *.mute* \`<@usuario>\`
+> Silencia a un usuario
+
+✰ *.unmute* \`<@usuario>\`
+> Quita el silencio a un usuario
+
+✰ *.lanzar* \`<GEOS> <%> <personajes> <%>\`
+> Lanza recursos al grupo
+
+┣━━━━ 💀 EXTREMOS ━━━━┫
+
+✰ *.rusa*
+> Elimina un usuario aleatorio
+
+✰ *.nuke*
+> Elimina a todos los usuarios
+> (Usar con extrema precaución)
+
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+> FrikiBot By Josexo`;
+
 // loader
 window.addEventListener('load',()=>{
   setTimeout(()=>document.getElementById('loader').classList.add('out'),1950);
@@ -695,7 +1505,7 @@ if(ring&&dot&&window.innerWidth>768){
     dot.style.transform=`translate(${mx}px,${my}px) translate(-50%,-50%)`;
     requestAnimationFrame(loop);
   })();
-  document.querySelectorAll('a,button,.btn,.feat-card,.cmd-card,.stat-item').forEach(el=>{
+  document.querySelectorAll('a,button,.btn,.feat-card,.cmd-card,.stat-item,.modal-close').forEach(el=>{
     el.addEventListener('mouseenter',()=>ring.classList.add('big'));
     el.addEventListener('mouseleave',()=>ring.classList.remove('big'));
   });
@@ -713,6 +1523,32 @@ if(ring&&dot&&window.innerWidth>768){
     d.style.cssText=`width:${s}px;height:${s}px;left:${Math.random()*100}%;background:${cols[Math.floor(Math.random()*cols.length)]};animation-duration:${10+Math.random()*22}s;animation-delay:${Math.random()*18}s;`;
     c.appendChild(d);
   }
+})();
+
+// modal del menú
+(function(){
+  const overlay = document.getElementById('menuModal');
+  const content = document.getElementById('menuContent');
+  const closeBtn = document.getElementById('menuClose');
+  const triggers = document.querySelectorAll('.menu-trigger');
+
+  if(!overlay||!content||!closeBtn)return;
+
+  content.textContent = MENU_RPG;
+
+  function openMenu(){
+    overlay.classList.add('open');
+    document.body.style.overflow='hidden';
+  }
+  function closeMenu(){
+    overlay.classList.remove('open');
+    document.body.style.overflow='';
+  }
+
+  triggers.forEach(el=>el.addEventListener('click',openMenu));
+  closeBtn.addEventListener('click',closeMenu);
+  overlay.addEventListener('click',e=>{if(e.target===overlay)closeMenu();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMenu();});
 })();
 
 // counters
