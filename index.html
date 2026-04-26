@@ -302,16 +302,7 @@ nav.scrolled{
   color:#ccaaaa;line-height:1.7;white-space:pre-wrap;
   word-break:break-word;
 }
-.menu-content .section-title{
-  color:var(--red);font-weight:700;font-size:0.75rem;
-  margin:1.2rem 0 0.5rem;font-family:var(--pixel);
-}
-.menu-content .cmd{color:var(--pink);}
-.menu-content .vip{color:#ffcc00;}
-.menu-content .note{color:#887777;font-style:italic;}
-.menu-sep{color:var(--border);text-align:center;margin:0.5rem 0;}
 
-/* scrollbar modal */
 .modal-box::-webkit-scrollbar{width:4px;}
 .modal-box::-webkit-scrollbar-track{background:var(--dark);}
 .modal-box::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
@@ -336,6 +327,9 @@ nav.scrolled{
   font-family:var(--tech);font-size:clamp(3rem,5.5vw,5rem);
   color:var(--red);line-height:1;margin-bottom:0.4rem;
   text-shadow:0 0 22px rgba(232,25,60,0.4);
+}
+.stat-num.uptime-live{
+  font-size:clamp(2.5rem,4.5vw,4rem);
 }
 .stat-lbl{
   font-family:var(--mono);font-size:0.72rem;
@@ -625,9 +619,9 @@ footer{
       <div class="stat-desc">diversión sin fin</div>
     </div>
     <div class="stat-item reveal d3">
-      <div class="stat-num" data-target="99.9">0</div>
+      <div class="stat-num uptime-live" id="uptimeNum">99.9</div>
       <div class="stat-lbl">uptime</div>
-      <div class="stat-desc">casi perfecto</div>
+      <div class="stat-desc">en tiempo real</div>
     </div>
   </div>
 </section>
@@ -1551,7 +1545,7 @@ if(ring&&dot&&window.innerWidth>768){
   document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMenu();});
 })();
 
-// counters
+// counters (solo para 24/7 y Usuarios, el uptime es en tiempo real)
 document.querySelectorAll('.stat-num[data-target]').forEach(el=>{
   const obs=new IntersectionObserver(entries=>{
     if(entries[0].isIntersecting){
@@ -1575,7 +1569,9 @@ const revObs=new IntersectionObserver(entries=>{
 },{threshold:0.08,rootMargin:'0px 0px -25px 0px'});
 document.querySelectorAll('.reveal').forEach(el=>revObs.observe(el));
 
-// status
+// status + uptime en tiempo real
+const uptimeEl = document.getElementById('uptimeNum');
+
 async function checkStatus(){
   const badge=document.getElementById('statusBadge');
   const text=document.getElementById('sText');
@@ -1591,6 +1587,19 @@ async function checkStatus(){
       text.textContent=m?`● offline · ${m}m`:'● offline';
     }
   }catch{badge.className='status-pill offline';text.textContent='● offline';}
+
+  // Actualizar uptime real cada 30s
+  if(uptimeEl){
+    try{
+      const ur=await fetch('/api/uptime',{cache:'no-store'});
+      if(ur.ok){
+        const ud=await ur.json();
+        if(ud && ud.uptime !== undefined){
+          uptimeEl.textContent = ud.uptime.toFixed(1);
+        }
+      }
+    }catch(e){}
+  }
 }
 checkStatus();setInterval(checkStatus,30000);
 </script>
