@@ -524,7 +524,7 @@ footer{
 
     <div class="hero-video-wrap reveal d3" id="videoWrap">
       <video class="hero-video" controls playsinline loop id="heroVideo">
-        <source src="" type="video/mp4">
+        <source src="https://yt-downloader-by-josexo-and-abejitadiceiwiwiwi.vercel.app/api/hosting/view/237ca437" type="video/mp4">
       </video>
       <div class="vc vc-tl"></div>
       <div class="vc vc-tr"></div>
@@ -712,34 +712,6 @@ if(ring&&dot&&window.innerWidth>768){
     const s=8+Math.random()*16;
     d.style.cssText=`width:${s}px;height:${s}px;left:${Math.random()*100}%;background:${cols[Math.floor(Math.random()*cols.length)]};animation-duration:${10+Math.random()*22}s;animation-delay:${Math.random()*18}s;`;
     c.appendChild(d);
-  }
-})();
-
-// auto-detectar video .mp4
-(async function(){
-  const videoWrap = document.getElementById('videoWrap');
-  const video = document.getElementById('heroVideo');
-  if(!videoWrap || !video) return;
-
-  const posibles = ['bot.mp4', 'video.mp4', 'tetovideo.mp4', 'friki.mp4', 'hero.mp4'];
-  let found = false;
-
-  for(const name of posibles){
-    try{
-      const res = await fetch(name, { method: 'HEAD' });
-      if(res.ok){
-        video.querySelector('source').src = name;
-        video.load();
-        found = true;
-        console.log('✅ Video cargado:', name);
-        break;
-      }
-    }catch(e){}
-  }
-
-  if(!found){
-    videoWrap.style.display = 'none';
-    console.log('⚠️ No se encontró ningún video .mp4');
   }
 })();
 
