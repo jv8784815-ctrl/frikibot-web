@@ -32,20 +32,17 @@ body{
   cursor:none;
 }
 
-/* noise */
 body::before{
   content:'';position:fixed;inset:0;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   opacity:0.035;pointer-events:none;z-index:0;
 }
-/* scanlines */
 body::after{
   content:'';position:fixed;inset:0;
   background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.06) 2px,rgba(0,0,0,0.06) 4px);
   pointer-events:none;z-index:1;opacity:0.5;
 }
 
-/* cursor */
 .cur-ring{
   position:fixed;width:36px;height:36px;
   border:2px solid var(--pink);border-radius:50%;
@@ -63,7 +60,6 @@ body::after{
 }
 .cur-ring.big{width:52px;height:52px;border-color:var(--red);}
 
-/* bg grid diagonal */
 .bg-grid{
   position:fixed;inset:0;z-index:0;pointer-events:none;
   background-image:
@@ -74,7 +70,6 @@ body::after{
 }
 @keyframes grid-shift{to{background-position:40px 40px,-40px 40px;}}
 
-/* partículas */
 .particles{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
 .p{
   position:absolute;
@@ -88,7 +83,6 @@ body::after{
   100%{opacity:0;transform:translateY(-10vh) rotate(720deg);}
 }
 
-/* loader */
 #loader{
   position:fixed;inset:0;z-index:99998;
   background:var(--darker);
@@ -117,7 +111,6 @@ body::after{
 }
 @keyframes ldfill{from{width:0;}to{width:100%;}}
 
-/* teto corner gif */
 .corner{
   position:fixed;bottom:22px;right:22px;z-index:9000;
   width:clamp(85px,11vw,130px);
@@ -128,7 +121,6 @@ body::after{
 }
 .corner img{width:100%;display:block;}
 
-/* nav */
 nav{
   position:fixed;top:0;width:100%;z-index:8000;
   padding:1.3rem 5%;
@@ -164,7 +156,6 @@ nav.scrolled{
 .nav-link:hover{color:var(--light);}
 .nav-link:hover::after{width:100%;}
 
-/* status */
 .status-pill{
   display:inline-flex;align-items:center;gap:0.55rem;
   padding:0.38rem 1rem;
@@ -183,7 +174,6 @@ nav.scrolled{
 @keyframes spulse{0%,100%{box-shadow:0 0 8px var(--red);}50%{box-shadow:0 0 18px var(--red),0 0 38px rgba(232,25,60,0.5);}}
 .status-pill.offline .s-dot{background:#333;box-shadow:none;}
 
-/* hero */
 .hero{
   min-height:100vh;padding:9rem 5% 6rem;
   display:flex;align-items:center;
@@ -197,7 +187,6 @@ nav.scrolled{
   margin-bottom:1.2rem;
 }
 .hero-eyebrow::before{content:'';width:28px;height:1px;background:var(--pink);}
-
 .hero-status{margin-bottom:1.3rem;}
 
 .hero-name{
@@ -257,7 +246,6 @@ nav.scrolled{
 
 .hero-btns{display:flex;gap:1.2rem;flex-wrap:wrap;}
 
-/* botones */
 .btn{
   display:inline-flex;align-items:center;gap:0.7rem;
   padding:0.85rem 2.2rem;font-family:var(--mono);
@@ -279,7 +267,6 @@ nav.scrolled{
 .btn-ghost::before{background:var(--border);}
 .btn-ghost:hover{color:var(--light);}
 
-/* stats */
 .stats{padding:6rem 5%;position:relative;z-index:5;}
 .stats-grid{
   max-width:1200px;margin:0 auto;
@@ -308,7 +295,6 @@ nav.scrolled{
 }
 .stat-desc{font-size:0.82rem;color:#886677;}
 
-/* section labels */
 .sec-label{
   display:flex;align-items:center;gap:1rem;
   font-family:var(--mono);font-size:0.72rem;
@@ -324,7 +310,6 @@ nav.scrolled{
 .sec-title span{color:var(--red);}
 .sec-desc{font-size:1rem;color:#998899;max-width:520px;line-height:1.7;}
 
-/* features */
 .features{
   padding:7rem 5%;position:relative;z-index:5;
   border-top:1px solid var(--border);
@@ -358,7 +343,6 @@ nav.scrolled{
 }
 .feat-text{font-size:0.9rem;color:#998899;line-height:1.65;}
 
-/* commands */
 .commands{
   padding:7rem 5%;position:relative;z-index:5;
   background:rgba(232,25,60,0.018);
@@ -389,7 +373,6 @@ nav.scrolled{
 .cmd-prompt{color:var(--red);opacity:0.65;}
 .cmd-desc{font-size:0.88rem;color:#997788;line-height:1.55;}
 
-/* cta */
 .cta{
   padding:8rem 5%;position:relative;z-index:5;
   text-align:center;overflow:hidden;
@@ -422,7 +405,6 @@ nav.scrolled{
 .cta-desc{font-size:1.05rem;color:#bbaacc;margin-bottom:2.5rem;line-height:1.65;}
 .cta-btns{display:flex;gap:1.2rem;justify-content:center;flex-wrap:wrap;}
 
-/* footer */
 footer{
   border-top:1px solid var(--border);
   padding:4rem 5% 2.5rem;
@@ -460,13 +442,11 @@ footer{
 }
 .heart{color:var(--red);}
 
-/* reveal */
 .reveal{opacity:0;transform:translateY(22px);transition:opacity 0.7s ease,transform 0.7s ease;}
 .d1{transition-delay:0.05s;}.d2{transition-delay:0.12s;}
 .d3{transition-delay:0.19s;}.d4{transition-delay:0.26s;}
 .reveal.in{opacity:1;transform:translateY(0);}
 
-/* responsive */
 @media(max-width:1024px){
   .stats-grid{grid-template-columns:repeat(2,1fr);}
   .footer-inner{grid-template-columns:1fr 1fr;}
@@ -494,7 +474,7 @@ footer{
 <body>
 
 <div class="cur-ring" id="curRing"></div>
-<div class="cur-dot"  id="curDot"></div>
+<div class="cur-dot" id="curDot"></div>
 
 <!-- LOADER -->
 <div id="loader">
@@ -514,10 +494,10 @@ footer{
     <span class="logo-spin">✦</span> FRIKIBOT
   </div>
   <div class="nav-links">
-    <a href="#home"     class="nav-link">Inicio</a>
+    <a href="#home" class="nav-link">Inicio</a>
     <a href="#features" class="nav-link">Funciones</a>
     <a href="#commands" class="nav-link">Comandos</a>
-    <a href="#join"     class="nav-link">Unirse</a>
+    <a href="#join" class="nav-link">Unirse</a>
   </div>
 </nav>
 
@@ -542,9 +522,9 @@ footer{
       Automátiza tu diversión y administración.
     </p>
 
-    <div class="hero-video-wrap reveal d3">
-      <video controls playsinline loop>
-        <source src="video.mp4" type="video/mp4">
+    <div class="hero-video-wrap reveal d3" id="videoWrap">
+      <video class="hero-video" controls playsinline loop id="heroVideo">
+        <source src="" type="video/mp4">
       </video>
       <div class="vc vc-tl"></div>
       <div class="vc vc-tr"></div>
@@ -735,6 +715,32 @@ if(ring&&dot&&window.innerWidth>768){
   }
 })();
 
+// auto-detectar video .mp4
+(async function(){
+  const videoWrap = document.getElementById('videoWrap');
+  const video = document.getElementById('heroVideo');
+  if(!videoWrap || !video) return;
+
+  const posibles = ['video.mp4', 'tetovideo.mp4', 'friki.mp4', 'bot.mp4', 'hero.mp4'];
+  let found = false;
+
+  for(const name of posibles){
+    try{
+      const res = await fetch(name, { method: 'HEAD' });
+      if(res.ok){
+        video.querySelector('source').src = name;
+        video.load();
+        found = true;
+        break;
+      }
+    }catch(e){}
+  }
+
+  if(!found){
+    videoWrap.style.display = 'none';
+  }
+})();
+
 // counters
 document.querySelectorAll('.stat-num[data-target]').forEach(el=>{
   const obs=new IntersectionObserver(entries=>{
@@ -779,4 +785,4 @@ async function checkStatus(){
 checkStatus();setInterval(checkStatus,30000);
 </script>
 </body>
-      </html>
+</html>
