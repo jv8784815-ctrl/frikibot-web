@@ -4,9 +4,24 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>FrikiBot</title>
+<link rel="icon" type="image/jpeg" sizes="32x32" href="/teto.jpg">
+<link rel="icon" type="image/jpeg" sizes="192x192" href="/teto.jpg">
+<link rel="apple-touch-icon" href="/teto.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800;900&family=Zen+Dots&family=Share+Tech+Mono&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<meta property="og:title" content="FrikiBot · Kasane Teto">
+<meta property="og:description" content="Automátiza tu diversión y administración. +1000 usuarios satisfechos.">
+<meta property="og:image" content="https://frikibot-web-josexl.vercel.app/teto.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://frikibot-web-josexl.vercel.app/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="FrikiBot">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="FrikiBot · Kasane Teto">
+<meta name="twitter:description" content="Automátiza tu diversión y administración. +1000 usuarios satisfechos.">
+<meta name="twitter:image" content="https://frikibot-web-josexl.vercel.app/teto.jpg">
 <style>
 :root {
   --red:    #e8193c;
@@ -461,8 +476,24 @@ nav.scrolled{
 }
 .cta-title span{color:var(--red);}
 .pixel-heart{
-  font-family:var(--pixel);font-size:clamp(2.5rem,7vw,5rem);
-  display:inline;vertical-align:middle;
+  display:inline-block;vertical-align:middle;
+  width:clamp(28px,5vw,45px);height:clamp(28px,5vw,45px);
+  background:var(--red);
+  clip-path:polygon(
+    50% 15%, 65% 0%, 85% 5%, 100% 25%, 95% 50%,
+    85% 65%, 70% 80%, 50% 95%,
+    30% 80%, 15% 65%, 5% 50%, 0% 25%, 15% 5%, 35% 0%
+  );
+  box-shadow:0 0 20px rgba(232,25,60,0.6);
+  animation:heartbeat 1.2s infinite;
+  image-rendering:pixelated;
+}
+@keyframes heartbeat{
+  0%,100%{transform:scale(1);}
+  15%{transform:scale(1.15);}
+  30%{transform:scale(1);}
+  45%{transform:scale(1.1);}
+  60%{transform:scale(1);}
 }
 .cta-desc{font-size:1.05rem;color:#bbaacc;margin-bottom:2.5rem;line-height:1.65;}
 .cta-btns{display:flex;gap:1.2rem;justify-content:center;flex-wrap:wrap;}
@@ -709,7 +740,7 @@ footer{
   <div class="cta-glow"></div>
   <div class="cta-inner">
     <div class="cta-jp reveal">カサネテト · フリキボット · ¡Únete!</div>
-    <h2 class="cta-title reveal d1">Pruébalo<br><span>ahora <span class="pixel-heart">❤</span></span></h2>
+    <h2 class="cta-title reveal d1">Pruébalo<br><span>ahora <span class="pixel-heart"></span></span></h2>
     <p class="cta-desc reveal d2">+1000 usuarios satisfechos con FrikiBot. ¿Qué esperas para probarlo?</p>
     <div class="cta-btns reveal d3">
       <a class="btn btn-red" href="https://chat.whatsapp.com/FvmAr3qHTGMKE2C51J3ZEC" target="_blank">
