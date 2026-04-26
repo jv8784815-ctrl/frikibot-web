@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>FrikiBot · Kasane Teto Style</title>
+<title>FrikiBot</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800;900&family=Zen+Dots&family=Share+Tech+Mono&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -489,6 +489,25 @@ footer{
 }
 .heart{color:var(--red);}
 
+/* ───── BOTÓN MÚSICA ───── */
+#musicToggle{
+  position:fixed;bottom:30px;left:20px;z-index:9999;
+  width:45px;height:45px;border-radius:50%;
+  background:rgba(232,25,60,0.9);border:2px solid #ff6b8a;
+  color:#fff;font-size:18px;cursor:none;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 20px rgba(232,25,60,0.5);
+  transition:transform 0.3s,box-shadow 0.3s;
+}
+#musicToggle:hover{
+  transform:scale(1.1);
+  box-shadow:0 0 30px rgba(255,107,138,0.7);
+}
+#musicToggle.playing{
+  background:rgba(13,2,8,0.9);
+  border-color:#5a1530;
+}
+
 .reveal{opacity:0;transform:translateY(22px);transition:opacity 0.7s ease,transform 0.7s ease;}
 .d1{transition-delay:0.05s;}.d2{transition-delay:0.12s;}
 .d3{transition-delay:0.19s;}.d4{transition-delay:0.26s;}
@@ -510,6 +529,7 @@ footer{
   .cur-ring,.cur-dot{display:none;}
   body{cursor:auto;}
   .corner{width:78px;bottom:14px;right:14px;}
+  #musicToggle{bottom:90px;left:15px;width:40px;height:40px;font-size:16px;cursor:pointer;}
 }
 @media(max-width:480px){
   .hero-name{font-size:3.8rem;}
@@ -534,6 +554,15 @@ footer{
 
 <!-- TETO GIF -->
 <div class="corner"><img src="teto.gif" alt="Kasane Teto"></div>
+
+<!-- MÚSICA DE FONDO -->
+<audio id="bgMusic" loop preload="auto">
+  <source src="musica.mp3" type="audio/mpeg">
+</audio>
+
+<button id="musicToggle" title="🎵 Música">
+  <span id="musicIcon">🔇</span>
+</button>
 
 <!-- MODAL MENÚ -->
 <div class="modal-overlay" id="menuModal">
@@ -1602,6 +1631,73 @@ async function checkStatus(){
   }
 }
 checkStatus();setInterval(checkStatus,30000);
+
+// ─── MÚSICA DE FONDO ───
+(function(){
+  const music = document.getElementById('bgMusic');
+  const toggle = document.getElementById('musicToggle');
+  const icon = document.getElementById('musicIcon');
+  const video = document.getElementById('heroVideo');
+  
+  if(!music||!toggle||!icon)return;
+  
+  music.volume = 0.3;
+  let musicPlaying = false;
+  
+  function tryPlay(){
+    music.play().then(()=>{
+      musicPlaying=true;
+      toggle.classList.add('playing');
+      icon.textContent='🎵';
+    }).catch(()=>{
+      musicPlaying=false;
+      toggle.classList.remove('playing');
+      icon.textContent='🔇';
+    });
+  }
+  
+  // Primer clic en cualquier parte activa la música
+  document.addEventListener('click',function initMusic(){
+    if(!musicPlaying)tryPlay();
+  },{once:false});
+  
+  // Toggle manual
+  toggle.addEventListener('click',(e)=>{
+    e.stopPropagation();
+    if(musicPlaying){
+      music.pause();
+      musicPlaying=false;
+      toggle.classList.remove('playing');
+      icon.textContent='🔇';
+    }else{
+      tryPlay();
+    }
+  });
+  
+  // Pausar cuando el video se reproduce
+  if(video){
+    video.addEventListener('play',()=>{
+      if(musicPlaying){
+        music.pause();
+        icon.textContent='⏸️';
+      }
+    });
+    
+    video.addEventListener('pause',()=>{
+      if(musicPlaying){
+        music.play().catch(()=>{});
+        icon.textContent='🎵';
+      }
+    });
+    
+    video.addEventListener('ended',()=>{
+      if(musicPlaying){
+        music.play().catch(()=>{});
+        icon.textContent='🎵';
+      }
+    });
+  }
+})();
 </script>
 </body>
 </html>
