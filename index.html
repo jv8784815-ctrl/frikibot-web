@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>FrikiBot</title>
+<title>FrikiBot · Kasane Teto Style</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800;900&family=Zen+Dots&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -107,10 +107,6 @@ body::after{
 @keyframes flicker{
   0%,100%{opacity:1;}
   92%{opacity:1;}93%{opacity:0.15;}94%{opacity:1;}96%{opacity:0.4;}97%{opacity:1;}
-}
-.ld-sub{
-  font-family:var(--mono);font-size:0.82rem;
-  letter-spacing:0.35em;color:var(--pink);opacity:0.6;text-transform:uppercase;
 }
 .ld-bar{width:min(300px,75vw);height:2px;background:var(--border);overflow:hidden;}
 .ld-fill{
@@ -253,7 +249,6 @@ nav.scrolled{
   filter:contrast(1.12) saturate(0.9);transition:filter 0.4s;
 }
 .hero-video-wrap:hover video{filter:contrast(1) saturate(1);}
-/* esquinas decorativas */
 .vc{position:absolute;width:14px;height:14px;border-color:var(--red);border-style:solid;}
 .vc-tl{top:8px;left:8px;border-width:2px 0 0 2px;}
 .vc-tr{top:8px;right:8px;border-width:2px 2px 0 0;}
@@ -283,21 +278,6 @@ nav.scrolled{
 .btn-ghost{border-color:var(--border);color:#bb8899;}
 .btn-ghost::before{background:var(--border);}
 .btn-ghost:hover{color:var(--light);}
-
-/* marquee */
-.marquee-wrap{
-  position:relative;z-index:5;
-  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
-  background:rgba(232,25,60,0.03);overflow:hidden;padding:0.85rem 0;white-space:nowrap;
-}
-.mq-track{display:inline-flex;animation:mq 24s linear infinite;}
-@keyframes mq{to{transform:translateX(-50%);}}
-.mq-item{
-  display:inline-flex;align-items:center;gap:1.5rem;padding:0 2rem;
-  font-family:var(--mono);font-size:0.78rem;letter-spacing:0.22em;
-  color:var(--pink);text-transform:uppercase;
-}
-.mq-sep{color:var(--red);opacity:0.45;}
 
 /* stats */
 .stats{padding:6rem 5%;position:relative;z-index:5;}
@@ -519,7 +499,6 @@ footer{
 <!-- LOADER -->
 <div id="loader">
   <div class="ld-title">FRIKIBOT</div>
-  <div class="ld-sub">カサネテト · BY JOSEXO · WhatsApp Bot</div>
   <div class="ld-bar"><div class="ld-fill"></div></div>
 </div>
 
@@ -560,7 +539,7 @@ footer{
     </div>
 
     <p class="hero-sub reveal d2">
-      Automátiza la diversión y administración de tu grupo.
+      Automátiza tu diversión y administración.
     </p>
 
     <div class="hero-video-wrap reveal d3">
@@ -584,11 +563,6 @@ footer{
 
   </div>
 </section>
-
-<!-- MARQUEE -->
-<div class="marquee-wrap">
-  <div class="mq-track" id="mqTrack"></div>
-</div>
 
 <!-- STATS -->
 <section class="stats" id="stats">
@@ -761,15 +735,6 @@ if(ring&&dot&&window.innerWidth>768){
   }
 })();
 
-// marquee
-(function(){
-  const items=['FrikiBot','WhatsApp Bot','by Josexo','カサネテト','Kasane Teto','24/7 Online','+1000 usuarios','comandos extensos','diversión sin fin','Ecuador 🇪🇨'];
-  const track=document.getElementById('mqTrack');
-  if(!track)return;
-  const html=items.map(t=>`<span class="mq-item">${t}<span class="mq-sep">✦</span></span>`).join('');
-  track.innerHTML=html+html;
-})();
-
 // counters
 document.querySelectorAll('.stat-num[data-target]').forEach(el=>{
   const obs=new IntersectionObserver(entries=>{
@@ -789,10 +754,6 @@ document.querySelectorAll('.stat-num[data-target]').forEach(el=>{
 });
 
 // reveal
-new IntersectionObserver(entries=>{
-  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');}});
-},{threshold:0.08,rootMargin:'0px 0px -25px 0px'})
-.observe=function(el){};
 const revObs=new IntersectionObserver(entries=>{
   entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');revObs.unobserve(e.target);}});
 },{threshold:0.08,rootMargin:'0px 0px -25px 0px'});
@@ -818,4 +779,4 @@ async function checkStatus(){
 checkStatus();setInterval(checkStatus,30000);
 </script>
 </body>
-</html>
+      </html>
