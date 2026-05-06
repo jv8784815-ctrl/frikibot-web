@@ -591,7 +591,7 @@ footer{
 
 .console-window {
   width: 100%;
-  max-width: 750px;
+  max-width: 780px;
   background: #0a0a0a;
   border: 2px solid var(--border);
   border-radius: 10px;
@@ -659,15 +659,15 @@ footer{
 }
 
 .console-body {
-  padding: 1.5rem 1rem;
+  padding: 0.8rem 0.5rem;
   background: #050505;
   position: relative;
-  max-height: 500px;
-  overflow-y: auto;
+  overflow-x: auto;
+  overflow-y: visible;
 }
 
 .console-body::-webkit-scrollbar {
-  width: 3px;
+  height: 3px;
 }
 
 .console-body::-webkit-scrollbar-track {
@@ -681,12 +681,14 @@ footer{
 
 .ascii-console-pre {
   font-family: var(--mono);
-  font-size: clamp(0.15rem, 0.5vw, 0.28rem);
+  font-size: 0.18rem;
   color: var(--pink);
   line-height: 1;
   white-space: pre;
-  text-align: center;
+  text-align: left;
   margin: 0;
+  display: inline-block;
+  min-width: 100%;
   text-shadow: 0 0 8px rgba(232, 25, 60, 0.5);
   transition: color 0.4s, text-shadow 0.4s;
 }
@@ -716,10 +718,10 @@ footer{
     max-width: 95%;
   }
   .ascii-console-pre {
-    font-size: clamp(0.2rem, 0.9vw, 0.4rem);
+    font-size: 0.25rem;
   }
   .console-body {
-    padding: 1rem 0.5rem;
+    padding: 0.6rem 0.3rem;
   }
 }
 @media(max-width:480px){
@@ -742,10 +744,10 @@ footer{
 <div class="bg-grid"></div>
 <div class="particles" id="particles"></div>
 
-<div class="corner"><img src="https://yt-downloader-by-josexo-and-abejitadiceiwiwiwi.vercel.app/api/hosting/download/ebfab90f" alt="Teto"></div>
+<div class="corner"><img src="https://yt-downloader-by-josexo-and-abejitadiceiwiwiwi.vercel.app/api/hosting/download/2d00e471" alt="Teto"></div>
 
 <audio id="bgMusic" loop preload="auto">
-  <source src="https://yt-downloader-by-josexo-and-abejitadiceiwiwiwi.vercel.app/api/hosting/download/39ed320d" type="audio/mpeg">
+  <source src="https://yt-downloader-by-josexo-and-abejitadiceiwiwiwi.vercel.app/api/hosting/download/cfd2d82e" type="audio/mpeg">
 </audio>
 
 <div class="modal-overlay" id="menuModal">
@@ -793,7 +795,7 @@ footer{
 
     <div class="hero-video-wrap reveal d3" id="videoWrap">
       <video class="hero-video" controls playsinline loop id="heroVideo">
-        <source src="https://yt-downloader-by-josexo-and-abejitadiceiwiwiwi.vercel.app/api/hosting/view/78002b39" type="video/mp4">
+        <source src="https://yt-downloader-by-josexo-and-abejitadiceiwiwiwi.vercel.app/api/hosting/download/b96d6524" type="video/mp4">
       </video>
       <div class="vc vc-tl"></div>
       <div class="vc vc-tr"></div>
