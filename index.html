@@ -31,6 +31,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800;900&family=Zen+Dots&family=Share+Tech+Mono&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 <style>
 :root {
   --red:    #e8193c;
@@ -550,55 +551,34 @@ footer{
 
 .seo-section{
   padding:4rem 5%;position:relative;z-index:5;
-  background:rgba(232,25,60,0.03);
+  background:rgba(232,25,60,0.05);
   border-top:1px solid var(--border);
   border-bottom:1px solid var(--border);
 }
-.seo-inner{
-  max-width:1200px;margin:0 auto;
-}
+.seo-inner{max-width:1200px;margin:0 auto;}
 .seo-inner h1{
   font-family:var(--tech);
-  font-size:clamp(1.8rem,4vw,2.8rem);
+  font-size:clamp(1.5rem,3vw,2.2rem);
   color:var(--cream);
-  margin-bottom:1.2rem;
-  letter-spacing:0.02em;
+  margin-bottom:0.8rem;
 }
 .seo-inner h2{
-  font-family:var(--jp);
-  font-weight:900;
-  font-size:1.4rem;
-  color:var(--pink);
-  margin:1.8rem 0 0.8rem 0;
+  font-family:var(--jp);font-weight:900;
+  font-size:1.2rem;color:var(--pink);
+  margin:1.5rem 0 0.6rem;
 }
-.seo-inner p{
-  font-size:1rem;
-  color:#998899;
-  line-height:1.7;
-  max-width:750px;
-}
+.seo-inner p{font-size:0.95rem;color:#998899;line-height:1.6;max-width:700px;}
 .seo-inner ul{
-  list-style:none;
-  padding:0;
-  margin:1.2rem 0;
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-  gap:0.8rem;
-  max-width:750px;
+  list-style:none;padding:0;margin:1rem 0;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:0.6rem;max-width:700px;
 }
 .seo-inner ul li{
-  font-size:0.95rem;
-  color:#ccaaaa;
-  padding-left:1.3rem;
-  position:relative;
-  line-height:1.6;
+  font-size:0.9rem;color:#ccaaaa;
+  padding-left:1.2rem;position:relative;
 }
 .seo-inner ul li::before{
-  content:'▹';
-  position:absolute;
-  left:0;
-  color:var(--red);
-  font-weight:bold;
+  content:'▹';position:absolute;left:0;color:var(--red);
 }
 
 @media(max-width:1024px){
@@ -617,7 +597,6 @@ footer{
   .cur-ring,.cur-dot{display:none;}
   body{cursor:auto;}
   .corner{width:78px;bottom:14px;right:14px;}
-  .seo-inner ul{grid-template-columns:1fr;}
 }
 @media(max-width:480px){
   .hero-name{font-size:3.8rem;}
@@ -713,9 +692,7 @@ footer{
 <section class="seo-section" id="seo-content">
   <div class="seo-inner">
     <h1>FrikiBot: Bot de WhatsApp gratis con comandos y automatización</h1>
-    <p>
-      FrikiBot es un bot de WhatsApp diseñado para automatizar grupos, descargar contenido de YouTube y TikTok sin marca de agua, generar stickers, usar inteligencia artificial y administrar comunidades fácilmente.
-    </p>
+    <p>FrikiBot es un bot de WhatsApp diseñado para automatizar grupos, descargar contenido de YouTube y TikTok sin marca de agua, generar stickers, usar inteligencia artificial y administrar comunidades fácilmente.</p>
     <h2>¿Qué puede hacer FrikiBot?</h2>
     <ul>
       <li>Descargar videos de YouTube desde WhatsApp</li>
@@ -725,9 +702,7 @@ footer{
       <li>Administrar grupos con comandos</li>
     </ul>
     <h2>Cómo usar el bot de WhatsApp</h2>
-    <p>
-      Solo debes entrar al grupo oficial de FrikiBot y comenzar a usar comandos como .menu, .yt o .tiktok para aprovechar todas sus funciones.
-    </p>
+    <p>Solo debes entrar al grupo oficial de FrikiBot y comenzar a usar comandos como .menu, .yt o .tiktok para aprovechar todas sus funciones.</p>
   </div>
 </section>
 
@@ -759,7 +734,7 @@ footer{
 <section class="features" id="features">
   <div class="features-inner">
     <div class="feat-hdr">
-      <div class="sec-label">FUNCIONES</div>
+      <div class="sec-label">FUNCIONES // 機能</div>
       <h2 class="sec-title reveal">¿qué <span>ofrece?</span></h2>
       <p class="sec-desc reveal d1">todo para que tu grupo no se muera del aburrimiento.</p>
     </div>
@@ -776,7 +751,7 @@ footer{
 <section class="commands" id="commands">
   <div class="commands-inner">
     <div class="cmd-hdr">
-      <div class="sec-label">COMANDOS</div>
+      <div class="sec-label">COMANDOS // コマンド</div>
       <h2 class="sec-title reveal">comandos</h2>
       <p class="sec-desc reveal d1">escribí esto en el chat y mirá lo que pasa.</p>
     </div>
@@ -1579,7 +1554,9 @@ const MENU_RPG = `━━━━━━━━━━━━━━━━━━━━�
 > Asigna reacción a otro owner
 
 ✰ *.cooldownaqui*
-> Quita cooldown a todos en el grupo✰ *.mute* \`<@usuario>\`
+> Quita cooldown a todos en el grupo
+
+✰ *.mute* \`<@usuario>\`
 > Silencia a un usuario
 
 ✰ *.unmute* \`<@usuario>\`
