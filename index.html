@@ -581,37 +581,119 @@ footer{
   content:'▹';position:absolute;left:0;color:var(--red);
 }
 
-.ascii-logo-section{
-  padding:3rem 5%;
-  position:relative;
-  z-index:5;
-  display:flex;
-  justify-content:center;
-  background:rgba(232,25,60,0.02);
-  border-bottom:1px solid var(--border);
+.console-section {
+  padding: 2rem 5%;
+  position: relative;
+  z-index: 5;
+  display: flex;
+  justify-content: center;
 }
-.ascii-logo-wrapper{
-  max-width:600px;
-  width:100%;
+
+.console-window {
+  width: 100%;
+  max-width: 750px;
+  background: #0a0a0a;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 40px rgba(232, 25, 60, 0.2), 0 10px 30px rgba(0, 0, 0, 0.7);
 }
-.ascii-logo-pre{
-  font-family:var(--mono);
-  font-size:clamp(0.15rem, 0.45vw, 0.25rem);
-  color:var(--pink);
-  line-height:1;
-  white-space:pre;
-  text-align:center;
-  overflow:hidden;
-  text-shadow:0 0 6px rgba(232,25,60,0.4);
-  transition:color 0.4s, text-shadow 0.4s;
-  background:transparent;
-  border:none;
-  padding:1rem;
-  cursor:default;
+
+.console-header {
+  background: #1a1a1a;
+  padding: 0.8rem 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  border-bottom: 1px solid #2a2a2a;
+  user-select: none;
 }
-.ascii-logo-pre:hover{
-  color:var(--red);
-  text-shadow:0 0 14px rgba(232,25,60,0.7);
+
+.console-dot {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  transition: all 0.4s ease;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+}
+
+.console-dot.green {
+  background: #27ae60;
+  box-shadow: 0 0 6px rgba(39, 174, 96, 0.5);
+}
+
+.console-dot.red {
+  background: #c0392b;
+  box-shadow: 0 0 6px rgba(192, 57, 43, 0.5);
+}
+
+.console-dot.green.active {
+  background: #2ecc71;
+  box-shadow: 0 0 18px #2ecc71, 0 0 35px rgba(46, 204, 113, 0.7);
+  animation: pulse-green 1.5s infinite;
+}
+
+.console-dot.red.active {
+  background: #e74c3c;
+  box-shadow: 0 0 18px #e74c3c, 0 0 35px rgba(231, 76, 60, 0.7);
+  animation: pulse-red 1.5s infinite;
+}
+
+@keyframes pulse-green {
+  0%, 100% { box-shadow: 0 0 12px #2ecc71, 0 0 25px rgba(46, 204, 113, 0.5); }
+  50% { box-shadow: 0 0 25px #2ecc71, 0 0 50px rgba(46, 204, 113, 0.9); }
+}
+
+@keyframes pulse-red {
+  0%, 100% { box-shadow: 0 0 12px #e74c3c, 0 0 25px rgba(231, 76, 60, 0.5); }
+  50% { box-shadow: 0 0 25px #e74c3c, 0 0 50px rgba(231, 76, 60, 0.9); }
+}
+
+.console-title {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: #777;
+  letter-spacing: 0.1em;
+  margin-left: 0.5rem;
+  flex: 1;
+}
+
+.console-body {
+  padding: 1.5rem 1rem;
+  background: #050505;
+  position: relative;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.console-body::-webkit-scrollbar {
+  width: 3px;
+}
+
+.console-body::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+
+.console-body::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 2px;
+}
+
+.ascii-console-pre {
+  font-family: var(--mono);
+  font-size: clamp(0.15rem, 0.5vw, 0.28rem);
+  color: var(--pink);
+  line-height: 1;
+  white-space: pre;
+  text-align: center;
+  margin: 0;
+  text-shadow: 0 0 8px rgba(232, 25, 60, 0.5);
+  transition: color 0.4s, text-shadow 0.4s;
+}
+
+.ascii-console-pre:hover {
+  color: #ff3355;
+  text-shadow: 0 0 18px rgba(255, 51, 85, 0.8);
 }
 
 @media(max-width:1024px){
@@ -630,7 +712,15 @@ footer{
   .cur-ring,.cur-dot{display:none;}
   body{cursor:auto;}
   .corner{width:78px;bottom:14px;right:14px;}
-  .ascii-logo-pre{font-size:clamp(0.2rem, 0.9vw, 0.35rem);}
+  .console-window {
+    max-width: 95%;
+  }
+  .ascii-console-pre {
+    font-size: clamp(0.2rem, 0.9vw, 0.4rem);
+  }
+  .console-body {
+    padding: 1rem 0.5rem;
+  }
 }
 @media(max-width:480px){
   .hero-name{font-size:3.8rem;}
@@ -723,9 +813,15 @@ footer{
   </div>
 </section>
 
-<section class="ascii-logo-section" id="ascii-logo">
-  <div class="ascii-logo-wrapper">
-    <pre class="ascii-logo-pre">
+<section class="console-section" id="ascii-console">
+  <div class="console-window">
+    <div class="console-header">
+      <span class="console-dot green" id="consoleDotGreen"></span>
+      <span class="console-dot red" id="consoleDotRed"></span>
+      <span class="console-title">friki@bot:~</span>
+    </div>
+    <div class="console-body">
+      <pre class="ascii-console-pre">
                                                                                                                                                                                                                             
                                                                                                                                                                                                                             
                                                                                                                                                                                                                             
@@ -777,7 +873,7 @@ footer{
         ,jffffffffffffffffffffffffffffffffffffffffffffff-'.      .tfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'        lfffffffffffffffffffffffffffffffffffffffffffffjx:.       
      `/jffffffffffffffffffffffffffffffffffffffffffffffffj"      `ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff_      "fffffffffffffffffffffffffffffffffffffffffffffffffft`     
   '&lt;\ffffffffffffffffffffffffffffffffffffffffffffffffffff[     `|fffffffffffffjffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffftf?     ijffffffffffffffffffffffffffffffffffffffffffffffftttt/+'  
-   ~ffffffffffffffffffffffffffffffffffffffffffffffffffffff^   `{jffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffjfffffffffffffffffffft&lt;   .jffffffffffffffffffffffffffffffffffffffffffffffffffftt[^  
+   ~ffffffffffffffffffffffffffffffffffffffffffffffffffffff^   `{jffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffjfffffffffffffffffffft&lt;   .jffffffffffffffffffffffffffffffffffffffffffffffffffttt[^  
    ;)fffffffffffffffffffffffffffffffffffffffffffffffffffff1  .-ffffffffffffjfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\I  .jfffffffffjffffffffffffffffffffffffffffffffffffffffff\!   
     _ttffffffffffffffffffffffffffffffffffffffffffffffffffj   iffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff[`  +jfffffffffffffffffffffffffffffffffffffffffffffffffff]    
      1fffffffffffffffffffffffffffffffffffffffffffffffffff:  :\fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffl  ^/ffffffffffffffffffffffffffffffffffffffffffffffffff)'    
@@ -849,7 +945,8 @@ footer{
                                                                                                                                                                                                                             
                                                                                                                                                                                                                             
                                                                                                                                                                                                                             
-    </pre>
+      </pre>
+    </div>
   </div>
 </section>
 
@@ -1831,18 +1928,38 @@ const uptimeEl = document.getElementById('uptimeNum');
 async function checkStatus(){
   const badge=document.getElementById('statusBadge');
   const text=document.getElementById('sText');
+  const dotGreen = document.getElementById('consoleDotGreen');
+  const dotRed = document.getElementById('consoleDotRed');
+  
   if(!badge||!text)return;
   try{
     const r=await fetch('/api/status',{cache:'no-store'});
     if(!r.ok)throw new Error();
     const d=await r.json();
-    if(d.online){badge.className='status-pill online';text.textContent='● online';}
-    else{
+    if(d.online){
+      badge.className='status-pill online';
+      text.textContent='● online';
+      if(dotGreen && dotRed) {
+        dotGreen.classList.add('active');
+        dotRed.classList.remove('active');
+      }
+    } else {
       badge.className='status-pill offline';
       const m=d.ago?Math.floor(d.ago/60):null;
       text.textContent=m?`● offline · ${m}m`:'● offline';
+      if(dotGreen && dotRed) {
+        dotGreen.classList.remove('active');
+        dotRed.classList.add('active');
+      }
     }
-  }catch{badge.className='status-pill offline';text.textContent='● offline';}
+  } catch {
+    badge.className='status-pill offline';
+    text.textContent='● offline';
+    if(dotGreen && dotRed) {
+      dotGreen.classList.remove('active');
+      dotRed.classList.add('active');
+    }
+  }
 
   if(uptimeEl){
     try{
