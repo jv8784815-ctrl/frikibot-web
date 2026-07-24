@@ -3,1062 +3,568 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>FrikiBot - Bot de WhatsApp gratis con comandos, IA y descargas</title>
-<meta name="description" content="FrikiBot es un bot de WhatsApp con comandos, descargas de YouTube y TikTok sin marca de agua, IA, stickers y administración de grupos. Únete gratis.">
-<meta name="keywords" content="bot whatsapp, bot de whatsapp gratis, descargar youtube whatsapp, bot whatsapp comandos, frikibot">
+<title>FrikiBot — Bot de WhatsApp con comandos, IA y descargas</title>
+<meta name="description" content="FrikiBot es un bot de WhatsApp con comandos, descargas de YouTube y TikTok sin marca de agua, IA, stickers y administración de grupos.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://frikibot.vercel.app/">
 
 <meta property="og:title" content="FrikiBot - Bot de WhatsApp">
 <meta property="og:description" content="Bot de WhatsApp con IA, descargas y comandos avanzados.">
 <meta property="og:image" content="https://frikibot.vercel.app/teto.jpg">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
 <meta property="og:url" content="https://frikibot.vercel.app/">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="FrikiBot">
 
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="FrikiBot">
-<meta name="twitter:description" content="Bot de WhatsApp con IA, descargas y comandos avanzados.">
-<meta name="twitter:image" content="https://frikibot.vercel.app/teto.jpg">
-
-<link rel="icon" type="image/jpeg" sizes="32x32" href="./teto.jpg?v=2">
-<link rel="icon" type="image/jpeg" sizes="192x192" href="./teto.jpg?v=2">
-<link rel="apple-touch-icon" href="./teto.jpg?v=2">
-<link rel="shortcut icon" type="image/jpeg" href="./teto.jpg?v=2">
+<link rel="icon" type="image/jpeg" href="./teto.jpg?v=2">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800;900&family=Zen+Dots&family=Share+Tech+Mono&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700;900&family=Zen+Kaku+Gothic+New:wght@400;700&family=DotGothic16&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
+/* ════════════════════════════════════════════════
+   FRIKIBOT v3 — ESTILO TETO LIMPIO Y RÁPIDO
+   Sin loader, sin scanlines pesadas, sin cursor custom.
+   Solo CSS puro, cero JS de animación.
+   ════════════════════════════════════════════════ */
+
 :root {
-  --red:    #e8193c;
-  --pink:   #ff6b8a;
-  --light:  #ffb3c1;
-  --cream:  #fff5f7;
-  --dark:   #1a0511;
-  --darker: #0d0208;
-  --border: #5a1530;
-  --glow:   rgba(232,25,60,0.55);
-  --jp:     'M PLUS Rounded 1c', sans-serif;
-  --tech:   'Zen Dots', cursive;
-  --mono:   'Share Tech Mono', monospace;
-  --pixel:  'Silkscreen', cursive;
+  --teto:      #e62e4d;
+  --teto-2:    #ff5478;
+  --teto-3:    #ff8fa8;
+  --dark:      #0c0609;
+  --dark-2:    #140a0f;
+  --dark-3:    #1e1018;
+  --text:      #f0dde3;
+  --text-dim:  #8a6a75;
+  --border:    #2a151e;
+  --border-2:  #3d1f2d;
+  --accent:    #00d4aa;
 }
 
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;font-size:16px}
 body{
-  background:var(--darker);
-  color:var(--cream);
-  font-family:var(--jp);
-  overflow-x:hidden;
-  cursor:none;
-}
-
-body::before{
-  content:'';position:fixed;inset:0;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  opacity:0.035;pointer-events:none;z-index:0;
-}
-body::after{
-  content:'';position:fixed;inset:0;
-  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.06) 2px,rgba(0,0,0,0.06) 4px);
-  pointer-events:none;z-index:1;opacity:0.5;
-}
-
-.cur-ring{
-  position:fixed;width:36px;height:36px;
-  border:2px solid var(--pink);border-radius:50%;
-  pointer-events:none;z-index:99999;
-  transform:translate(-50%,-50%);
-  transition:width 0.2s,height 0.2s,border-color 0.2s;
-  mix-blend-mode:difference;
-}
-.cur-dot{
-  position:fixed;width:6px;height:6px;
-  background:var(--pink);border-radius:50%;
-  pointer-events:none;z-index:100000;
-  transform:translate(-50%,-50%);
-  box-shadow:0 0 12px var(--pink);
-}
-.cur-ring.big{width:52px;height:52px;border-color:var(--red);}
-
-.bg-grid{
-  position:fixed;inset:0;z-index:0;pointer-events:none;
-  background-image:
-    linear-gradient(45deg,rgba(232,25,60,0.04) 1px,transparent 1px),
-    linear-gradient(-45deg,rgba(255,107,138,0.03) 1px,transparent 1px);
-  background-size:40px 40px;
-  animation:grid-shift 28s linear infinite;
-}
-@keyframes grid-shift{to{background-position:40px 40px,-40px 40px;}}
-
-.particles{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
-.p{
-  position:absolute;
-  clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);
-  opacity:0;animation:pfloat linear infinite;
-}
-@keyframes pfloat{
-  0%{opacity:0;transform:translateY(110vh) rotate(0deg);}
-  8%{opacity:0.5;}
-  92%{opacity:0.25;}
-  100%{opacity:0;transform:translateY(-10vh) rotate(720deg);}
-}
-
-#loader{
-  position:fixed;inset:0;z-index:99998;
-  background:var(--darker);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.8rem;
-  transition:opacity 0.7s,visibility 0.7s;
-}
-#loader.out{opacity:0;visibility:hidden;}
-.ld-title{
-  font-family:var(--tech);
-  font-size:clamp(2.8rem,10vw,5.5rem);
-  color:var(--red);
-  text-shadow:0 0 30px var(--glow),0 0 70px rgba(232,25,60,0.25);
-  letter-spacing:0.04em;
-  animation:flicker 2.2s infinite;
-}
-@keyframes flicker{
-  0%,100%{opacity:1;}
-  92%{opacity:1;}93%{opacity:0.15;}94%{opacity:1;}96%{opacity:0.4;}97%{opacity:1;}
-}
-.ld-bar{width:min(300px,75vw);height:2px;background:var(--border);overflow:hidden;}
-.ld-fill{
-  height:100%;
-  background:linear-gradient(90deg,var(--red),var(--pink));
-  box-shadow:0 0 18px var(--pink);
-  animation:ldfill 1.9s cubic-bezier(0.4,0,0.2,1) forwards;
-}
-@keyframes ldfill{from{width:0;}to{width:100%;}}
-
-.corner{
-  position:fixed;bottom:22px;right:22px;z-index:9000;
-  width:clamp(85px,11vw,130px);
-  border:2px solid var(--border);border-radius:10px;overflow:hidden;
-  box-shadow:0 0 0 3px rgba(232,25,60,0.12),0 12px 35px rgba(0,0,0,0.55);
-  pointer-events:none;
-  transition:transform 0.3s,box-shadow 0.3s;
-}
-.corner img{width:100%;display:block;}
-
-nav{
-  position:fixed;top:0;width:100%;z-index:8000;
-  padding:1.3rem 5%;
-  display:flex;align-items:center;justify-content:space-between;
-  transition:all 0.35s;border-bottom:1px solid transparent;
-}
-nav.scrolled{
-  background:rgba(13,2,8,0.96);
-  border-bottom-color:var(--border);
-  backdrop-filter:blur(20px);
-  padding:0.85rem 5%;
-  box-shadow:0 4px 28px rgba(0,0,0,0.5);
-}
-.nav-logo{
-  font-family:var(--tech);font-size:1.45rem;color:var(--red);
-  text-shadow:0 0 20px var(--glow);
-  display:flex;align-items:center;gap:0.5rem;letter-spacing:0.04em;
-}
-.logo-spin{display:inline-block;animation:spin 5s linear infinite;color:var(--pink);}
-@keyframes spin{to{transform:rotate(360deg);}}
-.music-nav-btn{
-  background:none;border:1.5px solid var(--border);
-  color:var(--pink);font-size:0.85rem;cursor:none;
-  padding:0.2rem 0.4rem;border-radius:4px;
-  margin-left:0.3rem;transition:all 0.3s;
-  display:inline-flex;align-items:center;justify-content:center;
-}
-.music-nav-btn:hover{
-  border-color:var(--red);color:var(--red);
-  box-shadow:0 0 12px rgba(232,25,60,0.4);
-}
-.music-nav-btn.playing{
-  border-color:var(--red);color:var(--red);
-  animation:spulse 1.5s infinite;
-}
-.nav-links{display:flex;gap:2.5rem;}
-.nav-link{
-  font-family:var(--mono);font-size:0.82rem;
-  text-decoration:none;color:#aa7788;
-  letter-spacing:0.15em;text-transform:uppercase;
-  transition:color 0.2s;position:relative;padding-bottom:2px;
-}
-.nav-link::after{
-  content:'';position:absolute;bottom:0;left:0;
-  width:0;height:1.5px;background:var(--pink);
-  transition:width 0.3s;box-shadow:0 0 8px var(--pink);
-}
-.nav-link:hover{color:var(--light);}
-.nav-link:hover::after{width:100%;}
-
-.status-pill{
-  display:inline-flex;align-items:center;gap:0.55rem;
-  padding:0.38rem 1rem;
-  border:1.5px solid var(--border);
-  background:rgba(26,5,17,0.8);
-  font-family:var(--mono);font-size:0.78rem;
-  letter-spacing:0.12em;backdrop-filter:blur(8px);
-  transition:all 0.4s;
-}
-.status-pill.online{border-color:var(--red);color:var(--light);}
-.status-pill.offline{border-color:#333;color:#554;}
-.status-pill.checking{border-color:var(--border);color:#886;animation:sblink 1.2s infinite;}
-@keyframes sblink{0%,100%{opacity:0.5;}50%{opacity:1;}}
-.s-dot{width:7px;height:7px;border-radius:50%;background:#332;flex-shrink:0;transition:all 0.4s;}
-.status-pill.online .s-dot{background:var(--red);box-shadow:0 0 10px var(--red),0 0 22px rgba(232,25,60,0.5);animation:spulse 1.5s infinite;}
-@keyframes spulse{0%,100%{box-shadow:0 0 8px var(--red);}50%{box-shadow:0 0 18px var(--red),0 0 38px rgba(232,25,60,0.5);}}
-.status-pill.offline .s-dot{background:#333;box-shadow:none;}
-
-.hero{
-  min-height:100vh;padding:9rem 5% 6rem;
-  display:flex;align-items:center;
-  position:relative;z-index:5;
-}
-.hero-inner{max-width:1200px;margin:0 auto;width:100%;}
-.hero-eyebrow{
-  font-family:var(--mono);font-size:0.78rem;
-  letter-spacing:0.3em;text-transform:uppercase;
-  color:var(--pink);display:flex;align-items:center;gap:0.8rem;
-  margin-bottom:1.2rem;
-}
-.hero-eyebrow::before{content:'';width:28px;height:1px;background:var(--pink);}
-.hero-status{margin-bottom:1.3rem;}
-
-.hero-name{
-  font-family:var(--tech);
-  font-size:clamp(4.5rem,15vw,10rem);
-  line-height:0.85;letter-spacing:-0.02em;
-  color:transparent;
-  -webkit-text-stroke:2px var(--red);
-  position:relative;display:inline-block;
-  margin-bottom:1.8rem;
-  animation:nameblink 4.5s infinite;
-}
-.hero-name .fill{
-  position:absolute;top:0;left:0;
-  color:var(--red);-webkit-text-stroke:0;
-  clip-path:inset(0 100% 0 0);
-  animation:reveal-fill 1.3s cubic-bezier(0.77,0,0.175,1) 0.4s forwards;
-  text-shadow:0 0 60px rgba(232,25,60,0.35);
-}
-@keyframes reveal-fill{to{clip-path:inset(0 0% 0 0);}}
-@keyframes nameblink{
-  0%,88%,100%{text-shadow:none;}
-  89%{text-shadow:-3px 0 var(--pink),3px 0 rgba(0,210,210,0.5);}
-  90%{text-shadow:3px -2px rgba(0,210,210,0.5),-3px 2px var(--pink);}
-  91%{text-shadow:none;}
-  93%{text-shadow:-2px 2px var(--pink);}
-  94%{text-shadow:none;}
-}
-
-.hero-sub{
-  font-size:clamp(1.05rem,2.5vw,1.4rem);
-  color:#ccaabb;max-width:620px;line-height:1.7;
-  border-left:3px solid var(--red);padding-left:1.6rem;
-  margin-bottom:2.5rem;
-}
-
-.hero-video-wrap{
-  max-width:800px;margin-bottom:3rem;
-  border:1.5px solid var(--border);background:#000;
-  position:relative;overflow:hidden;
-  transition:border-color 0.35s,box-shadow 0.35s;
-}
-.hero-video-wrap:hover{
-  border-color:var(--red);
-  box-shadow:0 20px 50px rgba(232,25,60,0.3);
-}
-.hero-video-wrap video{
-  width:100%;display:block;
-  filter:contrast(1.12) saturate(0.9);transition:filter 0.4s;
-}
-.hero-video-wrap:hover video{filter:contrast(1) saturate(1);}
-.vc{position:absolute;width:14px;height:14px;border-color:var(--red);border-style:solid;}
-.vc-tl{top:8px;left:8px;border-width:2px 0 0 2px;}
-.vc-tr{top:8px;right:8px;border-width:2px 2px 0 0;}
-.vc-bl{bottom:8px;left:8px;border-width:0 0 2px 2px;}
-.vc-br{bottom:8px;right:8px;border-width:0 2px 2px 0;}
-
-.hero-btns{display:flex;gap:1.2rem;flex-wrap:wrap;}
-
-.btn{
-  display:inline-flex;align-items:center;gap:0.7rem;
-  padding:0.85rem 2.2rem;font-family:var(--mono);
-  font-size:0.82rem;letter-spacing:0.18em;text-transform:uppercase;
-  text-decoration:none;border:2px solid;cursor:none;
-  position:relative;overflow:hidden;transition:color 0.25s,transform 0.2s;
-  white-space:nowrap;
-}
-.btn::before{
-  content:'';position:absolute;inset:0;
-  transform:translateX(-101%);transition:transform 0.3s cubic-bezier(0.7,0,0.3,1);z-index:-1;
-}
-.btn:hover::before{transform:translateX(0);}
-.btn:hover{transform:translateY(-2px);}
-.btn-red{border-color:var(--red);color:var(--red);}
-.btn-red::before{background:var(--red);}
-.btn-red:hover{color:var(--darker);box-shadow:0 8px 28px rgba(232,25,60,0.4);}
-.btn-ghost{border-color:var(--border);color:#bb8899;}
-.btn-ghost::before{background:var(--border);}
-.btn-ghost:hover{color:var(--light);}
-
-.modal-overlay{
-  position:fixed;inset:0;z-index:9500;
-  background:rgba(0,0,0,0.88);
-  display:flex;align-items:center;justify-content:center;
-  opacity:0;visibility:hidden;transition:opacity 0.3s,visibility 0.3s;
-  padding:1rem;
-}
-.modal-overlay.open{opacity:1;visibility:visible;}
-.modal-box{
   background:var(--dark);
-  border:2px solid var(--border);
-  max-width:700px;width:100%;max-height:85vh;
-  overflow-y:auto;padding:2rem;
-  position:relative;
-  box-shadow:0 0 60px rgba(232,25,60,0.25);
-}
-.modal-close{
-  position:sticky;top:0;float:right;
-  background:none;border:none;color:var(--red);
-  font-size:1.8rem;cursor:none;z-index:1;
-  font-family:var(--mono);transition:color 0.2s;
-}
-.modal-close:hover{color:var(--light);}
-.modal-title{
-  font-family:var(--pixel);font-size:1rem;color:var(--pink);
-  text-align:center;margin-bottom:1.5rem;
-  letter-spacing:0.1em;line-height:1.6;
-}
-.menu-content{
-  font-family:var(--mono);font-size:0.7rem;
-  color:#ccaaaa;line-height:1.7;white-space:pre-wrap;
-  word-break:break-word;
+  color:var(--text);
+  font-family:'Zen Maru Gothic','Zen Kaku Gothic New',sans-serif;
+  line-height:1.6;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
 }
 
-.modal-box::-webkit-scrollbar{width:4px;}
-.modal-box::-webkit-scrollbar-track{background:var(--dark);}
-.modal-box::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
-
-.stats{padding:6rem 5%;position:relative;z-index:5;}
-.stats-grid{
-  max-width:1200px;margin:0 auto;
-  display:grid;grid-template-columns:repeat(4,1fr);
-  gap:1.5px;background:var(--border);border:1.5px solid var(--border);
-}
-.stat-item{
-  background:var(--dark);padding:3rem 2rem;text-align:center;
-  position:relative;overflow:hidden;transition:background 0.3s;
-}
-.stat-item::before{
-  content:'';position:absolute;bottom:0;left:0;width:100%;height:0;
-  background:rgba(232,25,60,0.05);transition:height 0.4s;
-}
-.stat-item:hover::before{height:100%;}
-.stat-item:hover{background:#200a14;}
-.stat-num{
-  font-family:var(--tech);font-size:clamp(3rem,5.5vw,5rem);
-  color:var(--red);line-height:1;margin-bottom:0.4rem;
-  text-shadow:0 0 22px rgba(232,25,60,0.4);
-}
-.stat-num.uptime-live{
-  font-size:clamp(2.5rem,4.5vw,4rem);
-}
-.stat-lbl{
-  font-family:var(--mono);font-size:0.72rem;
-  letter-spacing:0.28em;text-transform:uppercase;
-  color:var(--pink);margin-bottom:0.4rem;
-}
-.stat-desc{font-size:0.82rem;color:#886677;}
-
-.sec-label{
-  display:flex;align-items:center;gap:1rem;
-  font-family:var(--mono);font-size:0.72rem;
-  letter-spacing:0.3em;text-transform:uppercase;
-  color:var(--red);margin-bottom:1.3rem;
-}
-.sec-label::after{content:'';flex:1;height:1px;background:var(--border);}
-.sec-title{
-  font-family:var(--tech);
-  font-size:clamp(2rem,5vw,3.5rem);
-  color:var(--cream);margin-bottom:1rem;letter-spacing:0.02em;line-height:1.1;
-}
-.sec-title span{color:var(--red);}
-.sec-desc{font-size:1rem;color:#998899;max-width:520px;line-height:1.7;}
-
-.features{
-  padding:7rem 5%;position:relative;z-index:5;
-  border-top:1px solid var(--border);
-}
-.features-inner{max-width:1200px;margin:0 auto;}
-.feat-hdr{margin-bottom:3.5rem;}
-.feat-grid{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-  gap:1.5px;background:var(--border);border:1.5px solid var(--border);
-}
-.feat-card{
-  background:var(--dark);padding:2.8rem 2rem;
-  position:relative;overflow:hidden;transition:background 0.3s;cursor:none;
-}
-.feat-card:hover{background:#200a14;}
-.feat-card::after{
-  content:'';position:absolute;bottom:0;left:0;
-  width:0;height:2px;background:var(--red);
-  transition:width 0.4s cubic-bezier(0.7,0,0.3,1);
-  box-shadow:0 0 12px var(--red);
-}
-.feat-card:hover::after{width:100%;}
-.feat-icon{
-  font-size:2.4rem;color:var(--red);
-  margin-bottom:1.5rem;display:block;transition:transform 0.3s;
-}
-.feat-card:hover .feat-icon{transform:scale(1.12) rotate(-6deg);}
-.feat-name{
-  font-family:var(--jp);font-weight:900;font-size:1.3rem;
-  color:var(--light);margin-bottom:0.7rem;
-}
-.feat-text{font-size:0.9rem;color:#998899;line-height:1.65;}
-
-.commands{
-  padding:7rem 5%;position:relative;z-index:5;
-  background:rgba(232,25,60,0.018);
-  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
-}
-.commands-inner{max-width:1200px;margin:0 auto;}
-.cmd-hdr{margin-bottom:3.5rem;}
-.cmd-grid{
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
-  gap:1.5px;background:var(--border);border:1.5px solid var(--border);
-}
-.cmd-card{
-  background:var(--dark);padding:1.8rem;
-  position:relative;transition:background 0.25s;overflow:hidden;cursor:none;
-}
-.cmd-card:hover{background:#200a14;}
-.cmd-card::after{
-  content:'';position:absolute;bottom:0;left:0;
-  width:0;height:2px;background:var(--red);
-  transition:width 0.35s ease;box-shadow:0 0 10px var(--red);
-}
-.cmd-card:hover::after{width:100%;}
-.cmd-syntax{
-  font-family:var(--mono);font-size:1.1rem;
-  color:var(--pink);margin-bottom:0.65rem;
-  display:flex;align-items:center;gap:0.4rem;
-}
-.cmd-prompt{color:var(--red);opacity:0.65;}
-.cmd-desc{font-size:0.88rem;color:#997788;line-height:1.55;}
-
-.cta{
-  padding:8rem 5%;position:relative;z-index:5;
-  text-align:center;overflow:hidden;
-}
-.cta-glow{
-  position:absolute;top:50%;left:50%;
-  transform:translate(-50%,-50%);
-  width:650px;height:650px;
-  background:radial-gradient(circle,rgba(232,25,60,0.11) 0%,transparent 70%);
-  pointer-events:none;
-  animation:glow-breathe 5s ease-in-out infinite alternate;
-}
-@keyframes glow-breathe{
-  from{opacity:0.35;transform:translate(-50%,-50%) scale(0.88);}
-  to{opacity:1;transform:translate(-50%,-50%) scale(1.12);}
-}
-.cta-inner{position:relative;z-index:1;max-width:680px;margin:0 auto;}
-.cta-jp{
-  font-family:var(--jp);font-size:0.9rem;font-weight:900;
-  letter-spacing:0.45em;color:var(--red);
-  margin-bottom:1.5rem;opacity:0.65;
-}
-.cta-title{
-  font-family:var(--tech);
-  font-size:clamp(2.5rem,7vw,5rem);
-  color:var(--cream);margin-bottom:1.5rem;line-height:0.92;
-  text-shadow:0 0 40px rgba(232,25,60,0.28);
-}
-.cta-title span{color:var(--red);}
-.pixel-heart{
-  display:inline-block;vertical-align:middle;
-  width:clamp(28px,5vw,45px);height:clamp(28px,5vw,45px);
-  background:var(--red);
-  clip-path:polygon(
-    50% 15%, 65% 0%, 85% 5%, 100% 25%, 95% 50%,
-    85% 65%, 70% 80%, 50% 95%,
-    30% 80%, 15% 65%, 5% 50%, 0% 25%, 15% 5%, 35% 0%
-  );
-  box-shadow:0 0 20px rgba(232,25,60,0.6);
-  animation:heartbeat 1.2s infinite;
-  image-rendering:pixelated;
-}
-@keyframes heartbeat{
-  0%,100%{transform:scale(1);}
-  15%{transform:scale(1.15);}
-  30%{transform:scale(1);}
-  45%{transform:scale(1.1);}
-  60%{transform:scale(1);}
-}
-.cta-desc{font-size:1.05rem;color:#bbaacc;margin-bottom:2.5rem;line-height:1.65;}
-.cta-btns{display:flex;gap:1.2rem;justify-content:center;flex-wrap:wrap;}
-
-footer{
-  border-top:1px solid var(--border);
-  padding:4rem 5% 2.5rem;
-  position:relative;z-index:5;
-  background:rgba(13,2,8,0.92);
-}
-.footer-inner{
-  max-width:1200px;margin:0 auto;
-  display:grid;grid-template-columns:2fr 1fr 1fr;
-  gap:4rem;margin-bottom:3rem;
-}
-.footer-logo{
-  font-family:var(--tech);font-size:1.7rem;color:var(--red);
-  text-shadow:0 0 18px var(--glow);
-  display:flex;align-items:center;gap:0.5rem;margin-bottom:0.8rem;
-}
-.footer-brand{font-size:0.88rem;color:#776677;line-height:1.65;}
-.footer-brand strong{color:var(--pink);}
-.footer-col h4{
-  font-family:var(--mono);font-size:0.72rem;
-  letter-spacing:0.25em;text-transform:uppercase;
-  color:var(--red);margin-bottom:1.3rem;
-}
-.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:0.7rem;}
-.footer-col a{
-  font-size:0.88rem;color:#776677;text-decoration:none;
-  display:flex;align-items:center;gap:0.5rem;transition:color 0.2s,transform 0.2s;
-}
-.footer-col a:hover{color:var(--light);transform:translateX(5px);}
-.footer-col a i{font-size:0.72rem;color:var(--border);}
-.footer-bottom{
-  border-top:1px solid rgba(90,21,48,0.4);padding-top:2rem;
-  display:flex;justify-content:space-between;align-items:center;
-  font-family:var(--mono);font-size:0.72rem;color:#554455;letter-spacing:0.1em;
-}
-.heart{color:var(--red);}
-
-.reveal{opacity:0;transform:translateY(22px);transition:opacity 0.7s ease,transform 0.7s ease;}
-.d1{transition-delay:0.05s;}.d2{transition-delay:0.12s;}
-.d3{transition-delay:0.19s;}.d4{transition-delay:0.26s;}
-.reveal.in{opacity:1;transform:translateY(0);}
-
-.seo-section{
-  padding:4rem 5%;position:relative;z-index:5;
-  background:rgba(232,25,60,0.05);
-  border-top:1px solid var(--border);
+/* ═══ NAV ═══ */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1rem 4%;
+  background:rgba(12,6,9,0.85);
+  backdrop-filter:blur(12px) saturate(1.2);
   border-bottom:1px solid var(--border);
 }
-.seo-inner{max-width:1200px;margin:0 auto;}
-.seo-inner h1{
-  font-family:var(--tech);
-  font-size:clamp(1.5rem,3vw,2.2rem);
-  color:var(--cream);
+.nav-brand{
+  font-family:'DotGothic16',monospace;
+  font-size:1.1rem;
+  color:var(--teto);
+  letter-spacing:0.08em;
+  display:flex;align-items:center;gap:0.5rem;
+}
+.nav-brand::before{
+  content:'';display:inline-block;
+  width:10px;height:10px;background:var(--teto);
+  clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);
+  animation:drillSpin 4s linear infinite;
+}
+@keyframes drillSpin{to{transform:rotate(360deg)}}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{
+  color:var(--text-dim);text-decoration:none;
+  font-size:0.78rem;letter-spacing:0.12em;
+  text-transform:uppercase;transition:color .2s;
+  font-family:'Zen Kaku Gothic New',sans-serif;
+}
+.nav-links a:hover{color:var(--teto-3)}
+.music-btn{
+  background:none;border:1px solid var(--border);
+  color:var(--text-dim);padding:0.3rem 0.6rem;
+  border-radius:4px;cursor:pointer;font-size:0.75rem;
+  transition:all .2s;margin-left:0.5rem;
+}
+.music-btn:hover{border-color:var(--teto);color:var(--teto)}
+
+/* ═══ HERO ═══ */
+.hero{
+  min-height:100vh;display:flex;align-items:center;
+  padding:7rem 4% 4rem;position:relative;
+}
+.hero::before{
+  content:'';position:absolute;top:0;right:0;width:55%;height:100%;
+  background:radial-gradient(ellipse at 80% 50%,rgba(230,46,77,0.08) 0%,transparent 60%);
+  pointer-events:none;
+}
+.hero-inner{
+  max-width:1100px;margin:0 auto;width:100%;
+  display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;
+}
+.hero-left{position:relative;z-index:2}
+.hero-tag{
+  display:inline-flex;align-items:center;gap:0.6rem;
+  padding:0.35rem 0.9rem;border:1px solid var(--border);
+  border-radius:99px;font-size:0.72rem;color:var(--teto-3);
+  letter-spacing:0.15em;text-transform:uppercase;
+  margin-bottom:1.5rem;background:var(--dark-2);
+}
+.hero-tag .dot{
+  width:7px;height:7px;border-radius:50%;background:var(--teto);
+  box-shadow:0 0 8px var(--teto);animation:pulse 2s infinite;
+}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+
+.hero-title{
+  font-size:clamp(2.8rem,6vw,5rem);
+  font-weight:900;line-height:1.05;
+  color:var(--text);margin-bottom:1.2rem;
+  letter-spacing:-0.02em;
+}
+.hero-title .red{color:var(--teto)}
+.hero-desc{
+  font-size:1.05rem;color:var(--text-dim);
+  max-width:440px;margin-bottom:2rem;line-height:1.7;
+}
+.hero-actions{display:flex;gap:1rem;flex-wrap:wrap}
+
+.btn{
+  display:inline-flex;align-items:center;gap:0.6rem;
+  padding:0.85rem 1.8rem;border-radius:8px;
+  font-size:0.85rem;font-weight:700;letter-spacing:0.04em;
+  text-decoration:none;transition:all .2s;cursor:pointer;
+  border:none;font-family:inherit;
+}
+.btn-primary{
+  background:var(--teto);color:#fff;
+}
+.btn-primary:hover{
+  background:var(--teto-2);transform:translateY(-2px);
+  box-shadow:0 8px 25px rgba(230,46,77,0.35);
+}
+.btn-secondary{
+  background:var(--dark-3);color:var(--text);
+  border:1px solid var(--border);
+}
+.btn-secondary:hover{
+  border-color:var(--teto-2);color:var(--teto-3);
+  transform:translateY(-2px);
+}
+
+.hero-right{
+  position:relative;display:flex;justify-content:center;align-items:center;
+}
+.hero-video-wrap{
+  width:100%;max-width:420px;
+  border-radius:16px;overflow:hidden;
+  border:1px solid var(--border);
+  box-shadow:0 20px 60px rgba(0,0,0,0.5),0 0 40px rgba(230,46,77,0.1);
+  background:var(--dark-2);
+}
+.hero-video-wrap video{width:100%;display:block}
+
+/* ═══ STATS BAR ═══ */
+.stats-bar{
+  padding:2.5rem 4%;position:relative;z-index:5;
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  background:var(--dark-2);
+}
+.stats-inner{
+  max-width:1000px;margin:0 auto;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;
+}
+.stat{text-align:center}
+.stat-num{
+  font-family:'DotGothic16',monospace;
+  font-size:clamp(1.6rem,3vw,2.2rem);
+  color:var(--teto);font-weight:400;
+}
+.stat-label{
+  font-size:0.72rem;color:var(--text-dim);
+  text-transform:uppercase;letter-spacing:0.2em;
+  margin-top:0.3rem;
+}
+
+/* ═══ SECTIONS ═══ */
+.section{
+  padding:5rem 4%;position:relative;z-index:5;
+}
+.section-inner{max-width:1000px;margin:0 auto}
+.section-header{margin-bottom:3rem}
+.section-tag{
+  font-family:'DotGothic16',monospace;
+  font-size:0.7rem;color:var(--teto);
+  letter-spacing:0.25em;text-transform:uppercase;
   margin-bottom:0.8rem;
 }
-.seo-inner h2{
-  font-family:var(--jp);font-weight:900;
-  font-size:1.2rem;color:var(--pink);
-  margin:1.5rem 0 0.6rem;
+.section-title{
+  font-size:clamp(1.6rem,3.5vw,2.6rem);
+  font-weight:900;color:var(--text);line-height:1.15;
 }
-.seo-inner p{font-size:0.95rem;color:#998899;line-height:1.6;max-width:700px;}
-.seo-inner ul{
-  list-style:none;padding:0;margin:1rem 0;
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:0.6rem;max-width:700px;
-}
-.seo-inner ul li{
-  font-size:0.9rem;color:#ccaaaa;
-  padding-left:1.2rem;position:relative;
-}
-.seo-inner ul li::before{
-  content:'▹';position:absolute;left:0;color:var(--red);
+.section-title span{color:var(--teto)}
+.section-desc{
+  color:var(--text-dim);font-size:0.95rem;
+  max-width:480px;margin-top:0.6rem;line-height:1.6;
 }
 
-.console-section {
-  padding: 2rem 5%;
-  position: relative;
-  z-index: 5;
-  display: flex;
-  justify-content: center;
+/* ═══ FEATURES ═══ */
+.features-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;
+}
+.feature-card{
+  background:var(--dark-2);border:1px solid var(--border);
+  border-radius:12px;padding:1.8rem;
+  transition:all .25s;position:relative;overflow:hidden;
+}
+.feature-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--teto),var(--teto-3));
+  opacity:0;transition:opacity .25s;
+}
+.feature-card:hover{
+  border-color:var(--border-2);
+  transform:translateY(-3px);
+  box-shadow:0 12px 30px rgba(0,0,0,0.4);
+}
+.feature-card:hover::before{opacity:1}
+.feature-icon{
+  width:44px;height:44px;border-radius:10px;
+  background:rgba(230,46,77,0.1);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;color:var(--teto);margin-bottom:1rem;
+}
+.feature-name{
+  font-size:1.05rem;font-weight:700;color:var(--text);
+  margin-bottom:0.4rem;
+}
+.feature-desc{
+  font-size:0.85rem;color:var(--text-dim);line-height:1.55;
 }
 
-.console-window {
-  width: 100%;
-  max-width: 780px;
-  background: #0a0a0a;
-  border: 2px solid var(--border);
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 0 40px rgba(232, 25, 60, 0.2), 0 10px 30px rgba(0, 0, 0, 0.7);
+/* ═══ COMMANDS ═══ */
+.commands-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;
+}
+.cmd-card{
+  background:var(--dark-2);border:1px solid var(--border);
+  border-radius:10px;padding:1.4rem 1.2rem;
+  transition:all .2s;
+}
+.cmd-card:hover{
+  border-color:var(--teto);background:var(--dark-3);
+}
+.cmd-line{
+  font-family:'DotGothic16',monospace;
+  font-size:0.9rem;color:var(--teto-2);margin-bottom:0.4rem;
+}
+.cmd-line .prompt{color:var(--text-dim);margin-right:0.3rem}
+.cmd-desc{
+  font-size:0.82rem;color:var(--text-dim);line-height:1.5;
+}
+.cmd-card.menu-trigger{cursor:pointer}
+.cmd-card.menu-trigger:hover .cmd-line{color:var(--teto)}
+
+/* ═══ CTA ═══ */
+.cta-section{
+  padding:6rem 4%;text-align:center;position:relative;
+  background:linear-gradient(180deg,var(--dark) 0%,var(--dark-2) 50%,var(--dark) 100%);
+}
+.cta-section::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at center,rgba(230,46,77,0.06) 0%,transparent 70%);
+  pointer-events:none;
+}
+.cta-inner{position:relative;z-index:2;max-width:600px;margin:0 auto}
+.cta-jp{
+  font-size:0.8rem;color:var(--teto);letter-spacing:0.3em;
+  text-transform:uppercase;margin-bottom:1rem;opacity:0.7;
+}
+.cta-title{
+  font-size:clamp(2rem,5vw,3.5rem);font-weight:900;
+  color:var(--text);line-height:1.1;margin-bottom:1rem;
+}
+.cta-title .red{color:var(--teto)}
+.cta-desc{
+  color:var(--text-dim);font-size:1rem;
+  margin-bottom:2rem;line-height:1.6;
+}
+.cta-actions{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+
+/* ═══ FOOTER ═══ */
+footer{
+  border-top:1px solid var(--border);
+  padding:3rem 4% 2rem;background:var(--dark-2);
+}
+.footer-inner{
+  max-width:1000px;margin:0 auto;
+  display:grid;grid-template-columns:2fr 1fr 1fr;gap:3rem;
+}
+.footer-brand-name{
+  font-family:'DotGothic16',monospace;
+  font-size:1.2rem;color:var(--teto);margin-bottom:0.5rem;
+}
+.footer-brand-desc{
+  font-size:0.85rem;color:var(--text-dim);line-height:1.6;
+}
+.footer-brand-desc strong{color:var(--teto-3)}
+.footer-col-title{
+  font-size:0.72rem;color:var(--teto);
+  text-transform:uppercase;letter-spacing:0.2em;
+  margin-bottom:1rem;
+}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:0.5rem}
+.footer-links a{
+  color:var(--text-dim);text-decoration:none;font-size:0.85rem;
+  transition:color .2s;display:flex;align-items:center;gap:0.4rem;
+}
+.footer-links a:hover{color:var(--text)}
+.footer-bottom{
+  max-width:1000px;margin:2rem auto 0;padding-top:1.5rem;
+  border-top:1px solid var(--border);
+  display:flex;justify-content:space-between;
+  font-size:0.72rem;color:var(--text-dim);letter-spacing:0.05em;
 }
 
-.console-header {
-  background: #1a1a1a;
-  padding: 0.8rem 1.2rem;
-  display: flex;
-  align-items: center;
-  gap: 0.7rem;
-  border-bottom: 1px solid #2a2a2a;
-  user-select: none;
+/* ═══ MODAL ═══ */
+.modal-overlay{
+  position:fixed;inset:0;z-index:200;
+  background:rgba(0,0,0,0.9);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s;
+  padding:1rem;
+}
+.modal-overlay.open{opacity:1;visibility:visible}
+.modal-box{
+  background:var(--dark-2);border:1px solid var(--border);
+  border-radius:12px;max-width:720px;width:100%;max-height:85vh;
+  overflow-y:auto;padding:1.5rem 2rem;
+  box-shadow:0 0 60px rgba(230,46,77,0.15);
+}
+.modal-close{
+  float:right;background:none;border:none;color:var(--teto);
+  font-size:1.6rem;cursor:pointer;transition:color .2s;
+}
+.modal-close:hover{color:var(--text)}
+.modal-title{
+  font-family:'DotGothic16',monospace;
+  font-size:0.9rem;color:var(--teto);text-align:center;
+  margin-bottom:1rem;letter-spacing:0.15em;
+}
+.modal-content{
+  font-family:'Zen Kaku Gothic New',monospace;
+  font-size:0.72rem;color:#b0909a;line-height:1.65;
+  white-space:pre-wrap;word-break:break-word;
 }
 
-.console-dot {
-  width: 13px;
-  height: 13px;
-  border-radius: 50%;
-  transition: all 0.4s ease;
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+/* ═══ RESPONSIVE ═══ */
+@media(max-width:900px){
+  .hero-inner{grid-template-columns:1fr;text-align:center}
+  .hero-desc{margin:0 auto 2rem}
+  .hero-actions{justify-content:center}
+  .hero-right{order:-1}
+  .features-grid,.commands-grid{grid-template-columns:repeat(2,1fr)}
+  .stats-inner{grid-template-columns:repeat(2,1fr);gap:1.5rem}
+  .footer-inner{grid-template-columns:1fr 1fr}
+}
+@media(max-width:600px){
+  .nav-links{display:none}
+  .features-grid,.commands-grid{grid-template-columns:1fr}
+  .stats-inner{grid-template-columns:1fr 1fr}
+  .footer-inner{grid-template-columns:1fr;gap:2rem}
+  .footer-bottom{flex-direction:column;gap:0.5rem;text-align:center}
+  .hero-video-wrap{max-width:320px;margin:0 auto}
+  .cta-actions{flex-direction:column;align-items:center}
+  .btn{width:100%;max-width:280px;justify-content:center}
 }
 
-.console-dot.green {
-  background: #27ae60;
-  box-shadow: 0 0 6px rgba(39, 174, 96, 0.5);
-}
-
-.console-dot.red {
-  background: #c0392b;
-  box-shadow: 0 0 6px rgba(192, 57, 43, 0.5);
-}
-
-.console-dot.green.active {
-  background: #2ecc71;
-  box-shadow: 0 0 18px #2ecc71, 0 0 35px rgba(46, 204, 113, 0.7);
-  animation: pulse-green 1.5s infinite;
-}
-
-.console-dot.red.active {
-  background: #e74c3c;
-  box-shadow: 0 0 18px #e74c3c, 0 0 35px rgba(231, 76, 60, 0.7);
-  animation: pulse-red 1.5s infinite;
-}
-
-@keyframes pulse-green {
-  0%, 100% { box-shadow: 0 0 12px #2ecc71, 0 0 25px rgba(46, 204, 113, 0.5); }
-  50% { box-shadow: 0 0 25px #2ecc71, 0 0 50px rgba(46, 204, 113, 0.9); }
-}
-
-@keyframes pulse-red {
-  0%, 100% { box-shadow: 0 0 12px #e74c3c, 0 0 25px rgba(231, 76, 60, 0.5); }
-  50% { box-shadow: 0 0 25px #e74c3c, 0 0 50px rgba(231, 76, 60, 0.9); }
-}
-
-.console-title {
-  font-family: var(--mono);
-  font-size: 0.7rem;
-  color: #777;
-  letter-spacing: 0.1em;
-  margin-left: 0.5rem;
-  flex: 1;
-}
-
-.console-body {
-  padding: 0.8rem 0.5rem;
-  background: #050505;
-  position: relative;
-  overflow-x: auto;
-  overflow-y: visible;
-}
-
-.console-body::-webkit-scrollbar {
-  height: 3px;
-}
-
-.console-body::-webkit-scrollbar-track {
-  background: #0a0a0a;
-}
-
-.console-body::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: 2px;
-}
-
-.ascii-console-pre {
-  font-family: var(--mono);
-  font-size: 0.18rem;
-  color: var(--pink);
-  line-height: 1;
-  white-space: pre;
-  text-align: left;
-  margin: 0;
-  display: inline-block;
-  min-width: 100%;
-  text-shadow: 0 0 8px rgba(232, 25, 60, 0.5);
-  transition: color 0.4s, text-shadow 0.4s;
-}
-
-.ascii-console-pre:hover {
-  color: #ff3355;
-  text-shadow: 0 0 18px rgba(255, 51, 85, 0.8);
-}
-
-@media(max-width:1024px){
-  .stats-grid{grid-template-columns:repeat(2,1fr);}
-  .footer-inner{grid-template-columns:1fr 1fr;}
-}
-@media(max-width:768px){
-  .nav-links{display:none;}
-  .hero-sub{border-left:none;border-top:3px solid var(--red);padding-left:0;padding-top:1rem;}
-  .hero-eyebrow::before{display:none;}
-  .hero-btns{flex-direction:column;align-items:flex-start;}
-  .btn{width:100%;max-width:320px;}
-  .stats-grid{grid-template-columns:repeat(2,1fr);}
-  .footer-inner{grid-template-columns:1fr;gap:2.5rem;}
-  .footer-bottom{flex-direction:column;gap:0.5rem;text-align:center;}
-  .cur-ring,.cur-dot{display:none;}
-  body{cursor:auto;}
-  .corner{width:78px;bottom:14px;right:14px;}
-  .console-window {
-    max-width: 95%;
-  }
-  .ascii-console-pre {
-    font-size: 0.25rem;
-  }
-  .console-body {
-    padding: 0.6rem 0.3rem;
-  }
-}
-@media(max-width:480px){
-  .hero-name{font-size:3.8rem;}
-  .stats-grid{grid-template-columns:1fr;}
-  .cta-btns{flex-direction:column;align-items:center;}
-}
+/* scrollbar ligera */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--dark)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+::-webkit-scrollbar-thumb:hover{background:var(--teto)}
 </style>
+<base target="_blank">
 </head>
 <body>
 
-<div class="cur-ring" id="curRing"></div>
-<div class="cur-dot" id="curDot"></div>
-
-<div id="loader">
-  <div class="ld-title">FRIKIBOT</div>
-  <div class="ld-bar"><div class="ld-fill"></div></div>
-</div>
-
-<div class="bg-grid"></div>
-<div class="particles" id="particles"></div>
-
-<div class="corner"><img src="https://yt-downloader-by-josexo-and-abejitadiceiwiwiwi.vercel.app/api/hosting/download/2d00e471" alt="Teto"></div>
-
-<audio id="bgMusic" loop preload="auto">
-  <source src="https://yt-downloader-by-josexo-and-abejitadiceiwiwiwi.vercel.app/api/hosting/download/cfd2d82e" type="audio/mpeg">
-</audio>
-
-<div class="modal-overlay" id="menuModal">
-  <div class="modal-box">
-    <button class="modal-close" id="menuClose">&times;</button>
-    <div class="modal-title">✦ MENÚ DE COMANDOS ✦</div>
-    <div class="menu-content" id="menuContent"></div>
-  </div>
-</div>
-
-<nav id="nav">
-  <div class="nav-logo">
-    <span class="logo-spin">✦</span> FRIKIBOT
-    <button class="music-nav-btn" id="musicToggle" title="Música ON/OFF">
+<nav>
+  <div class="nav-brand">FRIKIBOT</div>
+  <div style="display:flex;align-items:center">
+    <ul class="nav-links">
+      <li><a href="#home">Inicio</a></li>
+      <li><a href="#features">Funciones</a></li>
+      <li><a href="#commands">Comandos</a></li>
+      <li><a href="#join">Unirse</a></li>
+    </ul>
+    <button class="music-btn" id="musicToggle" title="Música">
       <i class="fas fa-music"></i>
     </button>
-  </div>
-  <div class="nav-links">
-    <a href="#home" class="nav-link">Inicio</a>
-    <a href="#features" class="nav-link">Funciones</a>
-    <a href="#commands" class="nav-link">Comandos</a>
-    <a href="#join" class="nav-link">Unirse</a>
   </div>
 </nav>
 
 <section class="hero" id="home">
   <div class="hero-inner">
-
-    <div class="hero-eyebrow reveal">BY JOSEXO</div>
-
-    <div class="hero-status reveal d1">
-      <div class="status-pill checking" id="statusBadge">
-        <span class="s-dot" id="sDot"></span>
-        <span id="sText">checking...</span>
+    <div class="hero-left">
+      <div class="hero-tag">
+        <span class="dot"></span>
+        <span id="sText">verificando...</span>
+      </div>
+      <h1 class="hero-title">
+        <span class="red">Friki</span>Bot
+      </h1>
+      <p class="hero-desc">
+        Automátiza tu diversión y administración. Un bot de WhatsApp con comandos, 
+        descargas de YouTube y TikTok sin marca de agua, IA, stickers y administración de grupos.
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="https://chat.whatsapp.com/FvmAr3qHTGMKE2C51J3ZEC" target="_blank">
+          <i class="fab fa-whatsapp"></i> Grupo
+        </a>
+        <a class="btn btn-secondary" href="https://whatsapp.com/channel/0029VbBKwI71XquRMXqfBD1R" target="_blank">
+          <i class="fas fa-broadcast-tower"></i> Canal
+        </a>
       </div>
     </div>
-
-    <div class="reveal d1">
-      <div class="hero-name">FrikiBot<span class="fill" aria-hidden="true">FrikiBot</span></div>
-    </div>
-
-    <p class="hero-sub reveal d2">
-      Automátiza tu diversión y administración.
-    </p>
-
-    <div class="hero-video-wrap reveal d3" id="videoWrap">
-      <video class="hero-video" controls playsinline loop id="heroVideo">
-        <source src="https://yt-downloader-by-josexo-and-abejitadiceiwiwiwi.vercel.app/api/hosting/download/b96d6524" type="video/mp4">
-      </video>
-      <div class="vc vc-tl"></div>
-      <div class="vc vc-tr"></div>
-      <div class="vc vc-bl"></div>
-      <div class="vc vc-br"></div>
-    </div>
-
-    <div class="hero-btns reveal d4">
-      <a class="btn btn-red" href="https://chat.whatsapp.com/FvmAr3qHTGMKE2C51J3ZEC" target="_blank">
-        <i class="fab fa-whatsapp"></i> Grupo
-      </a>
-      <a class="btn btn-ghost" href="https://whatsapp.com/channel/0029VbBKwI71XquRMXqfBD1R" target="_blank">
-        <i class="fas fa-broadcast-tower"></i> Canal
-      </a>
-    </div>
-
-  </div>
-</section>
-
-<section class="console-section" id="ascii-console">
-  <div class="console-window">
-    <div class="console-header">
-      <span class="console-dot green" id="consoleDotGreen"></span>
-      <span class="console-dot red" id="consoleDotRed"></span>
-      <span class="console-title">friki@bot:~</span>
-    </div>
-    <div class="console-body">
-      <pre class="ascii-console-pre">
-                                                                                                                                                                                                                            
-                                                                                                                                                                                                                            
-                                                                                                                                                                                                                            
-                                                                                                                                                                                                                            
-                                                                                                                                                                                                                            
-                                                                                                                                                                                                                            
-                                                                                                                                                                                                                            
-                                                                                                                                                                                                                            
-                                                                                                                                                                                                                            
-                                                                                                                                                                                                                            
-                                                                                                                                                                                                                            
-                                                                                                                                                                                                                            
-                                                                                                                                                                                                                            
-                                                                                                                                                                                                                            
-                                                                                                                                                                                                                            
-                                                                                                                                                                                                                            
-                                                                                   .l[)+`:I:`.                                                                                                                              
-                                                                               &lt;1\(:^                                                                                                                                       
-                                                                           "[/tI^                                                                                                                                           
-                                                                        .[/f?'                                                                                                                                              
-                                                                      .{tt]                                                                                                                                                 
-                                                                    ._tt)                                                                                                                                                   
-                                                                   :/t\:                                                                                                                                                    
-                                                                  :tt(;                                                                                                                                                     
-                                                                 ,ft);                                                                                                                                                      
-                                                                 /t/+                                                                                                                                                       
-                                                                [/t)                                                                                                                                                        
-                                                                1t/[                                                                                                                                                        
-                                                                )t/_                                                                                                                                                        
-                                                                (tt-                                                                                                                                                        
-                                                                (t/{                                                                                                                                                        
-                                                                ;/t)'                                                                                                                                                       
-                                                                 |tt]                                                                                                                                                       
-                                                                  jtt~                                                                                                                                                      
-                                                                  'ttf&gt;                                                                                                                                                     
-                                                                   .!tf+.                         '``:{tffjjfffffjjjf|~^``.                                                                                                 
-                                                                     :{tf,                 .^"-rfffffffffffffffffffffffffffffffjf|:"'                                                                                           
-                                                                       ,1t|,.           ;itjjjfffffffffffffffffffffffffffffffffffffffj[;^                                                                                       
-                                                                         .}(t?`.  . "!\jffffffffffffffffffffffffffffffffffffffffffffffffft?:.                                                                                   
-                                                                            :_(j&lt;i+tjfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffj-l                                                                                 
-                                                                               &gt;fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffj&lt;^                                                                              
-                                                .,&gt;+_&gt;'                     "~\fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff);                      i__i;'                                                
-                                    .i-???{\ffffffffff-                   `}tfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff1,                   &gt;/fffffffffffft\1]???&lt;'                                    
-                            '_[[1/ffffffffffffffffffff-                 .}jfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff),                 -fffffffffffffffffffft)}}_^                            
-                      .~1)tfffffffffffffffffffffffffff/i               _ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff?.              ,1ffffffffffffffffffffffffffft(1-.                      
-                  I{|ffffffffffffffffffffffffffffffffff&lt;             ,1ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff/&gt;             &gt;tfffffffffffffffffffffffffffffffff\1l                  
-               (\ffffffffffffffffffffffffffffffffffffft1,           ltfffffffffffffffffffffffffffffffffffffffffffffffffffffffjffffffffffffffffffffffffffffj}^          .~fffffffffffffffffffffffffffffffffffffft/.              
-           ~/fffffffffffffffffffffffffffffffffffffffffffI         .[ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffj'         Ifffffffffffffffffffffffffffffffffffffffffftt+           
-        ,jffffffffffffffffffffffffffffffffffffffffffffff-'.      .tfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'        lfffffffffffffffffffffffffffffffffffffffffffffjx:.       
-     `/jffffffffffffffffffffffffffffffffffffffffffffffffj"      `ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff_      "fffffffffffffffffffffffffffffffffffffffffffffffffft`     
-  '&lt;\ffffffffffffffffffffffffffffffffffffffffffffffffffff[     `|fffffffffffffjffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffftf?     ijffffffffffffffffffffffffffffffffffffffffffffffftttt/+'  
-   ~ffffffffffffffffffffffffffffffffffffffffffffffffffffff^   `{jffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffjfffffffffffffffffffft&lt;   .jffffffffffffffffffffffffffffffffffffffffffffffffffttt[^  
-   ;)fffffffffffffffffffffffffffffffffffffffffffffffffffff1  .-ffffffffffffjfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\I  .jfffffffffjffffffffffffffffffffffffffffffffffffffffff\!   
-    _ttffffffffffffffffffffffffffffffffffffffffffffffffffj   iffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff[`  +jfffffffffffffffffffffffffffffffffffffffffffffffffff]    
-     1fffffffffffffffffffffffffffffffffffffffffffffffffff:  :\fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffl  ^/ffffffffffffffffffffffffffffffffffffffffffffffffff)'    
-     i/fffffffffffffffffffffffffffffffffffffffffffffffff)` .+ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffj`  Iffffffffffffffffffffffffffffffffffffffffffffffffff?     
-      \fffffffffffffffffffffffffffffffffffffffffffjt}&gt;i!iiil`  ^ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff?  ';ll!!ii?/jrjjffffffffffffffffffffffffffffffffffff\      
-      `jffffffffffffffffffffffffffffjf|!II,.               _ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffj               ."Ill1ffffffffffffffffffffffffffffffjl      
-       \ffffffffffffffffffffffjj1l:^                       tffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffj:                      .::}ffffffffffffffffffffffffj       
-       .jfffffffffffffffffj/:^      .)|?'                  fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffft                  _\/.      ^:}jffffffffffffffffff^       
-        !fffffffffffffj|`.     .~/fjffffffft&lt;.            +fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff?ffffffffffffffffffffffffffffffffffffffffftt            .,ftfffffffft+.     .'(jffffffffffffft        
-        "rffffffffff,      '\jjjffffffffffffffff|,        (fffffffffffffffffffffffffffffffffffffffffjj? {fffffffffffffffff^ .?jfffffffffffffffffffffffffffffffffffffft        ")rjffffffffffffffffjf`      ^1ffftfffffj"        
-         Iftff//&lt;     ';trjffffffffffffffffffffffffft]`   /fffffffffffffffffffffffffffffffffffffffft     |fffffffffffffff/      ttffffffffffffffffffffffffffffffffffft   .]ffffffffffffffffffffffffffjjt;`     ^(\fttf+.        
-         ,1\I    .^&gt;/jffffffffffffffffffffffffffffffff]`  ffffffffffffffffffffffffffffffffffffft(,       .tffffffffffffff/        :(tfffffffffffffffffffffffffffffffft.  -ffffffffffffffffffffffffffffffffj/~".    I|\;         
-             ^:~tfffffffffffffffffffffffffffffffffffff[`  fffffffffffffffffffffffffffffj([.           ^ffffffffffffff/           .](fffffffffffffffffffffffffffftt.  -ffffffffffffffffffffffffffffffffffftff?,"             
-           '-{1fffffffffffffffffffffffffffffffffffffff(;  |ffffffffffffffffffffffffft)!                ,ffffffffffffft              .~1tffffffffffffffffffffffffft   -fffffffffffffffffffffffffffffffffftttff|[_^           
-                ^-[\jfffffffffffffffffffffffffffffffff):  -jffffffffffffffffffffj\?I                    ;ffffffffffffj                  I?|fffffffffffffffffffffff   _ffffffffffffffffffffffffffffffffff/}]"                
-                     I-[jjffffffffffffffffffffffffffff-   'fffffffffffffffffft}_                         ;|ffffffffftj                      ~}tffffffffffffffffffj   +fffffffffffffffffffffffffffffj{_~                     
-                         'i+\jfffffffffffffffffffffff{.    fffffffffffffffft~                             ;(fffffffffr                         l|ffffffffffffffff+    {ffffffffffffffffffffffff/+&gt;^                         
-                              `&lt;-\jfffffffffffffffff|:     }fffffffffffffff{.                              ')ffffffttj                          [jfffffffffffffff     .|fffffffffffffffffft]&gt;`                              
-                      &gt;}{/jf}[I    I!-jfffffffffffff+      `fffffffffffffff}                                 Ijfffttff                          ,\tfffffffffffff1      Ifffffffffffffj?!I    :[}/ft1[?                      
-                :{{\jjffffffffff\{[^   `;;/fffffftt\       '}fffffffffffftt?                                  `}fttttj                           (ttffffffffffff`       ]ttftftj\i;`   `?{\fffffffffffffffj/11;                
-             {jfjffffffffffffffffffff/(-'   ',&lt;ffff         :tffffffffffft/+                                   .i/tttf                           (ttfffffffffft&lt;.        jjff~,"    +(|ffffffffffffffffffffftf1             
-              jfffffffffffffffffffffffffft/\&lt;    '`          &gt;fffffffffffft+                                     .]ttj                           |tfffffffffff\,         '^.   &lt;\\fffffffffffffffffffffffffftt'             
-              Iffffffffffffffffffffffffffftff)               '?ffffffffffff}                                       .(j                           )ttfffffffffji             ..)fttfffffffffffffffffffffffffff(              
-               jfffffffffffffffffffffffffffff?.               :)ffffffffffj)                                                                    :\fffffffffff_               .?/tfffffffffffffffffffffffffffj               
-               `ffffffffffffffffffffj//{:                      l\ffffffffff{                                                                    ?tffffffffft[.                     .[t/jffffffffffffffffffff^               
-               '[ffffffffffffjf/|(l.                            ;tffffffffft+                                                                   }ffffffffff{                             ;|(\tfffffffffffff\`               
-                :tfftffff/))~                                    .ffffffffff?.                                                                 &lt;/fffffffff[                                    I)1\ffftfttj;                
-                 iff{}}'     "ll&lt;~,                               '1ffffffffj~                                                                ^}fffffffff+                               ^__ll:     .}[{ff?'                
-                       Ii&gt;)jffffftff&gt;                              `[ftffffft|;.                                                             '-ffffffff("                              i(ffffffff|+i!.                      
-                       "}ffffffffffff/i.                             I(ffffftf1^                                                            .+ttffffff}^                             !tjffffffffttt}i                       
-                         ;)ffffffffffft\]"                            ^}tftffff1.                                                           ~fffffff|I                            "_|fffffffffffj(:                         
-                           `irffffffffffff}.                            l/fffttft.                                                         -ffffffji                            .[tftffffffffff+:                           
-                              &lt;fffffffffff&lt;                               i/tttttt_.                                                     .)fffffj&lt;                              .~fffffffffff&lt;                              
-                             '..I1fftttf):                                 .;{fttff]'                                                   &lt;/fffft_'                                 `?fftttt\~' i                             
-                            ^jt}: ^(ttt]'                                     ^)ffff/!                                                ;\ttff\".                                    ._ttf|^ '?tf-                            
-                            \tttttI `~`                                          ,tftt/!                                            .tftffl`                                         `(^ ;/tttf|.                           
-                           ^\ttttttfl                                               ;|fft)                                        _/tff_.                                              `ttttffff}                           
-                           l/ftttff^                                                    1tfj&gt;.                                 I|ttj' .                                                 "ftttttt{                           
-                           ^\tttti                                                          &lt;|tf"`                        '^!//]`                                                         itttf/+                           
-                            \ttt_                                                                .l|?' `^'         `"' :|-.                                                                ~ttt(.                           
-                            If/}.                                                                                                                                                           }tt-                            
-                             ?t}`                                                                                                                                                           }f{                             
-                             .?t+                                                                                                                                                          &gt;\[                              
-                              .&lt;1;                                                                                                                                                        ^{[`                              
-                                :-,                                                                                                                                                      '~l                                
-                                 `&gt;'                                                                                                                                                    .!:                                 
-                                                                                                                                                                                                                            
-                                                                                                                                                                                                                            
-                                                                                                                                                                                                                            
-                                                                                                                                                                                                                            
-                                                                                                                                                                                                                            
-                                                                                                                                                                                                                            
-                                                                                                                                                                                                                            
-                                                                                                                                                                                                                            
-                                                                                                                                                                                                                            
-                                                                                                                                                                                                                            
-                                                                                                                                                                                                                            
-                                                                                                                                                                                                                            
-                                                                                                                                                                                                                            
-                                                                                                                                                                                                                            
-                                                                                                                                                                                                                            
-                                                                                                                                                                                                                            
-                                                                                                                                                                                                                            
-                                                                                                                                                                                                                            
-                                                                                                                                                                                                                            
-                                                                                                                                                                                                                            
-                                                                                                                                                                                                                            
-                                                                                                                                                                                                                            
-                                                                                                                                                                                                                            
-                                                                                                                                                                                                                            
-                                                                                                                                                                                                                            
-      </pre>
+    <div class="hero-right">
+      <div class="hero-video-wrap">
+        <video controls playsinline loop id="heroVideo" poster="https://frikibot.vercel.app/teto.jpg">
+          <source src="https://yt-downloader-by-josexo-and-abejitadiceiwiwiwi.vercel.app/api/hosting/download/b96d6524" type="video/mp4">
+        </video>
+      </div>
     </div>
   </div>
 </section>
 
-<section class="seo-section" id="seo-content">
-  <div class="seo-inner">
-    <h1>FrikiBot: Bot de WhatsApp gratis con comandos y automatización</h1>
-    <p>FrikiBot es un bot de WhatsApp diseñado para automatizar grupos, descargar contenido de YouTube y TikTok sin marca de agua, generar stickers, usar inteligencia artificial y administrar comunidades fácilmente.</p>
-    <h2>¿Qué puede hacer FrikiBot?</h2>
-    <ul>
-      <li>Descargar videos de YouTube desde WhatsApp</li>
-      <li>Descargar TikTok sin marca de agua</li>
-      <li>Crear stickers automáticamente</li>
-      <li>Responder con inteligencia artificial</li>
-      <li>Administrar grupos con comandos</li>
-    </ul>
-    <h2>Cómo usar el bot de WhatsApp</h2>
-    <p>Solo debes entrar al grupo oficial de FrikiBot y comenzar a usar comandos como .menu, .yt o .tiktok para aprovechar todas sus funciones.</p>
-  </div>
-</section>
-
-<section class="stats" id="stats">
-  <div class="stats-grid">
-    <div class="stat-item reveal">
-      <div class="stat-num" data-target="24">0</div>
-      <div class="stat-lbl">24/7</div>
-      <div class="stat-desc">siempre online</div>
+<section class="stats-bar" id="stats">
+  <div class="stats-inner">
+    <div class="stat">
+      <div class="stat-num">24/7</div>
+      <div class="stat-label">Siempre online</div>
     </div>
-    <div class="stat-item reveal d1">
-      <div class="stat-num" data-target="1000">0</div>
-      <div class="stat-lbl">Usuarios</div>
-      <div class="stat-desc">y contando...</div>
+    <div class="stat">
+      <div class="stat-num" id="userCount">1000+</div>
+      <div class="stat-label">Usuarios</div>
     </div>
-    <div class="stat-item reveal d2">
+    <div class="stat">
       <div class="stat-num">∞</div>
-      <div class="stat-lbl">caos</div>
-      <div class="stat-desc">diversión sin fin</div>
+      <div class="stat-label">Caos</div>
     </div>
-    <div class="stat-item reveal d3">
-      <div class="stat-num uptime-live" id="uptimeNum">99.9</div>
-      <div class="stat-lbl">uptime</div>
-      <div class="stat-desc">en tiempo real</div>
+    <div class="stat">
+      <div class="stat-num" id="uptimeNum">99.9%</div>
+      <div class="stat-label">Uptime</div>
     </div>
   </div>
 </section>
 
-<section class="features" id="features">
-  <div class="features-inner">
-    <div class="feat-hdr">
-      <div class="sec-label">FUNCIONES // 機能</div>
-      <h2 class="sec-title reveal">¿qué <span>ofrece?</span></h2>
-      <p class="sec-desc reveal d1">todo para que tu grupo no se muera del aburrimiento.</p>
+<section class="section" id="features">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-tag">FUNCIONES // 機能</div>
+      <h2 class="section-title">¿Qué <span>ofrece?</span></h2>
+      <p class="section-desc">Todo para que tu grupo no se muera del aburrimiento.</p>
     </div>
-    <div class="feat-grid">
-      <div class="feat-card reveal">
-        <i class="feat-icon fas fa-terminal"></i>
-        <div class="feat-name">comandos</div>
-        <p class="feat-text">Un menú de comandos extenso, tanto para la diversión y administración de tu grupo.</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fas fa-terminal"></i></div>
+        <div class="feature-name">Comandos</div>
+        <div class="feature-desc">Un menú de comandos extenso, tanto para la diversión y administración de tu grupo.</div>
       </div>
-    </div>
-  </div>
-</section>
-
-<section class="commands" id="commands">
-  <div class="commands-inner">
-    <div class="cmd-hdr">
-      <div class="sec-label">COMANDOS // コマンド</div>
-      <h2 class="sec-title reveal">comandos</h2>
-      <p class="sec-desc reveal d1">escribí esto en el chat y mirá lo que pasa.</p>
-    </div>
-    <div class="cmd-grid">
-      <div class="cmd-card reveal menu-trigger" id="menuTrigger">
-        <div class="cmd-syntax"><span class="cmd-prompt">&gt;_</span> .menu</div>
-        <div class="cmd-desc">Todos los comandos disponibles.</div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fas fa-download"></i></div>
+        <div class="feature-name">Descargas</div>
+        <div class="feature-desc">YouTube, TikTok, Instagram, Facebook. Sin marca de agua, sin anuncios.</div>
       </div>
-      <div class="cmd-card reveal d1">
-        <div class="cmd-syntax"><span class="cmd-prompt">&gt;_</span> .yt [nombre]</div>
-        <div class="cmd-desc">Descarga audio/video de YouTube.</div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fas fa-robot"></i></div>
+        <div class="feature-name">IA Integrada</div>
+        <div class="feature-desc">Inteligencia artificial que responde al toque. Pregúntale lo que sea.</div>
       </div>
-      <div class="cmd-card reveal d2">
-        <div class="cmd-syntax"><span class="cmd-prompt">&gt;_</span> .tiktok [url]</div>
-        <div class="cmd-desc">Descarga video sin marca de agua.</div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+        <div class="feature-name">Admin de Grupos</div>
+        <div class="feature-desc">Antilink, antiflood, bienvenidas, kicks, promotes. El bot hace el trabajo sucio.</div>
       </div>
-      <div class="cmd-card reveal">
-        <div class="cmd-syntax"><span class="cmd-prompt">&gt;_</span> .sticker</div>
-        <div class="cmd-desc">Convierte imagen en sticker.</div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fas fa-image"></i></div>
+        <div class="feature-name">Stickers & Edits</div>
+        <div class="feature-desc">Convierte imágenes en stickers, mejora calidad HDR, crea brats animados.</div>
       </div>
-      <div class="cmd-card reveal d1">
-        <div class="cmd-syntax"><span class="cmd-prompt">&gt;_</span> .kick @user</div>
-        <div class="cmd-desc">Expulsa a un miembro.</div>
-      </div>
-      <div class="cmd-card reveal d2">
-        <div class="cmd-syntax"><span class="cmd-prompt">&gt;_</span> .ia [texto]</div>
-        <div class="cmd-desc">La IA te responde al toque.</div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fas fa-gamepad"></i></div>
+        <div class="feature-name">Juegos & RPG</div>
+        <div class="feature-desc">Balatro, Buckshot Roulette, minar, pescar, cazar. Apuesta tus GEOS.</div>
       </div>
     </div>
   </div>
 </section>
 
-<section class="cta" id="join">
-  <div class="cta-glow"></div>
+<section class="section" id="commands" style="background:var(--dark-2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-tag">COMANDOS // コマンド</div>
+      <h2 class="section-title">Escribe y <span>sucede</span></h2>
+      <p class="section-desc">Algunos comandos populares. El menú completo tiene más de 100.</p>
+    </div>
+    <div class="commands-grid">
+      <div class="cmd-card menu-trigger" id="menuTrigger">
+        <div class="cmd-line"><span class="prompt">&gt;</span>.menu</div>
+        <div class="cmd-desc">Todos los comandos disponibles. Es largo, trae palomitas.</div>
+      </div>
+      <div class="cmd-card">
+        <div class="cmd-line"><span class="prompt">&gt;</span>.yt [nombre]</div>
+        <div class="cmd-desc">Descarga audio o video de YouTube. Rápido y sin anuncios.</div>
+      </div>
+      <div class="cmd-card">
+        <div class="cmd-line"><span class="prompt">&gt;</span>.tiktok [url]</div>
+        <div class="cmd-desc">TikTok sin marca de agua. Para esos videos que no quieres que sepan que viste.</div>
+      </div>
+      <div class="cmd-card">
+        <div class="cmd-line"><span class="prompt">&gt;</span>.ia [texto]</div>
+        <div class="cmd-desc">La IA responde al instante. A veces con sabiduría, a veces con sarcasmo.</div>
+      </div>
+      <div class="cmd-card">
+        <div class="cmd-line"><span class="prompt">&gt;</span>.sticker</div>
+        <div class="cmd-desc">Responde a una imagen y boom, sticker personalizado para el grupo.</div>
+      </div>
+      <div class="cmd-card">
+        <div class="cmd-line"><span class="prompt">&gt;</span>.trabajar</div>
+        <div class="cmd-desc">Gana GEOS trabajando. El capitalismo nunca fue tan divertido... o sí.</div>
+      </div>
+      <div class="cmd-card">
+        <div class="cmd-line"><span class="prompt">&gt;</span>.minar</div>
+        <div class="cmd-desc">Mina recursos cada 5 minutos. Necesitas un pico. No, no ese pico.</div>
+      </div>
+      <div class="cmd-card">
+        <div class="cmd-line"><span class="prompt">&gt;</span>.kick @user</div>
+        <div class="cmd-desc">Expulsa al que no deja de spammear memes de 2012.</div>
+      </div>
+      <div class="cmd-card">
+        <div class="cmd-line"><span class="prompt">&gt;</span>.vip</div>
+        <div class="cmd-desc">Compra VIP por 62k GEOS. Desbloquea comandos exclusivos y ventajas.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section" id="join">
   <div class="cta-inner">
-    <div class="cta-jp reveal">カサネテト · フリキボット · ¡Únete!</div>
-    <h2 class="cta-title reveal d1">Pruébalo<br><span>ahora <span class="pixel-heart"></span></span></h2>
-    <p class="cta-desc reveal d2">+1000 usuarios satisfechos con FrikiBot. ¿Qué esperas para probarlo?</p>
-    <div class="cta-btns reveal d3">
-      <a class="btn btn-red" href="https://chat.whatsapp.com/FvmAr3qHTGMKE2C51J3ZEC" target="_blank">
-        <i class="fab fa-whatsapp"></i> Grupo
+    <div class="cta-jp">カサネテト · フリキボット · ¡Únete!</div>
+    <h2 class="cta-title">
+      Pruébalo <span class="red">ahora</span>
+    </h2>
+    <p class="cta-desc">
+      +1000 usuarios satisfechos con FrikiBot. ¿Qué esperas para probarlo?
+    </p>
+    <div class="cta-actions">
+      <a class="btn btn-primary" href="https://chat.whatsapp.com/FvmAr3qHTGMKE2C51J3ZEC" target="_blank">
+        <i class="fab fa-whatsapp"></i> Unirme al Grupo
       </a>
-      <a class="btn btn-ghost" href="https://whatsapp.com/channel/0029VbBKwI71XquRMXqfBD1R" target="_blank">
-        <i class="fas fa-broadcast-tower"></i> Canal
+      <a class="btn btn-secondary" href="https://whatsapp.com/channel/0029VbBKwI71XquRMXqfBD1R" target="_blank">
+        <i class="fas fa-broadcast-tower"></i> Ver Canal
       </a>
     </div>
   </div>
@@ -1067,31 +573,46 @@ footer{
 <footer>
   <div class="footer-inner">
     <div>
-      <div class="footer-logo">✦ FRIKIBOT</div>
-      <p class="footer-brand">creado por <strong>Josexo</strong><br>bot para WhatsApp</p>
+      <div class="footer-brand-name">FRIKIBOT</div>
+      <p class="footer-brand-desc">
+        Creado por <strong>Josexo</strong><br>
+        Bot para WhatsApp con estilo propio.
+      </p>
     </div>
-    <div class="footer-col">
-      <h4>links</h4>
-      <ul>
-        <li><a href="#home"><i class="fas fa-chevron-right"></i> inicio</a></li>
-        <li><a href="#features"><i class="fas fa-chevron-right"></i> funciones</a></li>
-        <li><a href="#commands"><i class="fas fa-chevron-right"></i> comandos</a></li>
-        <li><a href="#join"><i class="fas fa-chevron-right"></i> unirse</a></li>
+    <div>
+      <div class="footer-col-title">Links</div>
+      <ul class="footer-links">
+        <li><a href="#home"><i class="fas fa-chevron-right" style="font-size:0.6rem"></i> Inicio</a></li>
+        <li><a href="#features"><i class="fas fa-chevron-right" style="font-size:0.6rem"></i> Funciones</a></li>
+        <li><a href="#commands"><i class="fas fa-chevron-right" style="font-size:0.6rem"></i> Comandos</a></li>
+        <li><a href="#join"><i class="fas fa-chevron-right" style="font-size:0.6rem"></i> Unirse</a></li>
       </ul>
     </div>
-    <div class="footer-col">
-      <h4>comunidad</h4>
-      <ul>
-        <li><a href="https://chat.whatsapp.com/FvmAr3qHTGMKE2C51J3ZEC" target="_blank"><i class="fab fa-whatsapp"></i> grupo</a></li>
-        <li><a href="https://whatsapp.com/channel/0029VbBKwI71XquRMXqfBD1R" target="_blank"><i class="fas fa-broadcast-tower"></i> canal</a></li>
+    <div>
+      <div class="footer-col-title">Comunidad</div>
+      <ul class="footer-links">
+        <li><a href="https://chat.whatsapp.com/FvmAr3qHTGMKE2C51J3ZEC" target="_blank"><i class="fab fa-whatsapp"></i> Grupo</a></li>
+        <li><a href="https://whatsapp.com/channel/0029VbBKwI71XquRMXqfBD1R" target="_blank"><i class="fas fa-broadcast-tower"></i> Canal</a></li>
       </ul>
     </div>
   </div>
   <div class="footer-bottom">
-    <span>© 2026 FrikiBot · by Josexo</span>
-    <span>Hecho para tu entretenimiento <span class="heart">💕</span></span>
+    <span>© 2025 - 2026 FrikiBot · by Josexo</span>
+    <span>Hecho para tu entretenimiento 💕</span>
   </div>
 </footer>
+
+<div class="modal-overlay" id="menuModal">
+  <div class="modal-box">
+    <button class="modal-close" id="menuClose">&times;</button>
+    <div class="modal-title">✦ MENÚ DE COMANDOS ✦</div>
+    <div class="modal-content" id="menuContent"></div>
+  </div>
+</div>
+
+<audio id="bgMusic" loop preload="none">
+  <source src="https://yt-downloader-by-josexo-and-abejitadiceiwiwiwi.vercel.app/api/hosting/download/cfd2d82e" type="audio/mpeg">
+</audio>
 
 <script>
 const MENU_RPG = `━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1841,203 +1362,74 @@ const MENU_RPG = `━━━━━━━━━━━━━━━━━━━━�
 
 > FrikiBot By Josexo`;
 
-window.addEventListener('load',()=>{
-  setTimeout(()=>document.getElementById('loader').classList.add('out'),1950);
-});
-
-window.addEventListener('scroll',()=>{
-  document.getElementById('nav').classList.toggle('scrolled',window.scrollY>60);
-});
-
-const ring=document.getElementById('curRing'),dot=document.getElementById('curDot');
-if(ring&&dot&&window.innerWidth>768){
-  let mx=-100,my=-100,rx=-100,ry=-100;
-  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
-  (function loop(){
-    rx+=(mx-rx)*0.11;ry+=(my-ry)*0.11;
-    ring.style.transform=`translate(${rx}px,${ry}px) translate(-50%,-50%)`;
-    dot.style.transform=`translate(${mx}px,${my}px) translate(-50%,-50%)`;
-    requestAnimationFrame(loop);
-  })();
-  document.querySelectorAll('a,button,.btn,.feat-card,.cmd-card,.stat-item,.modal-close,.music-nav-btn').forEach(el=>{
-    el.addEventListener('mouseenter',()=>ring.classList.add('big'));
-    el.addEventListener('mouseleave',()=>ring.classList.remove('big'));
-  });
-}
-
-(function(){
-  const c=document.getElementById('particles');
-  if(!c)return;
-  const cols=['#e8193c','#ff6b8a','#ff3355','#cc1133'];
-  for(let i=0;i<16;i++){
-    const d=document.createElement('div');
-    d.className='p';
-    const s=8+Math.random()*16;
-    d.style.cssText=`width:${s}px;height:${s}px;left:${Math.random()*100}%;background:${cols[Math.floor(Math.random()*cols.length)]};animation-duration:${10+Math.random()*22}s;animation-delay:${Math.random()*18}s;`;
-    c.appendChild(d);
-  }
-})();
-
-(function(){
-  const overlay = document.getElementById('menuModal');
-  const content = document.getElementById('menuContent');
-  const closeBtn = document.getElementById('menuClose');
-  const triggers = document.querySelectorAll('.menu-trigger');
-
-  if(!overlay||!content||!closeBtn)return;
-
-  content.textContent = MENU_RPG;
-
-  function openMenu(){
-    overlay.classList.add('open');
-    document.body.style.overflow='hidden';
-  }
-  function closeMenu(){
-    overlay.classList.remove('open');
-    document.body.style.overflow='';
-  }
-
-  triggers.forEach(el=>el.addEventListener('click',openMenu));
-  closeBtn.addEventListener('click',closeMenu);
-  overlay.addEventListener('click',e=>{if(e.target===overlay)closeMenu();});
-  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMenu();});
-})();
-
-document.querySelectorAll('.stat-num[data-target]').forEach(el=>{
-  const obs=new IntersectionObserver(entries=>{
-    if(entries[0].isIntersecting){
-      const target=parseFloat(el.dataset.target);
-      const float=target%1!==0;
-      let cur=0,steps=50,step=target/steps;
-      const iv=setInterval(()=>{
-        cur=Math.min(cur+step,target);
-        el.textContent=cur>=target?(float?target.toFixed(1):Math.floor(target)):(float?cur.toFixed(1):Math.floor(cur));
-        if(cur>=target)clearInterval(iv);
-      },26);
-      obs.disconnect();
-    }
-  },{threshold:0.5});
-  obs.observe(el);
-});
-
-const revObs=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');revObs.unobserve(e.target);}});
-},{threshold:0.08,rootMargin:'0px 0px -25px 0px'});
-document.querySelectorAll('.reveal').forEach(el=>revObs.observe(el));
-
-const uptimeEl = document.getElementById('uptimeNum');
-
+/* Estado del bot — una sola llamada, sin intervalos pesados */
 async function checkStatus(){
-  const badge=document.getElementById('statusBadge');
   const text=document.getElementById('sText');
-  const dotGreen = document.getElementById('consoleDotGreen');
-  const dotRed = document.getElementById('consoleDotRed');
-  
-  if(!badge||!text)return;
+  const dot=document.querySelector('.hero-tag .dot');
+  if(!text)return;
   try{
     const r=await fetch('/api/status',{cache:'no-store'});
     if(!r.ok)throw new Error();
     const d=await r.json();
     if(d.online){
-      badge.className='status-pill online';
       text.textContent='● online';
-      if(dotGreen && dotRed) {
-        dotGreen.classList.add('active');
-        dotRed.classList.remove('active');
-      }
-    } else {
-      badge.className='status-pill offline';
+      if(dot){dot.style.background='var(--teto)';dot.style.boxShadow='0 0 8px var(--teto)';}
+    }else{
       const m=d.ago?Math.floor(d.ago/60):null;
       text.textContent=m?`● offline · ${m}m`:'● offline';
-      if(dotGreen && dotRed) {
-        dotGreen.classList.remove('active');
-        dotRed.classList.add('active');
-      }
+      if(dot){dot.style.background='#444';dot.style.boxShadow='none';}
     }
-  } catch {
-    badge.className='status-pill offline';
+  }catch{
     text.textContent='● offline';
-    if(dotGreen && dotRed) {
-      dotGreen.classList.remove('active');
-      dotRed.classList.add('active');
-    }
-  }
-
-  if(uptimeEl){
-    try{
-      const ur=await fetch('/api/uptime',{cache:'no-store'});
-      if(ur.ok){
-        const ud=await ur.json();
-        if(ud && ud.uptime !== undefined){
-          uptimeEl.textContent = ud.uptime.toFixed(1);
-        }
-      }
-    }catch(e){}
+    if(dot){dot.style.background='#444';dot.style.boxShadow='none';}
   }
 }
-checkStatus();setInterval(checkStatus,30000);
+checkStatus();
 
+/* Uptime — solo una vez al cargar */
+(async function(){
+  const el=document.getElementById('uptimeNum');
+  if(!el)return;
+  try{
+    const r=await fetch('/api/uptime',{cache:'no-store'});
+    if(r.ok){
+      const d=await r.json();
+      if(d&&d.uptime!==undefined)el.textContent=d.uptime.toFixed(1)+'%';
+    }
+  }catch{}
+})();
+
+/* Modal del menú RPG */
 (function(){
-  const music = document.getElementById('bgMusic');
-  const toggle = document.getElementById('musicToggle');
-  const video = document.getElementById('heroVideo');
-  
+  const overlay=document.getElementById('menuModal');
+  const content=document.getElementById('menuContent');
+  const closeBtn=document.getElementById('menuClose');
+  const triggers=document.querySelectorAll('.menu-trigger');
+  if(!overlay||!content||!closeBtn)return;
+  content.textContent=MENU_RPG;
+  function open(){overlay.classList.add('open');document.body.style.overflow='hidden';}
+  function close(){overlay.classList.remove('open');document.body.style.overflow='';}
+  triggers.forEach(el=>el.addEventListener('click',open));
+  closeBtn.addEventListener('click',close);
+  overlay.addEventListener('click',e=>{if(e.target===overlay)close();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')close();});
+})();
+
+/* Música — solo cuando el usuario interactúa, lazy load */
+(function(){
+  const music=document.getElementById('bgMusic');
+  const toggle=document.getElementById('musicToggle');
+  const video=document.getElementById('heroVideo');
   if(!music||!toggle)return;
-  
-  music.volume = 0.6;
-  let musicPlaying = false;
-  
-  function updateUI(){
-    if(musicPlaying){
-      toggle.classList.add('playing');
-    }else{
-      toggle.classList.remove('playing');
-    }
-  }
-  
-  function tryPlay(){
-    music.play().then(()=>{
-      musicPlaying=true;
-      updateUI();
-    }).catch(()=>{
-      musicPlaying=false;
-      updateUI();
-    });
-  }
-  
-  document.addEventListener('click',function initMusic(){
-    if(!musicPlaying)tryPlay();
-  },{once:false});
-  
-  toggle.addEventListener('click',(e)=>{
-    e.stopPropagation();
-    if(musicPlaying){
-      music.pause();
-      musicPlaying=false;
-    }else{
-      tryPlay();
-    }
-    updateUI();
-  });
-  
+  music.volume=0.5;
+  let playing=false;
+  function update(){toggle.style.color=playing?'var(--teto)':'var(--text-dim)';toggle.style.borderColor=playing?'var(--teto)':'var(--border)';}
+  function tryPlay(){music.play().then(()=>{playing=true;update();}).catch(()=>{playing=false;update();});}
+  document.addEventListener('click',()=>{if(!playing)tryPlay();},{once:true});
+  toggle.addEventListener('click',e=>{e.stopPropagation();if(playing){music.pause();playing=false;}else{tryPlay();}update();});
   if(video){
-    video.addEventListener('play',()=>{
-      if(musicPlaying){
-        music.pause();
-      }
-    });
-    
-    video.addEventListener('pause',()=>{
-      if(musicPlaying){
-        music.play().catch(()=>{});
-      }
-    });
-    
-    video.addEventListener('ended',()=>{
-      if(musicPlaying){
-        music.play().catch(()=>{});
-      }
-    });
+    video.addEventListener('play',()=>{if(playing)music.pause();});
+    video.addEventListener('pause',()=>{if(playing)music.play().catch(()=>{});});
   }
 })();
 </script>
