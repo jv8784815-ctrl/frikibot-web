@@ -1,42 +1,31 @@
-// api/ping.js
-const BIN_ID  = process.env.JSONBIN_BIN_ID;
-const API_KEY = process.env.JSONBIN_API_KEY;
-const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+// api/ping.js — endpoint para recibir pings del bot y consultar estado
+let lastPing = 0;
 
-export default async function handler(req, res) {
+export default function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Content-Type', 'application/json');
 
-  if (req.method === 'OPTIONS') return res.status(200).end();
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
-
-  try {
-    // Obtener datos actuales
-    const getRes = await fetch(`${BIN_URL}/latest`, {
-      headers: { 'X-Master-Key': API_KEY },
-    });
-    const current = await getRes.json();
-    const record = current?.record || {};
-
-    const now = Date.now();
-    const newRecord = {
-      lastSeen: now,
-      startTime: record.startTime || now,
-      totalPings: (record.totalPings || 0) + 1,
-      missedPings: record.missedPings || 0,
-    };
-
-    await fetch(BIN_URL, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Master-Key': API_KEY,
-      },
-      body: JSON.stringify(newRecord),
-    });
-
-    return res.status(200).json({ ok: true, ts: now });
-  } catch (err) {
-    return res.status(500).json({ ok: false, error: err.message });
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
   }
+
+  if (req.method === 'POST') {
+    lastPing = Date.now();
+    return res.status(200).json({ ok: true, timestamp: lastPing });
+  }
+
+  if (req.method === 'GET') {
+    const now = Date.now();
+    const isOnline = lastPing > 0 && (now - lastPing) < 90000; // 90s de tolerancia
+    const ago = lastPing > 0 ? Math.floor((now - lastPing) / 1000) : null;
+    return res.status(200).json({
+      online: isOnline,
+      ago: isOnline ? 0 : ago,
+      lastPing: lastPing
+    });
+  }
+
+  res.status(405).json({ error: 'Method not allowed' });
 }
