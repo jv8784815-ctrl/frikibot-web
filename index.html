@@ -436,7 +436,7 @@ footer{
     </div>
     <div class="hero-right">
       <div class="hero-video-wrap">
-        <video controls playsinline loop id="heroVideo" poster="https://frikibot.vercel.app/teto.jpg">
+        <video autoplay muted loop playsinline id="heroVideo" poster="./teto.jpg">
           <source src="./video.mp4" type="video/mp4">
         </video>
       </div>
@@ -1373,10 +1373,11 @@ async function checkStatus(){
   const dot=document.querySelector('.hero-tag .dot');
   if(!text)return;
   try{
-    const r=await fetch('/api/ping',{cache:'no-store'});
-    if(!r.ok)throw new Error();
+    const r=await fetch('/api/ping',{method:'GET',cache:'no-store'});
+    if(!r.ok){console.log('ping status:',r.status);throw new Error('status '+r.status);}
     const d=await r.json();
-    if(d.online){
+    console.log('ping data:',d);
+    if(d.online===true){
       text.textContent='● online';
       if(dot){dot.style.background='var(--teto)';dot.style.boxShadow='0 0 8px var(--teto)';}
     }else{
@@ -1384,7 +1385,8 @@ async function checkStatus(){
       text.textContent=m?`● offline · ${m}m`:'● offline';
       if(dot){dot.style.background='#444';dot.style.boxShadow='none';}
     }
-  }catch{
+  }catch(e){
+    console.error('ping error:',e);
     text.textContent='● offline';
     if(dot){dot.style.background='#444';dot.style.boxShadow='none';}
   }
