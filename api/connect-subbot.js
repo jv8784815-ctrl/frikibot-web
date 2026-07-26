@@ -2,9 +2,9 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Conectar Sub-bot - FrikiBot</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥖</text></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700;900&family=Zen+Kaku+Gothic+New:wght@400;700&family=DotGothic16&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -20,92 +20,506 @@
   --text: #f0dde3;
   --text-dim: #8a6a75;
   --border: #2a151e;
+  --border-2: #3d1f2d;
 }
+
 * { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { font-size: 16px; }
+
 body {
   background: var(--dark);
   color: var(--text);
-  font-family: 'Zen Maru Gothic', sans-serif;
+  font-family: 'Zen Maru Gothic', 'Zen Kaku Gothic New', sans-serif;
+  line-height: 1.6;
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
+  padding: 2rem 4%;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
 }
+
+/* Fondo con gradiente radial sutil */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: radial-gradient(ellipse at 50% 50%, rgba(230,46,77,0.08) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ═══ NAV (igual que index) ═══ */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 4%;
+  background: rgba(12,6,9,0.85);
+  backdrop-filter: blur(12px) saturate(1.2);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-brand {
+  font-family: 'DotGothic16', monospace;
+  font-size: 1.1rem;
+  color: var(--teto);
+  letter-spacing: 0.08em;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+}
+
+.nav-brand::before {
+  content: '🤖';
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+}
+
+.nav-links a {
+  color: var(--text-dim);
+  text-decoration: none;
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: color .2s;
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+}
+
+.nav-links a:hover { color: var(--teto-3); }
+
+/* ═══ CONTAINER PRINCIPAL ═══ */
 .container {
-  max-width: 500px;
+  max-width: 550px;
   width: 100%;
   background: var(--dark-2);
   border: 1px solid var(--border);
   border-radius: 16px;
-  padding: 2.5rem;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  padding: 3rem 2.5rem;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(230,46,77,0.1);
+  position: relative;
+  z-index: 1;
+  margin-top: 5rem;
 }
-.header { text-align: center; margin-bottom: 2rem; }
-.logo { font-size: 3rem; margin-bottom: 1rem; }
-h1 { font-size: 2rem; color: var(--text); margin-bottom: 0.5rem; }
-.subtitle { color: var(--text-dim); font-size: 0.9rem; }
-.form-group { margin-bottom: 1.5rem; }
-label { display: block; color: var(--text); font-size: 0.9rem; margin-bottom: 0.5rem; font-weight: 700; }
+
+/* ═══ HEADER ═══ */
+.header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.logo {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  filter: drop-shadow(0 0 20px rgba(230,46,77,0.3));
+}
+
+.header-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.35rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 99px;
+  font-size: 0.72rem;
+  color: var(--teto-3);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  background: var(--dark-3);
+  font-family: 'DotGothic16', monospace;
+}
+
+.header-tag .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--teto);
+  box-shadow: 0 0 8px var(--teto);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+h1 {
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  font-weight: 900;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+h1 .red { color: var(--teto); }
+
+.subtitle {
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  max-width: 400px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ═══ FORMULARIO ═══ */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+label {
+  display: block;
+  color: var(--text);
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+}
+
 input {
-  width: 100%; padding: 1rem; background: var(--dark-3); border: 1px solid var(--border);
-  border-radius: 8px; color: var(--text); font-size: 1rem; font-family: inherit; transition: border-color 0.2s;
+  width: 100%;
+  padding: 1rem 1.2rem;
+  background: var(--dark-3);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  font-size: 1rem;
+  font-family: 'DotGothic16', monospace;
+  letter-spacing: 0.05em;
+  transition: all 0.2s;
 }
-input:focus { outline: none; border-color: var(--accent); }
+
+input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(0,212,170,0.15);
+}
+
+input::placeholder {
+  color: var(--text-dim);
+  opacity: 0.6;
+}
+
 .btn {
-  width: 100%; padding: 1rem; background: var(--accent); color: #fff; border: none;
-  border-radius: 8px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.2s; font-family: inherit;
+  width: 100%;
+  padding: 1rem 1.8rem;
+  background: var(--teto);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
 }
-.btn:hover { background: #00b894; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,212,170,0.35); }
-.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+.btn:hover {
+  background: var(--teto-2);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(230,46,77,0.35);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ═══ CAJAS DE ESTADO ═══ */
 .box {
-  margin-top: 2rem; padding: 1.5rem; background: var(--dark-3); border-radius: 8px; display: none;
+  margin-top: 2rem;
+  padding: 2rem 1.5rem;
+  background: var(--dark-3);
+  border-radius: 12px;
+  display: none;
+  border: 1px solid var(--border);
 }
-.box.show { display: block; animation: fadeIn 0.3s; }
-.box-code { border: 1px solid var(--accent); }
-.box-waiting { border: 1px solid #f0a500; }
-.box-success { border: 1px solid var(--accent); background: rgba(0,212,170,0.1); }
-.box-error { border: 1px solid var(--teto); background: rgba(230,46,77,0.1); }
+
+.box.show {
+  display: block;
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.box-code {
+  border-color: var(--accent);
+  box-shadow: 0 0 30px rgba(0,212,170,0.15);
+}
+
+.box-waiting {
+  border-color: #f0a500;
+  box-shadow: 0 0 30px rgba(240,165,0,0.1);
+}
+
+.box-success {
+  border-color: var(--accent);
+  background: linear-gradient(135deg, rgba(0,212,170,0.05) 0%, rgba(0,212,170,0.1) 100%);
+  box-shadow: 0 0 40px rgba(0,212,170,0.2);
+}
+
+.box-error {
+  border-color: var(--teto);
+  background: linear-gradient(135deg, rgba(230,46,77,0.05) 0%, rgba(230,46,77,0.1) 100%);
+  box-shadow: 0 0 40px rgba(230,46,77,0.15);
+}
+
+/* ═══ CÓDIGO DE PAIRING ═══ */
+.code-label {
+  font-family: 'DotGothic16', monospace;
+  font-size: 0.75rem;
+  color: var(--teto-3);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-align: center;
+  display: block;
+  margin-bottom: 1rem;
+}
+
 .code {
-  font-family: 'DotGothic16', monospace; font-size: 2rem; color: var(--accent); text-align: center;
-  letter-spacing: 0.3em; margin: 1rem 0; padding: 1rem; background: var(--dark); border-radius: 8px; border: 1px solid var(--border);
+  font-family: 'DotGothic16', monospace;
+  font-size: clamp(2rem, 6vw, 2.8rem);
+  color: var(--accent);
+  text-align: center;
+  letter-spacing: 0.4em;
+  margin: 1rem 0;
+  padding: 1.2rem;
+  background: var(--dark);
+  border-radius: 10px;
+  border: 1px solid var(--border-2);
+  text-shadow: 0 0 20px rgba(0,212,170,0.4);
+  user-select: all;
 }
-.status-icon { font-size: 3rem; text-align: center; margin-bottom: 1rem; }
-.status-text { font-size: 1.1rem; text-align: center; color: var(--text); margin-bottom: 0.5rem; font-weight: 700; }
-.status-desc { font-size: 0.85rem; text-align: center; color: var(--text-dim); line-height: 1.6; }
-.instructions { font-size: 0.85rem; color: var(--text-dim); line-height: 1.6; margin-top: 1rem; }
-.instructions ol { margin-left: 1.5rem; margin-top: 0.5rem; }
-.instructions li { margin-bottom: 0.4rem; }
-.timer { text-align: center; font-family: 'DotGothic16', monospace; font-size: 1.2rem; color: #f0a500; margin-top: 0.5rem; }
-.error-text { color: var(--teto-3); font-size: 0.9rem; text-align: center; }
+
+/* ═══ INSTRUCCIONES ═══ */
+.instructions {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  line-height: 1.7;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.instructions strong {
+  color: var(--text);
+  display: block;
+  margin-bottom: 0.5rem;
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}
+
+.instructions ol {
+  margin-left: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.instructions li {
+  margin-bottom: 0.5rem;
+  padding-left: 0.3rem;
+}
+
+.instructions li::marker {
+  color: var(--teto);
+  font-weight: 700;
+}
+
+/* ═══ ESTADOS VISUALES ═══ */
+.status-icon {
+  font-size: 3.5rem;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.status-text {
+  font-size: 1.2rem;
+  text-align: center;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+}
+
+.status-text.success-text {
+  color: var(--accent);
+}
+
+.status-desc {
+  font-size: 0.9rem;
+  text-align: center;
+  color: var(--text-dim);
+  line-height: 1.6;
+  max-width: 380px;
+  margin: 0 auto;
+}
+
+/* ═══ TIMER ═══ */
+.timer {
+  text-align: center;
+  font-family: 'DotGothic16', monospace;
+  font-size: 1.8rem;
+  color: #f0a500;
+  margin-top: 1rem;
+  letter-spacing: 0.1em;
+  text-shadow: 0 0 15px rgba(240,165,0,0.3);
+}
+
+.timer.danger {
+  color: var(--teto);
+  text-shadow: 0 0 15px rgba(230,46,77,0.4);
+}
+
+/* ═══ ERROR ═══ */
+.error-text {
+  color: var(--teto-3);
+  font-size: 0.95rem;
+  text-align: center;
+  line-height: 1.6;
+}
+
+/* ═══ INDICADORES ═══ */
 .loading {
-  display: inline-block; width: 1rem; height: 1rem; border: 2px solid var(--text-dim);
-  border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite;
-  margin-right: 0.5rem; vertical-align: middle;
+  display: inline-block;
+  width: 1.2rem;
+  height: 1.2rem;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
 }
+
 .pulse-dot {
-  display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #f0a500;
-  animation: pulseDot 1.5s infinite; margin-right: 0.5rem; vertical-align: middle;
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #f0a500;
+  box-shadow: 0 0 10px rgba(240,165,0,0.6);
+  animation: pulseDot 1.5s infinite;
+  margin-right: 0.5rem;
+  vertical-align: middle;
 }
-@keyframes spin { to { transform: rotate(360deg); } }
-@keyframes pulseDot { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-.back-link { display: inline-block; margin-top: 1.5rem; color: var(--accent); text-decoration: none; font-size: 0.9rem; }
-.back-link:hover { text-decoration: underline; }
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.8); }
+}
+
+/* ═══ BACK LINK ═══ */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  color: var(--text-dim);
+  text-decoration: none;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  transition: all 0.2s;
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+}
+
+.back-link:hover {
+  color: var(--accent);
+  transform: translateX(-3px);
+}
+
+/* ═══ RESPONSIVE ═══ */
+@media(max-width: 600px) {
+  .container {
+    padding: 2rem 1.5rem;
+    margin-top: 4rem;
+  }
+
+  .logo {
+    font-size: 3rem;
+  }
+
+  .code {
+    font-size: 1.8rem;
+    letter-spacing: 0.2em;
+    padding: 1rem;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .timer {
+    font-size: 1.5rem;
+  }
+}
+
+/* ═══ SCROLLBAR ═══ */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--dark); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--teto); }
 </style>
 </head>
 <body>
+
+<nav>
+  <a href="/" class="nav-brand">FRIKIBOT</a>
+  <ul class="nav-links">
+    <li><a href="/">Inicio</a></li>
+    <li><a href="/#features">Funciones</a></li>
+    <li><a href="/#commands">Comandos</a></li>
+  </ul>
+</nav>
+
 <div class="container">
   <div class="header">
     <div class="logo">🤖</div>
-    <h1>Conectar Sub-bot</h1>
-    <p class="subtitle">Vincula tu número de WhatsApp con FrikiBot</p>
+    <div class="header-tag">
+      <span class="dot"></span>
+      <span>Sub-bot System</span>
+    </div>
+    <h1>Conectar <span class="red">Sub-bot</span></h1>
+    <p class="subtitle">Vincula tu número de WhatsApp con FrikiBot usando un código de 8 dígitos</p>
   </div>
 
   <form id="connectForm">
     <div class="form-group">
-      <label for="phone">Número de teléfono (con código de país)</label>
-      <input type="tel" id="phone" placeholder="Ej: 521234567890" required>
+      <label for="phone">Número de teléfono</label>
+      <input type="tel" id="phone" placeholder="Ej: 521234567890" required autocomplete="tel">
     </div>
     <button type="submit" class="btn" id="submitBtn">
       <i class="fas fa-link"></i> Solicitar código
@@ -114,16 +528,16 @@ input:focus { outline: none; border-color: var(--accent); }
 
   <!-- PASO 1: CÓDIGO GENERADO -->
   <div class="box box-code" id="codeBox">
-    <label style="text-align:center; display:block;">Tu código de vinculación:</label>
+    <span class="code-label">Tu código de vinculación</span>
     <div class="code" id="codeDisplay">XXXX-XXXX</div>
     <div class="instructions">
       <strong>Para conectar tu sub-bot:</strong>
       <ol>
-        <li>Abre WhatsApp en tu teléfono.</li>
-        <li>Ve a <strong>Configuración</strong> > <strong>Dispositivos vinculados</strong>.</li>
-        <li>Toca <strong>Vincular un dispositivo</strong>.</li>
-        <li>En la parte inferior, toca <strong>Vincular con número de teléfono</strong>.</li>
-        <li>Ingresa el código de arriba.</li>
+        <li>Abre WhatsApp en tu teléfono</li>
+        <li>Ve a <strong style="display:inline; text-transform:none; font-size:inherit;">Configuración</strong> > <strong style="display:inline; text-transform:none; font-size:inherit;">Dispositivos vinculados</strong></li>
+        <li>Toca <strong style="display:inline; text-transform:none; font-size:inherit;">Vincular un dispositivo</strong></li>
+        <li>En la parte inferior, toca <strong style="display:inline; text-transform:none; font-size:inherit;">Vincular con número de teléfono</strong></li>
+        <li>Ingresa el código de arriba</li>
       </ol>
     </div>
   </div>
@@ -131,16 +545,23 @@ input:focus { outline: none; border-color: var(--accent); }
   <!-- PASO 2: ESPERANDO CONEXIÓN -->
   <div class="box box-waiting" id="waitingBox">
     <div class="status-icon">⏳</div>
-    <div class="status-text"><span class="pulse-dot"></span> Esperando conexión...</div>
-    <div class="status-desc">Ingresa el código en WhatsApp. Estamos esperando.</div>
+    <div class="status-text">
+      <span class="pulse-dot"></span>Esperando conexión...
+    </div>
+    <div class="status-desc">
+      Ingresa el código en WhatsApp.<br>Estamos verificando la conexión.
+    </div>
     <div class="timer" id="timerDisplay">60s</div>
   </div>
 
   <!-- PASO 3: CONECTADO -->
   <div class="box box-success" id="successBox">
     <div class="status-icon">✅</div>
-    <div class="status-text" style="color: var(--accent);">¡Sub-bot conectado!</div>
-    <div class="status-desc">Tu sub-bot está listo y funcionando. Ya puedes usarlo en tus grupos.</div>
+    <div class="status-text success-text">¡Sub-bot conectado!</div>
+    <div class="status-desc">
+      Tu sub-bot está listo y funcionando.<br>
+      Ya puedes usarlo en tus grupos de WhatsApp.
+    </div>
   </div>
 
   <!-- PASO 4: ERROR -->
@@ -214,16 +635,15 @@ form.addEventListener('submit', async (e) => {
     }
 
     if (data.code) {
-      // Mostrar el código
       codeDisplay.textContent = data.code;
       showBox(codeBox);
 
-      // Después de 3 segundos, cambiar a modo espera
+      // Después de 4 segundos, cambiar a modo espera
       setTimeout(() => {
         showBox(waitingBox);
         startTimer(60);
         startChecking(data.session);
-      }, 3000);
+      }, 4000);
 
     } else if (data.message && data.message.includes('ya estaba conectado')) {
       showBox(successBox);
@@ -244,12 +664,16 @@ form.addEventListener('submit', async (e) => {
 function startTimer(seconds) {
   timeLeft = seconds;
   timerDisplay.textContent = `${timeLeft}s`;
+  timerDisplay.classList.remove('danger');
+  
   timerInterval = setInterval(() => {
     timeLeft--;
     timerDisplay.textContent = `${timeLeft}s`;
+    
     if (timeLeft <= 10) {
-      timerDisplay.style.color = 'var(--teto)';
+      timerDisplay.classList.add('danger');
     }
+    
     if (timeLeft <= 0) {
       clearInterval(timerInterval);
       timerInterval = null;
@@ -278,7 +702,6 @@ function startChecking(session) {
         timerInterval = null;
         showBox(successBox);
       } else if (data.status === 'not_found') {
-        // La sesión desapareció
         clearInterval(checkInterval);
         checkInterval = null;
         clearInterval(timerInterval);
@@ -286,7 +709,6 @@ function startChecking(session) {
         errorText.textContent = 'La sesión se cerró. Intenta de nuevo.';
         showBox(errorBox);
       }
-      // Si status es 'waiting' o 'pending', seguimos esperando
     } catch (error) {
       console.error('Error verificando estado:', error);
     }
