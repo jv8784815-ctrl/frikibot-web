@@ -10,16 +10,15 @@
 
 <meta property="og:title" content="FrikiBot - Bot de WhatsApp">
 <meta property="og:description" content="Bot de WhatsApp con IA, descargas y comandos avanzados.">
-<meta property="og:image" content="https://frikibot.vercel.app/teto.jpg">
 <meta property="og:url" content="https://frikibot.vercel.app/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="FrikiBot">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="FrikiBot">
 <meta name="twitter:description" content="Bot de WhatsApp con IA, descargas y comandos avanzados.">
-<meta name="twitter:image" content="https://frikibot.vercel.app/teto.jpg">
 
-<link rel="icon" type="image/jpeg" href="https://frikibot.vercel.app/teto.jpg?v=2">
+<!-- Favicon con emoji (no da errores 404) -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700;900&family=Zen+Kaku+Gothic+New:wght@400;700&family=DotGothic16&display=swap" rel="stylesheet">
@@ -170,7 +169,6 @@ nav{
   box-shadow:0 20px 60px rgba(0,0,0,0.5),0 0 40px rgba(230,46,77,0.1);
   background:var(--dark-2);
 }
-.hero-video-wrap video{width:100%;display:block}
 
 /* ═══ STATS BAR ═══ */
 .stats-bar{
@@ -435,10 +433,8 @@ footer{
       </div>
     </div>
     <div class="hero-right">
-      <div class="hero-video-wrap">
-        <video autoplay muted loop playsinline id="heroVideo" poster="/teto.jpg">
-          <source src="/video.mp4" type="video/mp4">
-        </video>
+      <div class="hero-video-wrap" style="display:flex;align-items:center;justify-content:center;height:420px;background:var(--dark-3);border:1px solid var(--border);border-radius:16px;">
+        <p style="color:var(--text-dim);font-size:0.9rem;">Video próximamente</p>
       </div>
     </div>
   </div>
@@ -616,7 +612,7 @@ footer{
 </div>
 
 <audio id="bgMusic" loop preload="none">
-  <source src="./music.mp3" type="audio/mpeg">
+  <source src="/music.mp3" type="audio/mpeg">
 </audio>
 
 <script>
@@ -1421,7 +1417,6 @@ setInterval(checkStatus,30000);
 (function(){
   const music=document.getElementById('bgMusic');
   const toggle=document.getElementById('musicToggle');
-  const video=document.getElementById('heroVideo');
   if(!music||!toggle)return;
   music.volume=0.5;
   let playing=false;
@@ -1429,10 +1424,6 @@ setInterval(checkStatus,30000);
   function tryPlay(){music.play().then(()=>{playing=true;update();}).catch(()=>{playing=false;update();});}
   document.addEventListener('click',()=>{if(!playing)tryPlay();},{once:true});
   toggle.addEventListener('click',e=>{e.stopPropagation();if(playing){music.pause();playing=false;}else{tryPlay();}update();});
-  if(video){
-    video.addEventListener('play',()=>{if(playing)music.pause();});
-    video.addEventListener('pause',()=>{if(playing)music.play().catch(()=>{});});
-  }
 })();
 </script>
 </body>
