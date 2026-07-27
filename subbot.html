@@ -609,7 +609,7 @@ const checkText = document.getElementById('checkText');
 
 let checkInterval = null;
 let timerInterval = null;
-let timeLeft = 120; // 2 minutos para tener más tiempo
+let timeLeft = 60; // 60 segundos
 
 function hideAll() {
   codeBox.classList.remove('show');
@@ -652,9 +652,8 @@ form.addEventListener('submit', async (e) => {
     }
 
     if (data.code) {
-      // Mostrar el código + estado de verificación TODO EN UNA PANTALLA
       codeDisplay.textContent = data.code;
-      timeLeft = 120; // 2 minutos
+      timeLeft = 60; // 60 segundos
       showBox(codeBox);
       startTimer();
       startChecking(data.session);
@@ -681,7 +680,7 @@ function startTimer() {
     timeLeft--;
     timerDisplay.textContent = `${timeLeft}s`;
     
-    if (timeLeft <= 15) {
+    if (timeLeft <= 10) {
       timerDisplay.classList.add('danger');
     }
     
@@ -699,20 +698,16 @@ function startTimer() {
 }
 
 function startChecking(session) {
-  // Actualizar estado visual cada 3 segundos
   checkInterval = setInterval(async () => {
     try {
       const response = await fetch(`/api/subbot-status?session=${session}`);
       const data = await response.json();
 
       if (data.connected) {
-        // ¡Conectado!
         clearInterval(checkInterval);
         checkInterval = null;
         clearInterval(timerInterval);
         timerInterval = null;
-        
-        // Mostrar éxito
         showBox(successBox);
       } else if (data.status === 'not_found') {
         clearInterval(checkInterval);
@@ -722,7 +717,6 @@ function startChecking(session) {
         errorText.textContent = 'La sesión se cerró. Intenta de nuevo.';
         showBox(errorBox);
       } else {
-        // Seguir esperando - actualizar texto según estado
         if (data.status === 'waiting') {
           checkText.textContent = 'Esperando código en WhatsApp...';
         } else if (data.status === 'pending') {
