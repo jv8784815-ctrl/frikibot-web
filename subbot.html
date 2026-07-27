@@ -24,7 +24,6 @@
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
-
 html { font-size: 16px; }
 
 body {
@@ -41,7 +40,6 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Fondo con gradiente radial sutil */
 body::before {
   content: '';
   position: fixed;
@@ -52,7 +50,7 @@ body::before {
   z-index: 0;
 }
 
-/* ═══ NAV (igual que index) ═══ */
+/* ═══ NAV ═══ */
 nav {
   position: fixed;
   top: 0; left: 0; right: 0;
@@ -101,7 +99,7 @@ nav {
 
 .nav-links a:hover { color: var(--teto-3); }
 
-/* ═══ CONTAINER PRINCIPAL ═══ */
+/* ═══ CONTAINER ═══ */
 .container {
   max-width: 550px;
   width: 100%;
@@ -175,10 +173,8 @@ h1 .red { color: var(--teto); }
   line-height: 1.6;
 }
 
-/* ═══ FORMULARIO ═══ */
-.form-group {
-  margin-bottom: 1.5rem;
-}
+/* ═══ FORM ═══ */
+.form-group { margin-bottom: 1.5rem; }
 
 label {
   display: block;
@@ -247,7 +243,7 @@ input::placeholder {
   transform: none;
 }
 
-/* ═══ CAJAS DE ESTADO ═══ */
+/* ═══ CAJAS ═══ */
 .box {
   margin-top: 2rem;
   padding: 2rem 1.5rem;
@@ -263,24 +259,13 @@ input::placeholder {
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-15px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(-15px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .box-code {
   border-color: var(--accent);
   box-shadow: 0 0 30px rgba(0,212,170,0.15);
-}
-
-.box-waiting {
-  border-color: #f0a500;
-  box-shadow: 0 0 30px rgba(240,165,0,0.1);
 }
 
 .box-success {
@@ -295,7 +280,7 @@ input::placeholder {
   box-shadow: 0 0 40px rgba(230,46,77,0.15);
 }
 
-/* ═══ CÓDIGO DE PAIRING ═══ */
+/* ═══ CÓDIGO ═══ */
 .code-label {
   font-family: 'DotGothic16', monospace;
   font-size: 0.75rem;
@@ -357,7 +342,75 @@ input::placeholder {
   font-weight: 700;
 }
 
-/* ═══ ESTADOS VISUALES ═══ */
+/* ═══ ESTADO DE VERIFICACIÓN ═══ */
+.check-status {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: var(--dark);
+  border-radius: 10px;
+  border: 1px solid var(--border-2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.check-left {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.pulse-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #f0a500;
+  box-shadow: 0 0 10px rgba(240,165,0,0.6);
+  animation: pulseDot 1.5s infinite;
+  flex-shrink: 0;
+}
+
+.pulse-dot.connected {
+  background: var(--accent);
+  box-shadow: 0 0 10px rgba(0,212,170,0.6);
+  animation: none;
+}
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.8); }
+}
+
+.check-text {
+  font-size: 0.85rem;
+  color: var(--text);
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.check-timer {
+  font-family: 'DotGothic16', monospace;
+  font-size: 1.3rem;
+  color: #f0a500;
+  letter-spacing: 0.1em;
+  text-shadow: 0 0 10px rgba(240,165,0,0.3);
+  flex-shrink: 0;
+}
+
+.check-timer.danger {
+  color: var(--teto);
+  text-shadow: 0 0 10px rgba(230,46,77,0.4);
+}
+
+/* ═══ ÉXITO/ERROR ═══ */
 .status-icon {
   font-size: 3.5rem;
   text-align: center;
@@ -386,23 +439,6 @@ input::placeholder {
   margin: 0 auto;
 }
 
-/* ═══ TIMER ═══ */
-.timer {
-  text-align: center;
-  font-family: 'DotGothic16', monospace;
-  font-size: 1.8rem;
-  color: #f0a500;
-  margin-top: 1rem;
-  letter-spacing: 0.1em;
-  text-shadow: 0 0 15px rgba(240,165,0,0.3);
-}
-
-.timer.danger {
-  color: var(--teto);
-  text-shadow: 0 0 15px rgba(230,46,77,0.4);
-}
-
-/* ═══ ERROR ═══ */
 .error-text {
   color: var(--teto-3);
   font-size: 0.95rem;
@@ -410,7 +446,7 @@ input::placeholder {
   line-height: 1.6;
 }
 
-/* ═══ INDICADORES ═══ */
+/* ═══ LOADING ═══ */
 .loading {
   display: inline-block;
   width: 1.2rem;
@@ -421,25 +457,8 @@ input::placeholder {
   animation: spin 0.8s linear infinite;
 }
 
-.pulse-dot {
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: #f0a500;
-  box-shadow: 0 0 10px rgba(240,165,0,0.6);
-  animation: pulseDot 1.5s infinite;
-  margin-right: 0.5rem;
-  vertical-align: middle;
-}
-
 @keyframes spin {
   to { transform: rotate(360deg); }
-}
-
-@keyframes pulseDot {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.4; transform: scale(0.8); }
 }
 
 /* ═══ BACK LINK ═══ */
@@ -468,9 +487,7 @@ input::placeholder {
     margin-top: 4rem;
   }
 
-  .logo {
-    font-size: 3rem;
-  }
+  .logo { font-size: 3rem; }
 
   .code {
     font-size: 1.8rem;
@@ -478,16 +495,16 @@ input::placeholder {
     padding: 1rem;
   }
 
-  .nav-links {
-    display: none;
+  .nav-links { display: none; }
+
+  .check-status {
+    flex-direction: column;
+    text-align: center;
   }
 
-  .timer {
-    font-size: 1.5rem;
-  }
+  .check-left { justify-content: center; }
 }
 
-/* ═══ SCROLLBAR ═══ */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: var(--dark); }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
@@ -516,6 +533,7 @@ input::placeholder {
     <p class="subtitle">Vincula tu número de WhatsApp con FrikiBot usando un código de 8 dígitos</p>
   </div>
 
+  <!-- FORMULARIO INICIAL -->
   <form id="connectForm">
     <div class="form-group">
       <label for="phone">Número de teléfono</label>
@@ -526,10 +544,20 @@ input::placeholder {
     </button>
   </form>
 
-  <!-- PASO 1: CÓDIGO GENERADO -->
+  <!-- CÓDIGO + ESTADO DE VERIFICACIÓN (TODO EN UNA PANTALLA) -->
   <div class="box box-code" id="codeBox">
     <span class="code-label">Tu código de vinculación</span>
     <div class="code" id="codeDisplay">XXXX-XXXX</div>
+    
+    <!-- ESTADO: Verificando conexión + Timer -->
+    <div class="check-status">
+      <div class="check-left">
+        <span class="pulse-dot" id="pulseDot"></span>
+        <span class="check-text" id="checkText">Verificando conexión...</span>
+      </div>
+      <div class="check-timer" id="timerDisplay">60s</div>
+    </div>
+
     <div class="instructions">
       <strong>Para conectar tu sub-bot:</strong>
       <ol>
@@ -542,19 +570,7 @@ input::placeholder {
     </div>
   </div>
 
-  <!-- PASO 2: ESPERANDO CONEXIÓN -->
-  <div class="box box-waiting" id="waitingBox">
-    <div class="status-icon">⏳</div>
-    <div class="status-text">
-      <span class="pulse-dot"></span>Esperando conexión...
-    </div>
-    <div class="status-desc">
-      Ingresa el código en WhatsApp.<br>Estamos verificando la conexión.
-    </div>
-    <div class="timer" id="timerDisplay">60s</div>
-  </div>
-
-  <!-- PASO 3: CONECTADO -->
+  <!-- ÉXITO -->
   <div class="box box-success" id="successBox">
     <div class="status-icon">✅</div>
     <div class="status-text success-text">¡Sub-bot conectado!</div>
@@ -564,13 +580,16 @@ input::placeholder {
     </div>
   </div>
 
-  <!-- PASO 4: ERROR -->
+  <!-- ERROR -->
   <div class="box box-error" id="errorBox">
     <div class="status-icon">❌</div>
     <div class="error-text" id="errorText">Error desconocido</div>
+    <a href="/" class="back-link" style="display:flex; justify-content:center; margin-top:1.5rem;">
+      <i class="fas fa-redo"></i> Intentar de nuevo
+    </a>
   </div>
 
-  <a href="/" class="back-link">
+  <a href="/" class="back-link" id="backLink">
     <i class="fas fa-arrow-left"></i> Volver al inicio
   </a>
 </div>
@@ -580,28 +599,26 @@ const form = document.getElementById('connectForm');
 const phoneInput = document.getElementById('phone');
 const submitBtn = document.getElementById('submitBtn');
 const codeBox = document.getElementById('codeBox');
-const waitingBox = document.getElementById('waitingBox');
 const successBox = document.getElementById('successBox');
 const errorBox = document.getElementById('errorBox');
 const codeDisplay = document.getElementById('codeDisplay');
 const errorText = document.getElementById('errorText');
 const timerDisplay = document.getElementById('timerDisplay');
+const pulseDot = document.getElementById('pulseDot');
+const checkText = document.getElementById('checkText');
 
 let checkInterval = null;
 let timerInterval = null;
-let timeLeft = 60;
+let timeLeft = 120; // 2 minutos para tener más tiempo
 
-// Ocultar todas las cajas
 function hideAll() {
   codeBox.classList.remove('show');
-  waitingBox.classList.remove('show');
   successBox.classList.remove('show');
   errorBox.classList.remove('show');
   if (checkInterval) { clearInterval(checkInterval); checkInterval = null; }
   if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
 }
 
-// Mostrar una caja
 function showBox(box) {
   hideAll();
   box.classList.add('show');
@@ -635,16 +652,12 @@ form.addEventListener('submit', async (e) => {
     }
 
     if (data.code) {
+      // Mostrar el código + estado de verificación TODO EN UNA PANTALLA
       codeDisplay.textContent = data.code;
+      timeLeft = 120; // 2 minutos
       showBox(codeBox);
-
-      // Después de 4 segundos, cambiar a modo espera
-      setTimeout(() => {
-        showBox(waitingBox);
-        startTimer(60);
-        startChecking(data.session);
-      }, 4000);
-
+      startTimer();
+      startChecking(data.session);
     } else if (data.message && data.message.includes('ya estaba conectado')) {
       showBox(successBox);
     } else {
@@ -660,9 +673,7 @@ form.addEventListener('submit', async (e) => {
   }
 });
 
-// Temporizador de 60 segundos
-function startTimer(seconds) {
-  timeLeft = seconds;
+function startTimer() {
   timerDisplay.textContent = `${timeLeft}s`;
   timerDisplay.classList.remove('danger');
   
@@ -670,7 +681,7 @@ function startTimer(seconds) {
     timeLeft--;
     timerDisplay.textContent = `${timeLeft}s`;
     
-    if (timeLeft <= 10) {
+    if (timeLeft <= 15) {
       timerDisplay.classList.add('danger');
     }
     
@@ -687,8 +698,8 @@ function startTimer(seconds) {
   }, 1000);
 }
 
-// Verificar estado de conexión cada 3 segundos
 function startChecking(session) {
+  // Actualizar estado visual cada 3 segundos
   checkInterval = setInterval(async () => {
     try {
       const response = await fetch(`/api/subbot-status?session=${session}`);
@@ -700,6 +711,8 @@ function startChecking(session) {
         checkInterval = null;
         clearInterval(timerInterval);
         timerInterval = null;
+        
+        // Mostrar éxito
         showBox(successBox);
       } else if (data.status === 'not_found') {
         clearInterval(checkInterval);
@@ -708,6 +721,15 @@ function startChecking(session) {
         timerInterval = null;
         errorText.textContent = 'La sesión se cerró. Intenta de nuevo.';
         showBox(errorBox);
+      } else {
+        // Seguir esperando - actualizar texto según estado
+        if (data.status === 'waiting') {
+          checkText.textContent = 'Esperando código en WhatsApp...';
+        } else if (data.status === 'pending') {
+          checkText.textContent = 'Iniciando conexión...';
+        } else {
+          checkText.textContent = 'Verificando conexión...';
+        }
       }
     } catch (error) {
       console.error('Error verificando estado:', error);
